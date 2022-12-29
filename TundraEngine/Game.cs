@@ -11,7 +11,7 @@ namespace TundraEngine
         public string BuildNumber { get; }
 
         public IGameWindow Window;
-        public World World;
+        public World World { get => Window.World; }
         public bool IsRunning = false;
 
         public delegate void OnUpdateHandler(double dt);
@@ -36,9 +36,7 @@ namespace TundraEngine
                 Window = window;
             }
 
-            // Create the Arch ECS World
-            World = World.Create();
-
+            Window.OnRender += Render;
         }
 
         public void Start()
@@ -59,19 +57,6 @@ namespace TundraEngine
         }
         public void Render()
         {
-
-            // Rendering everything 
-            Window.Renderer.Begin();
-
-            var renderQuery = new QueryDescription { All = new Arch.Core.Utils.ComponentType[] { typeof(Transform), typeof(Sprite) } };
-            World.Query(in renderQuery, (ref Transform transform, ref Sprite sprite) =>
-            {
-                Window.Renderer.DrawSprite(sprite, transform);
-            });
-            Window.Renderer.End();
-
-
-            Window.Render();
         }
         public void Quit()
         {

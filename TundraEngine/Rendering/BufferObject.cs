@@ -9,7 +9,7 @@ namespace TundraEngine.Rendering
         private BufferTargetARB _bufferType;
         private GL _gl;
 
-        public unsafe BufferObject(GL gl, Span<TDataType> data, BufferTargetARB bufferType)
+        public unsafe BufferObject(GL gl, Span<TDataType> data, BufferTargetARB bufferType, uint length)
         {
             _gl = gl;
             _bufferType = bufferType;
@@ -18,7 +18,16 @@ namespace TundraEngine.Rendering
             Bind();
             fixed (void* d = data)
             {
-                _gl.BufferData(bufferType, (nuint)(data.Length * sizeof(TDataType)), d, BufferUsageARB.StaticDraw);
+                _gl.BufferData(bufferType, (nuint)(length * sizeof(TDataType)), d, BufferUsageARB.DynamicDraw);
+            }
+        }
+
+        public unsafe void UpdateData(Span<TDataType> data, uint length)
+        {
+            Bind();
+            fixed (void* d = data)
+            {
+                _gl?.BufferData(_bufferType, (nuint)(length * sizeof(TDataType)), d, BufferUsageARB.DynamicDraw);
             }
         }
 

@@ -1,5 +1,6 @@
+using Silk.NET.Maths;
 using Silk.NET.OpenGL;
-
+using System.IO;
 namespace TundraEngine.Rendering
 {
     public class Shader : IDisposable
@@ -49,6 +50,20 @@ namespace TundraEngine.Rendering
                 throw new Exception($"{name} uniform not found on shader.");
             }
             _gl.Uniform1(location, value);
+        }
+
+
+        public void SetUniform(string name, Matrix4X4<float> value)
+        {
+            int location = _gl.GetUniformLocation(_handle, name);
+            if (location == -1)
+            {
+                throw new Exception($"{name} uniform not found on shader.");
+            }
+            unsafe
+            {
+                _gl.UniformMatrix4(location, 1, false, (float*)&value);
+            }
         }
 
         public void SetUniform(string name, float value)

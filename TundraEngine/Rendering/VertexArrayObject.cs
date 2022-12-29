@@ -19,6 +19,13 @@ namespace TundraEngine.Rendering
             ebo.Bind();
         }
 
+        public unsafe void UpdateData(BufferObject<TVertexType> vbo, BufferObject<TIndexType> ebo)
+        {
+            Bind();
+            vbo.Bind();
+            ebo.Bind();
+        }
+
         public unsafe void VertexAttributePointer(uint index, int count, VertexAttribPointerType type, uint vertexSize, int offSet)
         {
             _gl.VertexAttribPointer(index, count, type, false, vertexSize * (uint)sizeof(TVertexType), (void*)(offSet * sizeof(TVertexType)));
