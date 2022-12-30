@@ -32,6 +32,22 @@ namespace TestGame1.Objects
         public override void Update(float dt)
         {
             base.Update(dt);
+            var moveSpeed = 0.1f;
+            if (Input.IsKeyPressed(Key.W)){
+                Transform.Y += moveSpeed;
+            }
+            if (Input.IsKeyPressed(Key.S))
+            {
+                Transform.Y -= moveSpeed;
+            }
+            if (Input.IsKeyPressed(Key.A))
+            {
+                Transform.X -= moveSpeed;
+            }
+            if (Input.IsKeyPressed(Key.D))
+            {
+                Transform.X += moveSpeed;
+            }
         }
     }
 }

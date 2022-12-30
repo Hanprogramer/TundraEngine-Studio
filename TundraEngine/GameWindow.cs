@@ -1,4 +1,5 @@
 ﻿using Silk.NET.Core.Contexts;
+using Silk.NET.Input;
 using Silk.NET.OpenGL;
 using Silk.NET.SDL;
 using Silk.NET.Windowing;
@@ -43,11 +44,27 @@ namespace TundraEngine
             _window.Load += _window_Load;
             _window.Closing += _window_Closing;
             _window.Resize += _window_Resize;
-
             _window.ShouldSwapAutomatically = false;
 
             _window.Initialize();
+
+            var input = _window.CreateInput();
+            foreach (var keyboard in input.Keyboards) {
+                keyboard.KeyDown += Keyboard_KeyDown;
+                keyboard.KeyUp += Keyboard_KeyUp;
+            }
+
             Scene = new Scene(this);
+        }
+
+        private void Keyboard_KeyUp(IKeyboard arg1, Silk.NET.Input.Key arg2, int arg3)
+        {
+            Input.InputManager.Release((TundraEngine.Classes.Key)arg2);
+        }
+
+        private void Keyboard_KeyDown(IKeyboard arg1, Silk.NET.Input.Key arg2, int arg3)
+        {
+            Input.InputManager.Press((TundraEngine.Classes.Key)arg2);
         }
 
         private void _window_Resize(Silk.NET.Maths.Vector2D<int> size)
