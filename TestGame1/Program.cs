@@ -1,36 +1,32 @@
-﻿using Arch.Core;
+﻿using System;
+using TestGame1;
+using TestGame1.Objects;
 using TundraEngine;
 using TundraEngine.Components;
-
 var game = new Game("My Game", "v0.0.1", "1234412");
+var testUpdateSpeed = false;
 
-
-// Add entities to the game
-for (var index = 0; index < 1000; index++)
+if (testUpdateSpeed)
 {
-    game.World.Create(
-        new Transform() { X = 0, Y = index*16, Width = 32, Height = 32 },
-        new Sprite() { textureID = 0 }
-        );
+    // Add entities to the game
+    for (var index = 0; index < 500; index++)
+    {
+        game.Window.Scene.AddObject(
+                new TestObject(game.Window.Scene) { Transform = new Transform() { X = 0, Y = index * 16, Width = 32, Height = 32 } });
+
+    }
+    for (var index = 0; index < 500; index++)
+    {
+        game.Window.Scene.AddObject(
+                new TestObject(game.Window.Scene) { Transform = new Transform() { Y = 0, X = index * 16, Width = 32, Height = 32 } });
+
+    }
 }
-for (var index = 0; index < 1000; index++)
-{
-    game.World.Create(
-        new Transform() { Y = 0, X = index * 16, Width = 32, Height = 32 },
-        new Sprite() { textureID = 0 }
-        );
-}
 
-// A simple update query
-game.OnUpdate += (double dt) =>
-{
-    // Updating position
-    //var query = new QueryDescription { All = new Arch.Core.Utils.ComponentType[] { typeof(Transform) } };
-    //game.World.Query(in query, (ref Transform transform) =>
-    //{
-    //    transform.X += (float)((1f / transform.Y) * dt);
-    //});
-};
+game.Window.Scene.AddObject(
+    new Plane(game.Window.Scene) { 
+        Transform = new Transform() { Y = 0, X = 16, Width = 32, Height = 32 } 
+    });
 
 // Start the game
 game.Start();
