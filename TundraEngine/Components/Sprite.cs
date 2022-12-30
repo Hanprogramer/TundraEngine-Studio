@@ -3,7 +3,7 @@
     /// <summary>
     /// A basic component to draw a texture onto the screen
     /// </summary>
-    public struct Sprite
+    public class Sprite
     {
         public int textureID;
     }

@@ -1,5 +1,5 @@
-﻿using Arch.Core;
-using Silk.NET.SDL;
+﻿using Silk.NET.SDL;
+using TundraEngine.Classes;
 using TundraEngine.Components;
 
 namespace TundraEngine
@@ -11,7 +11,7 @@ namespace TundraEngine
         public string BuildNumber { get; }
 
         public IGameWindow Window;
-        public World World { get => Window.World; }
+        public Scene World { get => Window.Scene; }
         public bool IsRunning = false;
 
         public delegate void OnUpdateHandler(double dt);
@@ -20,6 +20,9 @@ namespace TundraEngine
         public Event OnRender;
         public Event OnInitialize;
         public Event OnClosed;
+
+        public float Ticks = 0;
+        public AssetManager AssetManager;
 
         public Game(string title, string version, string buildNumber, IGameWindow? window = null)
         {
@@ -37,6 +40,14 @@ namespace TundraEngine
             }
 
             Window.OnRender += Render;
+            AssetManager = new AssetManager(Window);
+            Window.OnLoadAssets += () =>
+            {
+                AssetManager.LoadTextures();
+            };
+            GameManager.Game = this;
+            GameManager.AssetManager = AssetManager;
+            GameManager.GameWindow = Window;
         }
 
         public void Start()
@@ -52,8 +63,12 @@ namespace TundraEngine
 
         public void Update()
         {
-            Window.Update();
-            OnUpdate.Invoke(1);
+
+            //TODO: implement real DT
+            Window.PollEvents();
+            if(OnUpdate != null)
+                OnUpdate.Invoke(1);
+            Ticks++;
         }
         public void Render()
         {

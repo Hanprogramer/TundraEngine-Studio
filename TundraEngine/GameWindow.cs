@@ -1,9 +1,9 @@
-﻿using Arch.Core;
-using Silk.NET.Core.Contexts;
+﻿using Silk.NET.Core.Contexts;
 using Silk.NET.OpenGL;
 using Silk.NET.SDL;
 using Silk.NET.Windowing;
 using System.Security.Cryptography.X509Certificates;
+using TundraEngine.Classes;
 using TundraEngine.Components;
 using TundraEngine.Rendering;
 using Window = Silk.NET.Windowing.Window;
@@ -22,11 +22,12 @@ namespace TundraEngine
         public bool IsInitialized { get; set; } = false;
         public Rendering.Renderer Renderer { get; set; }
         public event IGameWindow.OnRenderHandler OnRender;
+        public event IGameWindow.OnLoadAssetsHandler OnLoadAssets;
+
         public GL Gl { get; set; }
-        public World World { get; set; }
+        public Scene Scene { get; set; }
 
         public IGLContext context;
-        int ticks = 0;
 
         IWindow _window;
         public GameWindow(Game game, int width = 800, int height = 600)
@@ -46,7 +47,7 @@ namespace TundraEngine
             _window.ShouldSwapAutomatically = false;
 
             _window.Initialize();
-            World = World.Create();
+            Scene = new Scene(this);
         }
 
         private void _window_Resize(Silk.NET.Maths.Vector2D<int> size)
@@ -77,6 +78,10 @@ namespace TundraEngine
                 Gl = GL.GetApi(context);
                 Renderer = new Rendering.Renderer(this, Gl);
                 Renderer.SetSize(_window.Size.X, _window.Size.Y);
+                Scene.Initialize();
+
+                OnLoadAssets.Invoke();
+
                 while (Game.IsRunning)
                 {
                     if (_window != null)
@@ -84,8 +89,10 @@ namespace TundraEngine
                         _window.DoUpdate();
                         Gl.Viewport(0, 0, (uint)_window.Size.X, (uint)_window.Size.Y);
                     }
+                    Scene.Update(1); // TODO: Fix fake deltaTime
+                    PollEvents();
                     Renderer?.Clear();
-                    RenderWorld();
+                    Scene.Render();
                     // Render the entire batch
                     Renderer?.Render();
                     context?.SwapBuffers();
@@ -99,35 +106,14 @@ namespace TundraEngine
             IsInitialized = true;
         }
 
-        public void Update()
+        public void PollEvents()
         {
             _window.DoEvents();
-
-            var query = new QueryDescription { All = new Arch.Core.Utils.ComponentType[] { typeof(Transform) } };
-            World.Query(in query, (ref Transform transform) =>
-            {
-                ticks++;
-                transform.X = (MathF.Sin((ticks/10 + transform.Y * 100000) / 1000000f) * 100f);
-            });
         }
 
         public void Destroy()
         {
             _window.Close();
-        }
-
-        
-
-        public void RenderWorld()
-        {
-            // Rendering everything 
-            Renderer.Begin();
-            var renderQuery = new QueryDescription { All = new Arch.Core.Utils.ComponentType[] { typeof(Transform), typeof(Sprite) } };
-            World.Query(in renderQuery, (ref Transform transform, ref Sprite sprite) =>
-            {
-                Renderer.DrawSprite(sprite, transform);
-            });
-            Renderer.End();
         }
     }
 }

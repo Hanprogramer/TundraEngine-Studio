@@ -8,19 +8,24 @@ namespace TundraEngine.Rendering
     {
         private uint _handle;
         private GL _gl;
+        private RendererFilter filter;
+        public string Path { get; private set; } = "";
 
-        public unsafe Texture(GL gl, string path)
+        public Texture(string path) {
+            Path = path;
+        }
+        public unsafe void Load(Renderer renderer)
         {
-            _gl = gl;
+            _gl = renderer.Gl;
+            filter = renderer.RendererFilter;
 
             _handle = _gl.GenTexture();
             Bind();
-
             //Loading an image using imagesharp.
-            using (var img = Image.Load<Rgba32>(path))
+            using (var img = Image.Load<Rgba32>(Path))
             {
                 //Reserve enough memory from the gpu for the whole image
-                gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba8, (uint)img.Width, (uint)img.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, null);
+                _gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba8, (uint)img.Width, (uint)img.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, null);
 
                 img.ProcessPixelRows(accessor =>
                 {
@@ -30,7 +35,7 @@ namespace TundraEngine.Rendering
                         fixed (void* data = accessor.GetRowSpan(y))
                         {
                             //Loading the actual image.
-                            gl.TexSubImage2D(TextureTarget.Texture2D, 0, 0, y, (uint)accessor.Width, 1, PixelFormat.Rgba, PixelType.UnsignedByte, data);
+                            _gl.TexSubImage2D(TextureTarget.Texture2D, 0, 0, y, (uint)accessor.Width, 1, PixelFormat.Rgba, PixelType.UnsignedByte, data);
                         }
                     }
                 });
@@ -40,10 +45,11 @@ namespace TundraEngine.Rendering
 
         }
 
-        public unsafe Texture(GL gl, Span<byte> data, uint width, uint height)
+        public unsafe void Load(Renderer renderer, Span<byte> data, uint width, uint height)
         {
             //Saving the gl instance.
-            _gl = gl;
+            _gl = renderer.Gl;
+            filter = renderer.RendererFilter;
 
             //Generating the opengl handle;
             _handle = _gl.GenTexture();
@@ -63,8 +69,18 @@ namespace TundraEngine.Rendering
             //Setting some texture perameters so the texture behaves as expected.
             _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)GLEnum.ClampToEdge);
             _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)GLEnum.ClampToEdge);
-            _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)GLEnum.LinearMipmapLinear);
-            _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)GLEnum.Linear);
+
+            if (filter == RendererFilter.Linear)
+            {
+                _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)GLEnum.LinearMipmapLinear);
+                _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)GLEnum.Linear);
+            }
+            else
+            {
+                _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)GLEnum.NearestMipmapNearest);
+                _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)GLEnum.Nearest);
+            }
+
             _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureBaseLevel, 0);
             _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMaxLevel, 8);
             //Generating mipmaps.

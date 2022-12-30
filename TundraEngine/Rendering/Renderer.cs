@@ -5,6 +5,10 @@ using TundraEngine.Components;
 
 namespace TundraEngine.Rendering
 {
+    public enum RendererFilter {
+        Nearest,
+        Linear
+    }
     public class Renderer
     {
         public GL Gl;
@@ -14,11 +18,12 @@ namespace TundraEngine.Rendering
         private BufferObject<uint> Ebo;
         private VertexArrayObject<float, uint> Vao;
         private Shader Shader;
-        private Texture Texture;
 
-        IGameWindow Window;
-        Camera camera;
+        public IGameWindow Window;
+        public Camera camera;
+        public Texture lastTexture;
 
+        public RendererFilter RendererFilter = RendererFilter.Nearest;
         public int RenderWidth = 1, RenderHeight = 1;
         public float PixelWidth = 1, PixelHeight = 1;
 
@@ -67,8 +72,6 @@ namespace TundraEngine.Rendering
 
             Shader = new Shader(Gl, DefaultShader.Vertex, DefaultShader.Fragment);
 
-            Texture = new Texture(Gl, "Assets/silk.png");
-
         }
 
         public Renderer(IWindow window)
@@ -94,7 +97,6 @@ namespace TundraEngine.Rendering
             Vao.Bind();
             Shader.Use();
 
-            Texture.Bind(TextureUnit.Texture0);
             Shader.SetUniform("uTexture0", 0);
 
             Shader.SetUniform("uProjection", camera.ProjectionMatrix);
@@ -193,6 +195,11 @@ namespace TundraEngine.Rendering
             AddQuad(position);
 
             drawCalls++;
+            if (lastTexture != texture)
+            {
+                texture.Bind();
+                Flush();
+            }
         }
 
         public void DrawSprite(Sprite sprite, Transform position)
