@@ -11,40 +11,50 @@ namespace TundraEngine.Classes
         public IGameWindow Window;
         public Renderer Renderer { get => Window.Renderer; }
 
-        public AssetManager(IGameWindow Window) {
+        public AssetManager(IGameWindow Window)
+        {
             Textures = new();
             this.Window = Window;
         }
-        public void LoadTextures() {
-            foreach(var key in Textures.Keys) {
+        public void LoadTextures()
+        {
+            foreach (var key in Textures.Keys)
+            {
                 Console.WriteLine("Loading texture " + key);
                 Textures[key].Load(Renderer);
             }
         }
-        public void AddTexture(Texture texture) {
+        public void AddTexture(Texture texture)
+        {
+            Console.WriteLine(Textures.Count);
             if (Textures.ContainsKey(texture.Path)) return;
             Textures.Add(texture.Path, texture);
         }
 
         public Texture AddTexture(string path)
         {
-            if (Textures.ContainsKey(path)) return Textures[path];
+            if (Textures.ContainsKey(path))
+                return Textures[path];
+
             var t = new Texture(path);
             Textures.Add(path, t);
             return t;
         }
 
-        public Texture GetTexture(string path) {
+        public Texture GetTexture(string path)
+        {
             if (Textures.TryGetValue(path, out Texture? texture))
             {
                 return texture;
             }
-            else {
+            else
+            {
                 throw new Exception("Texture " + path + " not found");
             }
         }
 
-        public void UnloadTexture(string path) {
+        public void UnloadTexture(string path)
+        {
             throw new NotImplementedException("Unload texture not implemented");
         }
     }

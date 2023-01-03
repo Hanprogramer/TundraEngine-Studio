@@ -22,7 +22,7 @@ namespace TundraEngine.Rendering
             _handle = _gl.GenTexture();
             Bind();
             //Loading an image using imagesharp.
-            using (var img = Image.Load<Rgba32>(Path))
+            using (var img = SixLabors.ImageSharp.Image.Load<Rgba32>(Path))
             {
                 //Reserve enough memory from the gpu for the whole image
                 _gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba8, (uint)img.Width, (uint)img.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, null);
@@ -92,6 +92,10 @@ namespace TundraEngine.Rendering
             //When we bind a texture we can choose which textureslot we can bind it to.
             _gl.ActiveTexture(textureSlot);
             _gl.BindTexture(TextureTarget.Texture2D, _handle);
+        }
+
+        public void Unbind() {
+            _gl.BindTexture(TextureTarget.Texture2D, 0);
         }
 
         public void Dispose()

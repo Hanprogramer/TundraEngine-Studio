@@ -3,9 +3,7 @@ using Silk.NET.Input;
 using Silk.NET.OpenGL;
 using Silk.NET.SDL;
 using Silk.NET.Windowing;
-using System.Security.Cryptography.X509Certificates;
 using TundraEngine.Classes;
-using TundraEngine.Components;
 using TundraEngine.Rendering;
 using Window = Silk.NET.Windowing.Window;
 
@@ -18,17 +16,18 @@ namespace TundraEngine
     {
 
         public Game Game { get; set; }
-        public int Width { get => _window.Size.X; set {  } }
-        public int Height { get => _window.Size.Y; set {  } }
+        public int Width { get => _window.Size.X; set { } }
+        public int Height { get => _window.Size.Y; set { } }
         public bool IsInitialized { get; set; } = false;
         public Rendering.Renderer Renderer { get; set; }
-        public event IGameWindow.OnRenderHandler OnRender;
         public event IGameWindow.OnLoadAssetsHandler OnLoadAssets;
+        public event IGameWindow.OnUpdateHandler OnUpdate;
 
         public GL Gl { get; set; }
         public Scene Scene { get; set; }
 
         public IGLContext context;
+        public IInputContext input;
 
         IWindow _window;
         public GameWindow(Game game, int width = 800, int height = 600)
@@ -46,13 +45,6 @@ namespace TundraEngine
             _window.Resize += _window_Resize;
             _window.ShouldSwapAutomatically = false;
 
-            _window.Initialize();
-
-            var input = _window.CreateInput();
-            foreach (var keyboard in input.Keyboards) {
-                keyboard.KeyDown += Keyboard_KeyDown;
-                keyboard.KeyUp += Keyboard_KeyUp;
-            }
 
             Scene = new Scene(this);
         }
@@ -95,24 +87,30 @@ namespace TundraEngine
                 Gl = GL.GetApi(context);
                 Renderer = new Rendering.Renderer(this, Gl);
                 Renderer.SetSize(_window.Size.X, _window.Size.Y);
+                if (Scene == null) Scene = new Scene(this);
                 Scene.Initialize();
 
-                OnLoadAssets.Invoke();
+                if (OnLoadAssets != null)
+                {
+                    /// Wait until game is really running
+                    while (!Game.IsRunning) { }
+                    OnLoadAssets.Invoke();
+                }
+                IsInitialized = true;
 
                 while (Game.IsRunning)
                 {
                     if (_window != null)
-                    {
-                        _window.DoUpdate();
                         Gl.Viewport(0, 0, (uint)_window.Size.X, (uint)_window.Size.Y);
-                    }
-                    Scene.Update(1); // TODO: Fix fake deltaTime
+
                     PollEvents();
                     Renderer?.Clear();
+
+                    Renderer?.Begin();
                     Scene.Render();
-                    // Render the entire batch
-                    Renderer?.Render();
-                    context?.SwapBuffers();
+                    Renderer?.End();
+
+                    _window?.SwapBuffers();
                 }
             });
             thread.Start();
@@ -120,7 +118,14 @@ namespace TundraEngine
 
         public void Initialize()
         {
-            IsInitialized = true;
+            _window.Initialize();
+
+            input = _window.CreateInput();
+            foreach (var keyboard in input.Keyboards)
+            {
+                keyboard.KeyDown += Keyboard_KeyDown;
+                keyboard.KeyUp += Keyboard_KeyUp;
+            }
         }
 
         public void PollEvents()
@@ -131,6 +136,18 @@ namespace TundraEngine
         public void Destroy()
         {
             _window.Close();
+        }
+
+        public void Update(float dt)
+        {
+            if(IsInitialized)
+            Scene.Update(dt);
+        }
+
+        public void SetIcon(string path)
+        {
+            var icon = Image.Load(path);
+            _window.SetWindowIcon(ref icon);
         }
     }
 }

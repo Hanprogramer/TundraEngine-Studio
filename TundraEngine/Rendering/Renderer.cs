@@ -1,5 +1,4 @@
-﻿using Silk.NET.Input;
-using Silk.NET.OpenGL;
+﻿using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using TundraEngine.Components;
 
@@ -11,26 +10,33 @@ namespace TundraEngine.Rendering
     }
     public class Renderer
     {
+        // OpenGL stuffs
         public GL Gl;
 
-
+        // Buffers
         private BufferObject<float> Vbo;
         private BufferObject<uint> Ebo;
         private VertexArrayObject<float, uint> Vao;
+
+        // Default Shader
         private Shader Shader;
 
+        // Windowing
         public IGameWindow Window;
-        public Camera camera;
+
+        // Render stuffs
+        public Camera Camera;
         public Texture lastTexture;
 
         public RendererFilter RendererFilter = RendererFilter.Nearest;
         public int RenderWidth = 1, RenderHeight = 1;
         public float PixelWidth = 1, PixelHeight = 1;
 
-        int drawCalls = 0;
+        // Drawing state
+        int quadsCount = 0;
         bool isDrawing = false;
 
-        private float[] Vertices = new float[4048];
+        private float[] Vertices = new float[32752];
         //{
         //    //X    Y      U   V
         //     1f,  1f,     1f, 0f,
@@ -39,22 +45,23 @@ namespace TundraEngine.Rendering
         //    -1f,  1f,     0f, 0f
         //};
 
-        private uint[] Indices = new uint[4048];
+        private uint[] Indices = new uint[12282];
         //{
         //    0, 1, 3,
         //    1, 2, 3
         //};
-        private int maxDrawCalls = 253; // 4048 / 15
+
+        private int maxQuadsCount = 2047; // 32752 / 16
         private uint vertId = 0;
         private uint indId = 0;
-
+        private int drawCalls = 0;
 
 
         public Renderer(IGameWindow window, GL gl)
         {
             Gl = gl;
             Window = window;
-            camera = new Camera(window);
+            Camera = new Camera(window);
             Initialize();
         }
 
@@ -83,24 +90,28 @@ namespace TundraEngine.Rendering
         public unsafe void Clear()
         {
 
-            Gl.ClearColor(System.Drawing.Color.Green);
+            Gl.ClearColor(0.94f, 0.79f, 0.64f, 1.0f);
             Gl.Clear((uint)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
             Gl.Enable(EnableCap.Blend);
             Gl.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
+
         }
 
         public unsafe void Render()
         {
-
+            if (!isDrawing) throw new Exception("Renderer.Begin must be called before starting to draw");
             Ebo.Bind();
             Vbo.Bind();
             Vao.Bind();
             Shader.Use();
 
             Shader.SetUniform("uTexture0", 0);
+            //lastTexture.Bind();
 
-            Shader.SetUniform("uProjection", camera.ProjectionMatrix);
+            Shader.SetUniform("uProjection", Camera.ProjectionMatrix);
             Gl.DrawElements(PrimitiveType.Triangles, indId, DrawElementsType.UnsignedInt, null);
+
+            drawCalls++;
         }
 
         public void SetupMatrix()
@@ -111,9 +122,11 @@ namespace TundraEngine.Rendering
         {
             if (isDrawing) throw new Exception("Renderer.End must be called before starting another one");
             isDrawing = true;
-            drawCalls = 0;
+            quadsCount = 0;
             vertId = 0;
             indId = 0;
+            drawCalls = 0;
+            lastTexture = null;
             SetupMatrix();
         }
 
@@ -122,9 +135,9 @@ namespace TundraEngine.Rendering
             Vbo.UpdateData(Vertices, vertId);
             Ebo.UpdateData(Indices, indId);
             Vao.UpdateData(Vbo, Ebo);
-            
+
             Render();
-            drawCalls = 0;
+            quadsCount = 0;
             vertId = 0;
             indId = 0;
         }
@@ -132,9 +145,10 @@ namespace TundraEngine.Rendering
         public void End()
         {
             if (!isDrawing) throw new Exception("Renderer.Begin must be called before ending one");
-            isDrawing = false;
-            if (drawCalls > 0)
+            if (quadsCount > 0)
                 Flush();
+            lastTexture = null;
+            isDrawing = false;
         }
 
         private void AddQuad(Transform transform)
@@ -149,32 +163,37 @@ namespace TundraEngine.Rendering
                 transform.Y = 0;
             }
 
+            float x1 = transform.X - transform.Width / 2;
+            float y1 = transform.Y - transform.Height / 2;
+            float x2 = transform.X + transform.Width / 2;
+            float y2 = transform.Y + transform.Height / 2;
+
             // Top Right
-            Vertices[vertId++] = transform.X + transform.Width;  // X
-            Vertices[vertId++] = transform.Y + transform.Height;  // Y
+            Vertices[vertId++] = x2;  // X
+            Vertices[vertId++] = y2;  // Y
             Vertices[vertId++] = 1;  // U
             Vertices[vertId++] = 0;  // V
 
             // Bottom Right
-            Vertices[vertId++] = transform.X + transform.Width;  // X
-            Vertices[vertId++] = transform.Y; // y
+            Vertices[vertId++] = x2;  // X
+            Vertices[vertId++] = y1; // y
             Vertices[vertId++] = 1;  // U
             Vertices[vertId++] = 1;  // V
 
             // Bottom Left
-            Vertices[vertId++] = transform.X; // X
-            Vertices[vertId++] = transform.Y; // Y
+            Vertices[vertId++] = x1; // X
+            Vertices[vertId++] = y1; // Y
             Vertices[vertId++] = 0;  // U
             Vertices[vertId++] = 1;  // V
 
             // Top Left
-            Vertices[vertId++] = transform.X; // X
-            Vertices[vertId++] = transform.Y + transform.Height;  // Y
+            Vertices[vertId++] = x1; // X
+            Vertices[vertId++] = y2;  // Y
             Vertices[vertId++] = 0;  // U
             Vertices[vertId++] = 0;  // V
 
             // Indices
-            uint dc = (uint)(drawCalls * 4);
+            uint dc = (uint)(quadsCount * 4);
             Indices[indId++] = 0 + dc;
             Indices[indId++] = 1 + dc;
             Indices[indId++] = 3 + dc;
@@ -182,35 +201,40 @@ namespace TundraEngine.Rendering
             Indices[indId++] = 1 + dc;
             Indices[indId++] = 2 + dc;
             Indices[indId++] = 3 + dc;
+            quadsCount++;
 
         }
 
-        public unsafe void DrawTexture(Texture texture, Transform position)
+        public unsafe void DrawTexture(Texture texture, Transform transform)
         {
-            if (drawCalls >= maxDrawCalls)
+
+            if (lastTexture == null || (lastTexture != null && texture.Path != lastTexture.Path))
             {
+                //Console.WriteLine("Calling Flush (2)");
+                Flush();
+                lastTexture = texture;
+                lastTexture.Bind();
+            }
+            else 
+            if (quadsCount >= maxQuadsCount)
+            {
+                //Console.WriteLine("Calling Flush (1)");
+                lastTexture = texture;
+                lastTexture.Bind();
                 Flush();
             }
 
-            AddQuad(position);
-
-            drawCalls++;
-            if (lastTexture != texture)
-            {
-                texture.Bind();
-                Flush();
-            }
+            AddQuad(transform);
         }
 
-        public void DrawSprite(Sprite sprite, Transform position)
+        public void DrawSprite(SpriteRenderer sprite, Transform transform)
         {
-            if (drawCalls >= maxDrawCalls)
+            throw new NotImplementedException();
+            if (quadsCount >= maxQuadsCount)
             {
                 Flush();
             }
-            AddQuad(position);
-
-            drawCalls++;
+            AddQuad(transform);
         }
 
         public void Dispose()

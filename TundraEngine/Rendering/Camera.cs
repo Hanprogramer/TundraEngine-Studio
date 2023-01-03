@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TundraEngine.Classes;
 using TundraEngine.Components;
 
 namespace TundraEngine.Rendering
@@ -33,15 +34,13 @@ namespace TundraEngine.Rendering
             Zoom = 1f;
             if (position == null)
             {
-                Position = new Transform()
-                {
-                    X = 0,//(int)(window.Width / 2f),
-                    Y = (int)(window.Height / 2f)
-                };
+                Position = GameObject.CreateComponent<Transform>(new ComponentProperties());
+                Position.X = 0;//(int)(window.Width / 2f),
+                Position.Y = (int)(window.Height / 2f);
             }
             else
             {
-                Position = (Transform)position;
+                Position = position;
             }
         }
     }

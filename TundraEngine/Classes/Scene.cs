@@ -39,8 +39,9 @@ namespace TundraEngine.Classes
             }
         }
 
-        public void AddObject(GameObject obj) {
+        public GameObject AddObject(GameObject obj) {
             objects.Add(obj);
+            return obj;
         }
 
         public void RemoveObject(GameObject obj) {

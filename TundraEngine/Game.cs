@@ -1,4 +1,5 @@
 ﻿using Silk.NET.SDL;
+using System.Diagnostics;
 using TundraEngine.Classes;
 using TundraEngine.Components;
 
@@ -24,6 +25,12 @@ namespace TundraEngine
         public float Ticks = 0;
         public AssetManager AssetManager;
 
+        private Stopwatch UpdateStopwatch;
+
+        public bool DoUpdateOnSeparateThread = true;
+
+        string? icon; //TODO: better icon loading
+
         public Game(string title, string version, string buildNumber, IGameWindow? window = null)
         {
             Title = title;
@@ -39,43 +46,68 @@ namespace TundraEngine
                 Window = window;
             }
 
-            Window.OnRender += Render;
             AssetManager = new AssetManager(Window);
             Window.OnLoadAssets += () =>
             {
                 AssetManager.LoadTextures();
+                Window.SetIcon(icon);
             };
             GameManager.Game = this;
             GameManager.AssetManager = AssetManager;
             GameManager.GameWindow = Window;
+
+            UpdateStopwatch = new();
         }
 
         public void Start()
         {
             IsRunning = true;
-
+            UpdateStopwatch.Start();
             Window.Initialize();
-            while (IsRunning)
+            if (DoUpdateOnSeparateThread)
             {
-                Update();
+                // Run update on separate thread
+                new System.Threading.Thread(() =>
+                {
+                    while (IsRunning)
+                    {
+                        Update();
+                    }
+                }).Start();
+
+                while (IsRunning)
+                {
+                    Window.PollEvents();
+                }
+            }
+            else {
+                // Run update on main thread
+                while (IsRunning)
+                {
+                    Window.PollEvents();
+                    Update();
+                }
             }
         }
 
         public void Update()
         {
+            var delta = (float)UpdateStopwatch.Elapsed.TotalSeconds;
+            UpdateStopwatch.Restart();
+            Window.Update(delta);
 
-            //TODO: implement real DT
-            Window.PollEvents();
-            if(OnUpdate != null)
-                OnUpdate.Invoke(1);
+            if (OnUpdate != null)
+                OnUpdate.Invoke(delta);
             Ticks++;
-        }
-        public void Render()
-        {
         }
         public void Quit()
         {
             IsRunning = false;
+        }
+
+        public void SetIcon(string v)
+        {
+            icon = v;
         }
     }
 }
