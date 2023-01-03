@@ -7,6 +7,7 @@ namespace TestGame1.Objects
     public class Plane : GameObject
     {
         Transform transform;
+        Camera camera;
         public Plane(Scene scene) : base(scene)
         {
         }
@@ -20,15 +21,8 @@ namespace TestGame1.Objects
         {
             base.Load();
             transform = GetComponent<Transform>();
+            camera = Scene.FindObject<Camera>();
         }
-
-        //public override void Render(Renderer renderer)
-        //{
-        //    base.Render(renderer);
-        //    renderer.Camera.Position = transform;
-        //    renderer.Camera.Zoom = 2;
-        //    renderer.DrawTexture(texture, transform);
-        //}
 
         public override void Update(float dt)
         {
@@ -49,6 +43,7 @@ namespace TestGame1.Objects
             {
                 transform.X += moveSpeed;
             }
+            camera.Position = transform;
         }
     }
 }

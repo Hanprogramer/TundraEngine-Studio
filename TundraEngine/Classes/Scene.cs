@@ -12,7 +12,8 @@ namespace TundraEngine.Classes
         List<GameObject> objects;
         public IGameWindow GameWindow;
         Renderer Renderer { get => GameWindow.Renderer; }
-        public Scene(IGameWindow window) {
+        public Scene(IGameWindow window)
+        {
             objects = new();
             GameWindow = window;
         }
@@ -25,7 +26,8 @@ namespace TundraEngine.Classes
             }
         }
 
-        public void Update(float dt) {
+        public void Update(float dt)
+        {
             for (var i = 0; i < objects.Count; i++)
             {
                 objects[i].Update(dt);
@@ -39,12 +41,14 @@ namespace TundraEngine.Classes
             }
         }
 
-        public GameObject AddObject(GameObject obj) {
+        public GameObject AddObject(GameObject obj)
+        {
             objects.Add(obj);
             return obj;
         }
 
-        public void RemoveObject(GameObject obj) {
+        public void RemoveObject(GameObject obj)
+        {
             objects.Remove(obj);
         }
 
@@ -56,6 +60,16 @@ namespace TundraEngine.Classes
                     return objects[i];
             }
             return null;
+        }
+
+        public T FindObject<T>() where T : GameObject
+        {
+            for (var i = 0; i < objects.Count; i++)
+            {
+                if (objects[i].GetType() == typeof(T))
+                    return (T)objects[i];
+            }
+            throw new Exception("Object of type " + typeof(T).Name + " not found in the scene");
         }
     }
 }

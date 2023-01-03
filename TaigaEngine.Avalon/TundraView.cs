@@ -17,7 +17,7 @@ namespace TundraEngine.Studio
         {
             base.OnOpenGlInit(gl, fb);
             Gl = GL.GetApi(gl.GetProcAddress);
-            Renderer = new Renderer(Gl);
+            Renderer = new Renderer(null, Gl);
         }
 
 

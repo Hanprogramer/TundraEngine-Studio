@@ -1,5 +1,6 @@
 ﻿using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
+using TundraEngine.Classes;
 using TundraEngine.Components;
 
 namespace TundraEngine.Rendering
@@ -26,6 +27,7 @@ namespace TundraEngine.Rendering
 
         // Render stuffs
         public Camera Camera;
+        public Scene Scene;
         public Texture lastTexture;
 
         public RendererFilter RendererFilter = RendererFilter.Nearest;
@@ -61,7 +63,7 @@ namespace TundraEngine.Rendering
         {
             Gl = gl;
             Window = window;
-            Camera = new Camera(window);
+            Camera = (Camera)window.Scene.AddObject(new Camera(window.Scene));
             Initialize();
         }
 
@@ -79,12 +81,6 @@ namespace TundraEngine.Rendering
 
             Shader = new Shader(Gl, DefaultShader.Vertex, DefaultShader.Fragment);
 
-        }
-
-        public Renderer(IWindow window)
-        {
-            Gl = GL.GetApi(window);
-            Initialize();
         }
 
         public unsafe void Clear()
@@ -114,9 +110,6 @@ namespace TundraEngine.Rendering
             drawCalls++;
         }
 
-        public void SetupMatrix()
-        {
-        }
 
         public void Begin()
         {
@@ -127,7 +120,6 @@ namespace TundraEngine.Rendering
             indId = 0;
             drawCalls = 0;
             lastTexture = null;
-            SetupMatrix();
         }
 
         public void Flush()
@@ -153,16 +145,6 @@ namespace TundraEngine.Rendering
 
         private void AddQuad(Transform transform)
         {
-            // Multiplication by zero sometimes causes infinity
-            if (double.IsInfinity(transform.X))
-            {
-                transform.X = 0;
-            }
-            if (double.IsInfinity(transform.Y))
-            {
-                transform.Y = 0;
-            }
-
             float x1 = transform.X - transform.Width / 2;
             float y1 = transform.Y - transform.Height / 2;
             float x2 = transform.X + transform.Width / 2;
@@ -208,22 +190,16 @@ namespace TundraEngine.Rendering
         public unsafe void DrawTexture(Texture texture, Transform transform)
         {
 
-            if (lastTexture == null || (lastTexture != null && texture.Path != lastTexture.Path))
+            if (lastTexture != texture)
             {
-                //Console.WriteLine("Calling Flush (2)");
                 Flush();
                 lastTexture = texture;
                 lastTexture.Bind();
             }
             else 
             if (quadsCount >= maxQuadsCount)
-            {
-                //Console.WriteLine("Calling Flush (1)");
-                lastTexture = texture;
-                lastTexture.Bind();
                 Flush();
-            }
-
+            
             AddQuad(transform);
         }
 

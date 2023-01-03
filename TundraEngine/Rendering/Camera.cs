@@ -11,7 +11,7 @@ using TundraEngine.Components;
 
 namespace TundraEngine.Rendering
 {
-    public class Camera
+    public class Camera : GameObject
     {
         IGameWindow _window;
         public Transform Position { get; set; }
@@ -28,20 +28,13 @@ namespace TundraEngine.Rendering
                 return Matrix4X4.CreateOrthographicOffCenter(left,right,bottom,top, 0.01f,10f) * Matrix4X4.CreateScale(Zoom);
             }
         }
-        public Camera(IGameWindow window, Transform? position=null)
+        public Camera(Scene scene) : base(scene)
         {
-            _window = window;
+            _window = Game.Window;
             Zoom = 1f;
-            if (position == null)
-            {
-                Position = GameObject.CreateComponent<Transform>(new ComponentProperties());
-                Position.X = 0;//(int)(window.Width / 2f),
-                Position.Y = (int)(window.Height / 2f);
-            }
-            else
-            {
-                Position = position;
-            }
+            Position = AddComponent<Transform>();
+            Position.X = 0;
+            Position.Y = 0;
         }
     }
 }
