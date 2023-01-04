@@ -1,14 +1,20 @@
 using Silk.NET.OpenGL;
+using Silk.NET.SDL;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using PixelFormat = Silk.NET.OpenGL.PixelFormat;
+using PixelType = Silk.NET.OpenGL.PixelType;
 
 namespace TundraEngine.Rendering
 {
     public class Texture : IDisposable
     {
         private uint _handle;
-        private GL _gl;
+        private Renderer _renderer;
+        private GL _gl { get => _renderer.Gl; }
         private RendererFilter filter;
+
+        public bool IsLoaded = false;
         public string Path { get; private set; } = "";
 
         public Texture(string path) {
@@ -16,7 +22,8 @@ namespace TundraEngine.Rendering
         }
         public unsafe void Load(Renderer renderer)
         {
-            _gl = renderer.Gl;
+            _renderer = renderer;
+            //_gl = renderer.Gl;
             filter = renderer.RendererFilter;
 
             _handle = _gl.GenTexture();
@@ -40,6 +47,7 @@ namespace TundraEngine.Rendering
                     }
                 });
             }
+            IsLoaded = true;
 
             SetParameters();
 
@@ -48,7 +56,8 @@ namespace TundraEngine.Rendering
         public unsafe void Load(Renderer renderer, Span<byte> data, uint width, uint height)
         {
             //Saving the gl instance.
-            _gl = renderer.Gl;
+            _renderer = renderer;
+            //_gl = renderer.Gl;
             filter = renderer.RendererFilter;
 
             //Generating the opengl handle;
@@ -62,6 +71,7 @@ namespace TundraEngine.Rendering
                 _gl.TexImage2D(TextureTarget.Texture2D, 0, (int)InternalFormat.Rgba, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, d);
                 SetParameters();
             }
+            IsLoaded = true;
         }
 
         private void SetParameters()
@@ -89,6 +99,7 @@ namespace TundraEngine.Rendering
 
         public void Bind(TextureUnit textureSlot = TextureUnit.Texture0)
         {
+            if (_gl == null) throw new Exception("Texture hasn't been loaded yet");
             //When we bind a texture we can choose which textureslot we can bind it to.
             _gl.ActiveTexture(textureSlot);
             _gl.BindTexture(TextureTarget.Texture2D, _handle);

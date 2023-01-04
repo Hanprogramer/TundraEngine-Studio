@@ -94,7 +94,7 @@ namespace TundraEngine
                 {
                     /// Wait until game is really running
                     while (!Game.IsRunning) { }
-                    OnLoadAssets.Invoke();
+                    OnLoadAssets.Invoke(Renderer);
                 }
                 IsInitialized = true;
 
@@ -107,7 +107,7 @@ namespace TundraEngine
                     Renderer?.Clear();
 
                     Renderer?.Begin();
-                    Scene.Render();
+                    Scene.Render(Renderer);
                     Renderer?.End();
 
                     _window?.SwapBuffers();

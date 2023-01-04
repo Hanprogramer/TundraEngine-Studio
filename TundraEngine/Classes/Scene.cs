@@ -11,7 +11,6 @@ namespace TundraEngine.Classes
     {
         List<GameObject> objects;
         public IGameWindow GameWindow;
-        Renderer Renderer { get => GameWindow.Renderer; }
         public Scene(IGameWindow window)
         {
             objects = new();
@@ -22,7 +21,7 @@ namespace TundraEngine.Classes
         {
             for (var i = 0; i < objects.Count; i++)
             {
-                objects[i].Load();
+                objects[i].Initialize();
             }
         }
 
@@ -33,11 +32,11 @@ namespace TundraEngine.Classes
                 objects[i].Update(dt);
             }
         }
-        public void Render()
+        public void Render(Renderer renderer)
         {
             for (var i = 0; i < objects.Count; i++)
             {
-                objects[i].Render(Renderer);
+                objects[i].Render(renderer);
             }
         }
 

@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TundraEngine.Studio
+{
+    /// <summary>
+    /// Helper class to communicate AvalonaUI and Tundra
+    /// </summary>
+    public static class TundraAvalon
+    {
+        /// <summary>
+        /// Translates Avalonia Key class to Tundra/Silk.NET key
+        /// </summary>
+        /// <param name="key">Avalona Key</param>
+        /// <returns>Tundra/Silk.NET key</returns>
+        public static TundraEngine.Classes.Key? TranslateAvaloniaKeys(Avalonia.Input.Key key) {
+            string name = Enum.GetName(typeof(Avalonia.Input.Key), key)!;
+            if (Enum.TryParse<TundraEngine.Classes.Key>(name, false, out var result))
+                return result;
+            else
+            {
+                Console.WriteLine("Key can't be translated: " + name);
+                return null;
+            }
+        }
+    }
+}

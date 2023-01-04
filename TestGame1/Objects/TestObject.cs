@@ -17,9 +17,9 @@ namespace TestGame1.Objects
         {
         }
 
-        public override void Load()
+        public override void Initialize()
         {
-            base.Load();
+            base.Initialize();
             transform = GetComponent<Transform>();
         }
 

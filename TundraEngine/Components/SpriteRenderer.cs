@@ -30,7 +30,14 @@ namespace TundraEngine.Components
         public override void Render(Renderer Renderer)
         {
             base.Render(Renderer);
-            Renderer.DrawTexture(Texture, Transform);
+            if (Renderer == null) {
+                Console.WriteLine("Renderer is null");
+                return;
+            }
+            if (Texture.IsLoaded)
+                Renderer.DrawTexture(Texture, Transform);
+            //else
+                //Texture.Load(Renderer);
         }
 
         public override void Update(float dt)

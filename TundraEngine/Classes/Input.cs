@@ -515,7 +515,7 @@ namespace TundraEngine.Classes
         }
         public void Release(Key key)
         {
-            pressedKeys.Remove(key);
+            pressedKeys.RemoveAll((_key) => key.Equals(_key));
         }
         public bool IsKeyPressed(Key key)
         {

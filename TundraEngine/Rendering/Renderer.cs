@@ -1,5 +1,8 @@
-﻿using Silk.NET.OpenGL;
+﻿using Silk.NET.Maths;
+using Silk.NET.OpenGL;
+using Silk.NET.SDL;
 using Silk.NET.Windowing;
+using System.Numerics;
 using TundraEngine.Classes;
 using TundraEngine.Components;
 
@@ -26,7 +29,6 @@ namespace TundraEngine.Rendering
         public IGameWindow Window;
 
         // Render stuffs
-        public Camera Camera;
         public Scene Scene;
         public Texture lastTexture;
 
@@ -63,12 +65,12 @@ namespace TundraEngine.Rendering
         {
             Gl = gl;
             Window = window;
-            Camera = (Camera)window.Scene.AddObject(new Camera(window.Scene));
             Initialize();
         }
 
         public void Initialize()
         {
+
 
             //Instantiating our new abstractions
             Ebo = new BufferObject<uint>(Gl, Indices, BufferTargetARB.ElementArrayBuffer, 0);
@@ -103,11 +105,14 @@ namespace TundraEngine.Rendering
 
             Shader.SetUniform("uTexture0", 0);
             //lastTexture.Bind();
-
-            Shader.SetUniform("uProjection", Camera.ProjectionMatrix);
             Gl.DrawElements(PrimitiveType.Triangles, indId, DrawElementsType.UnsignedInt, null);
 
             drawCalls++;
+        }
+
+        public void SetProjectionMatrix(Matrix4X4<float> matrix)
+        {
+            Shader.SetUniform("uProjection", matrix);
         }
 
 

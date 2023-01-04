@@ -33,7 +33,7 @@ namespace TundraEngine.Classes
         public GameObject(Scene scene)
         {
             Scene = scene;
-            if (Game == null)
+            if (Game != null)
             {
                 Game = scene.GameWindow.Game;
                 AssetManager = Game.AssetManager;
@@ -45,7 +45,7 @@ namespace TundraEngine.Classes
         /// Do parts that needs assets loading safely
         /// TODO: do a better way to load assets
         /// </summary>
-        public virtual void Load()
+        public virtual void Initialize()
         {
             for(int i = 0; i < Components.Count; i++)
                 Components[i].Initialize();

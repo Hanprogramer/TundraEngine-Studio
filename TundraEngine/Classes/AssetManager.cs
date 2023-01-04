@@ -9,15 +9,17 @@ namespace TundraEngine.Classes
     {
         public Dictionary<string, Texture> Textures;
         public IGameWindow Window;
-        public Renderer Renderer { get => Window.Renderer; }
+        public Renderer Renderer;
 
         public AssetManager(IGameWindow Window)
         {
             Textures = new();
             this.Window = Window;
+            Renderer = Window.Renderer;
         }
-        public void LoadTextures()
+        public void LoadTextures(Renderer renderer)
         {
+            Renderer = renderer;
             foreach (var key in Textures.Keys)
             {
                 Console.WriteLine("Loading texture " + key);

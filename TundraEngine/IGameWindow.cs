@@ -7,7 +7,7 @@ namespace TundraEngine
     public interface IGameWindow
     {
 
-        public delegate void OnLoadAssetsHandler();
+        public delegate void OnLoadAssetsHandler(Renderer renderer);
         public event OnLoadAssetsHandler OnLoadAssets;
 
         public delegate void OnUpdateHandler(float dt);

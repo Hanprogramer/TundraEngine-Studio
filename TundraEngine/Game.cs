@@ -1,7 +1,7 @@
-﻿using Silk.NET.SDL;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using TundraEngine.Classes;
 using TundraEngine.Components;
+using TundraEngine.Rendering;
 
 namespace TundraEngine
 {
@@ -16,11 +16,12 @@ namespace TundraEngine
         public bool IsRunning = false;
 
         public delegate void OnUpdateHandler(double dt);
-
         public OnUpdateHandler OnUpdate;
-        public Event OnRender;
-        public Event OnInitialize;
-        public Event OnClosed;
+
+        public delegate void GameEvent();
+        public GameEvent OnRender;
+        public GameEvent OnInitialize;
+        public GameEvent OnClosed;
 
         public float Ticks = 0;
         public AssetManager AssetManager;
@@ -37,33 +38,34 @@ namespace TundraEngine
             Version = version;
             BuildNumber = buildNumber;
             if (window == null)
-            {
                 // If no Window, create one
                 Window = new GameWindow(this);
-            }
             else
-            {
                 Window = window;
-            }
 
             AssetManager = new AssetManager(Window);
-            Window.OnLoadAssets += () =>
+            Window.OnLoadAssets += (Renderer renderer) =>
             {
-                AssetManager.LoadTextures();
-                Window.SetIcon(icon);
+                AssetManager.LoadTextures(renderer);
+                if (icon != null)
+                    Window.SetIcon(icon);
             };
             GameManager.Game = this;
             GameManager.AssetManager = AssetManager;
             GameManager.GameWindow = Window;
 
+            GameObject.Game = this;
+
             UpdateStopwatch = new();
         }
 
-        public void Start()
+        public void Start(bool shouldCreateEventsLoop = false, bool shouldInitialize = true)
         {
+            //OnStart();
             IsRunning = true;
             UpdateStopwatch.Start();
-            Window.Initialize();
+            if (shouldInitialize)
+                Window.Initialize();
             if (DoUpdateOnSeparateThread)
             {
                 // Run update on separate thread
@@ -75,12 +77,14 @@ namespace TundraEngine
                     }
                 }).Start();
 
-                while (IsRunning)
-                {
-                    Window.PollEvents();
-                }
+                if (shouldCreateEventsLoop)
+                    while (IsRunning)
+                    {
+                        Window.PollEvents();
+                    }
             }
-            else {
+            else
+            {
                 // Run update on main thread
                 while (IsRunning)
                 {
@@ -109,5 +113,7 @@ namespace TundraEngine
         {
             icon = v;
         }
+
+        public virtual void OnStart() { }
     }
 }
