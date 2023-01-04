@@ -1,5 +1,4 @@
-﻿using Silk.NET.OpenGL;
-using TundraEngine.Classes;
+﻿using TundraEngine.Classes;
 using TundraEngine.Rendering;
 using Texture = TundraEngine.Rendering.Texture;
 
@@ -12,7 +11,8 @@ namespace TundraEngine.Components
     {
         public Texture Texture;
         public Transform Transform;
-        public SpriteRenderer(GameObject gameObject, ComponentProperties props) : base(gameObject, props) {
+        public SpriteRenderer(GameObject gameObject, ComponentProperties props) : base(gameObject, props)
+        {
             //Texture = props.GetValue<Texture>("Texture");
             Transform = gameObject.GetComponent<Transform>();
         }
@@ -30,14 +30,15 @@ namespace TundraEngine.Components
         public override void Render(Renderer Renderer)
         {
             base.Render(Renderer);
-            if (Renderer == null) {
+            if (Renderer == null)
+            {
                 Console.WriteLine("Renderer is null");
                 return;
             }
             if (Texture.IsLoaded)
                 Renderer.DrawTexture(Texture, Transform);
             //else
-                //Texture.Load(Renderer);
+            //Texture.Load(Renderer);
         }
 
         public override void Update(float dt)

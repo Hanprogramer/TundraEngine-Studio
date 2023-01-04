@@ -7,7 +7,8 @@ namespace TundraEngine.Rendering
     public class Image
     {
         public Image() { }
-        public unsafe static RawImage Load(string filename) {
+        public unsafe static RawImage Load(string filename)
+        {
             using var image = SixLabors.ImageSharp.Image.Load<Rgba32>(filename);
             var bytes = new byte[image.Width * image.Height * sizeof(Rgba32)];
             image.ProcessPixelRows
@@ -20,7 +21,7 @@ namespace TundraEngine.Rendering
                     }
                 }
             );
-           return new RawImage(image.Width, image.Height, bytes);
+            return new RawImage(image.Width, image.Height, bytes);
         }
     }
 }

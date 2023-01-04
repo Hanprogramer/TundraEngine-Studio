@@ -1,9 +1,8 @@
-﻿using System;
-using Avalonia.Controls;
-using Avalonia.Input;
+﻿using Avalonia.Controls;
 using Avalonia.Logging;
 using Avalonia.Media;
 using Avalonia.OpenGL.Imaging;
+using System;
 using static Avalonia.OpenGL.GlConsts;
 
 namespace Avalonia.OpenGL.Controls

@@ -1,8 +1,5 @@
-﻿using TundraEngine.Rendering;
+﻿using System.Reflection;
 using TundraEngine.Components;
-using Silk.NET.GLFW;
-using System.Reflection;
-using Silk.NET.SDL;
 using Renderer = TundraEngine.Rendering.Renderer;
 
 namespace TundraEngine.Classes
@@ -47,7 +44,7 @@ namespace TundraEngine.Classes
         /// </summary>
         public virtual void Initialize()
         {
-            for(int i = 0; i < Components.Count; i++)
+            for (int i = 0; i < Components.Count; i++)
                 Components[i].Initialize();
         }
 
@@ -58,7 +55,7 @@ namespace TundraEngine.Classes
         /// <param name="dt">Delta time, time elapsed since last frame</param>
         public virtual void Update(float dt)
         {
-            for(int i = 0; i < Components.Count; i++)
+            for (int i = 0; i < Components.Count; i++)
                 Components[i].Update(dt);
         }
 
@@ -70,7 +67,7 @@ namespace TundraEngine.Classes
         {
             if (Renderer == null)
                 Renderer = renderer;
-            for(int i = 0; i < Components.Count; i++)
+            for (int i = 0; i < Components.Count; i++)
                 Components[i].Render(renderer);
         }
 
@@ -79,13 +76,13 @@ namespace TundraEngine.Classes
         /// </summary>
         public virtual void Destroy()
         {
-            for(int i = 0; i < Components.Count; i++)
+            for (int i = 0; i < Components.Count; i++)
                 Components[i].Destroy();
         }
 
         public T GetComponent<T>() where T : Component
         {
-            for(int i = 0; i < Components.Count; i++)
+            for (int i = 0; i < Components.Count; i++)
             {
                 if (Components[i].GetType() == typeof(T))
                 {

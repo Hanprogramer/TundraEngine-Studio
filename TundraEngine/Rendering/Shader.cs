@@ -1,6 +1,5 @@
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
-using System.IO;
 namespace TundraEngine.Rendering
 {
     public class Shader : IDisposable

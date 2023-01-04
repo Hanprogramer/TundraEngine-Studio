@@ -1,18 +1,12 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using AvaloniaEdit.Document;
-using AvaloniaEdit;
-using HarfBuzzSharp;
-using Microsoft.Win32;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-using System.Resources;
-using System;
-using System.Runtime.InteropServices;
 using Avalonia.Media;
-using TextMateSharp.Grammars;
+using AvaloniaEdit;
 using AvaloniaEdit.TextMate;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using TextMateSharp.Grammars;
 
 namespace TundraEngine.Studio
 {

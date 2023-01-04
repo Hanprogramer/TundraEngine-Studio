@@ -1,6 +1,4 @@
 using Silk.NET.OpenGL;
-using Silk.NET.SDL;
-using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using PixelFormat = Silk.NET.OpenGL.PixelFormat;
 using PixelType = Silk.NET.OpenGL.PixelType;
@@ -17,7 +15,8 @@ namespace TundraEngine.Rendering
         public bool IsLoaded = false;
         public string Path { get; private set; } = "";
 
-        public Texture(string path) {
+        public Texture(string path)
+        {
             Path = path;
         }
         public unsafe void Load(Renderer renderer)
@@ -105,7 +104,8 @@ namespace TundraEngine.Rendering
             _gl.BindTexture(TextureTarget.Texture2D, _handle);
         }
 
-        public void Unbind() {
+        public void Unbind()
+        {
             _gl.BindTexture(TextureTarget.Texture2D, 0);
         }
 

@@ -140,8 +140,8 @@ namespace TundraEngine
 
         public void Update(float dt)
         {
-            if(IsInitialized)
-            Scene.Update(dt);
+            if (IsInitialized)
+                Scene.Update(dt);
         }
 
         public void SetIcon(string path)

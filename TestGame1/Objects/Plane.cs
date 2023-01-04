@@ -28,7 +28,8 @@ namespace TestGame1.Objects
         {
             base.Update(dt);
             float moveSpeed = 150f * dt;
-            if (Input.IsKeyPressed(Key.W)){
+            if (Input.IsKeyPressed(Key.W))
+            {
                 transform.Y += moveSpeed;
             }
             if (Input.IsKeyPressed(Key.S))

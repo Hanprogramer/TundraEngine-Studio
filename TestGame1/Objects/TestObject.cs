@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TundraEngine.Classes;
+﻿using TundraEngine.Classes;
 using TundraEngine.Components;
-using TundraEngine.Rendering;
 
 namespace TestGame1.Objects
 {
@@ -26,7 +20,7 @@ namespace TestGame1.Objects
         public override void Update(float dt)
         {
             base.Update(dt);
-            ticks += 1*dt * 10000f;
+            ticks += 1 * dt * 10000f;
             transform.X = MathF.Sin((ticks + transform.Y * 100000) / 10000f) * 100f;
             //Console.WriteLine(transform.X);
         }

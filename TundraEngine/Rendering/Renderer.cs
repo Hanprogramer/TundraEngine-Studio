@@ -1,14 +1,12 @@
 ﻿using Silk.NET.Maths;
 using Silk.NET.OpenGL;
-using Silk.NET.SDL;
-using Silk.NET.Windowing;
-using System.Numerics;
 using TundraEngine.Classes;
 using TundraEngine.Components;
 
 namespace TundraEngine.Rendering
 {
-    public enum RendererFilter {
+    public enum RendererFilter
+    {
         Nearest,
         Linear
     }
@@ -201,10 +199,10 @@ namespace TundraEngine.Rendering
                 lastTexture = texture;
                 lastTexture.Bind();
             }
-            else 
+            else
             if (quadsCount >= maxQuadsCount)
                 Flush();
-            
+
             AddQuad(transform);
         }
 

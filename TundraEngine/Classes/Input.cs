@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TundraEngine.Classes
+﻿namespace TundraEngine.Classes
 {
     //
     // Summary:
@@ -525,12 +519,14 @@ namespace TundraEngine.Classes
     public static class Input
     {
         static InputManager _input;
-        public static InputManager InputManager { 
-            get { 
-                if(_input == null)
+        public static InputManager InputManager
+        {
+            get
+            {
+                if (_input == null)
                     _input = new InputManager();
-                return _input; 
-            } 
+                return _input;
+            }
         }
 
         public static bool IsKeyPressed(Key key)

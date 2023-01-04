@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TundraEngine.Components
+﻿namespace TundraEngine.Components
 {
     public class ComponentProperties
     {
         Dictionary<string, dynamic> Values;
-        public ComponentProperties() {
+        public ComponentProperties()
+        {
             Values = new();
         }
 
@@ -20,7 +15,8 @@ namespace TundraEngine.Components
         /// <param name="name">Name of the property</param>
         /// <returns>Value of the property</returns>
         /// <exception cref="Exception">When the value is not found</exception>
-        public T GetValue<T>(string name) {
+        public T GetValue<T>(string name)
+        {
             Values.TryGetValue(name, out var value);
             if (value == null)
                 throw new Exception("Can't find component property: " + name);

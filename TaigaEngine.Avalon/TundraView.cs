@@ -4,7 +4,6 @@ using Avalonia.OpenGL;
 using Avalonia.OpenGL.Controls;
 using Avalonia.Threading;
 using Silk.NET.OpenGL;
-using System;
 using System.Runtime.InteropServices;
 using TundraEngine.Classes;
 using TundraEngine.Rendering;
