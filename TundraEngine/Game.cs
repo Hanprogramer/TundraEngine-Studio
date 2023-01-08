@@ -4,7 +4,7 @@ using TundraEngine.Rendering;
 
 namespace TundraEngine
 {
-    public class Game
+    public class Game : IDisposable
     {
         public string Title { get; }
         public string Version { get; }
@@ -21,6 +21,8 @@ namespace TundraEngine
         public GameEvent OnRender;
         public GameEvent OnInitialize;
         public GameEvent OnClosed;
+
+        public System.Threading.Thread? UpdateThread;
 
         public float Ticks = 0;
         public AssetManager AssetManager;
@@ -68,13 +70,14 @@ namespace TundraEngine
             if (DoUpdateOnSeparateThread)
             {
                 // Run update on separate thread
-                new System.Threading.Thread(() =>
+                UpdateThread = new System.Threading.Thread(() =>
                 {
                     while (IsRunning)
                     {
                         Update();
                     }
-                }).Start();
+                });
+                UpdateThread.Start();
 
                 if (shouldCreateEventsLoop)
                     while (IsRunning)
@@ -106,6 +109,7 @@ namespace TundraEngine
         public void Quit()
         {
             IsRunning = false;
+            Dispose();
         }
 
         public void SetIcon(string v)
@@ -114,5 +118,14 @@ namespace TundraEngine
         }
 
         public virtual void OnStart() { }
+
+        public void Dispose()
+        {
+            if (UpdateThread != null && UpdateThread.ThreadState == System.Threading.ThreadState.Running)
+            {
+                Console.WriteLine("Stopping update thread");
+                UpdateThread?.Join();
+            }
+        }
     }
 }

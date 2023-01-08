@@ -5,7 +5,7 @@ using TundraEngine.Rendering;
 
 public class TestGame1Game : Game
 {
-    bool testUpdateSpeed = true;
+    bool testUpdateSpeed = false;
     int testCount = 50000;
     public TestGame1Game(IGameWindow window) : base("My Game", "v0.0.1", "1234412", window)
     {

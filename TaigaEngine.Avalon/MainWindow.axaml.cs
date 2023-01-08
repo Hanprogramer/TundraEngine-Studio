@@ -6,6 +6,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using AvaloniaEdit;
 using AvaloniaEdit.TextMate;
+using HarfBuzzSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +27,10 @@ namespace TundraEngine.Studio
         public string ProjectPath = "D:\\Programming\\C#\\TaigaEngine.Avalon\\TestGame1\\project.json";
         public static FontFamily CodeFamily = FontFamily.Parse("avares://TundraEngine.Studio/Assets/JetBrainsMono-Regular.ttf#JetBrains Mono");
         public static MainWindow? Instance;
+        private Runner.Runner Runner;
+
+
+        public EditorTab? GameTab = null;
 
         public TundraProject CurrentProject;
         public MainWindow()
@@ -44,12 +49,32 @@ namespace TundraEngine.Studio
         }
         public void RunGame(string dllPath)
         {
+            PlayBtn.IsEnabled = false;
+            PauseBtn.IsEnabled = true;
+            StopBtn.IsEnabled = true;
             var tab = new EditorTab("Game", dllPath, EditorType.Game);
             var tv = tab.Content as TundraView;
-            var runner = new Runner.Runner(dllPath, tv);
-            tv!.Game = runner.Game;
+            Runner = new Runner.Runner(dllPath, tv);
+            tv!.Game = Runner.Game;
             ((MainWindowViewModel)DataContext!).Tabs.Add(tab);
             FileTabs.SelectedItem = tab;
+            GameTab = tab;
+        }
+
+        public void OnStopGame(object? sender, RoutedEventArgs e)
+        {
+            if (GameTab == null) return;
+            var tv = (GameTab.Content as TundraView)!;
+
+            tv.Stop();
+
+            Runner?.Destroy();
+            ((MainWindowViewModel)DataContext!).Tabs.Remove(GameTab);
+            GameTab = null;
+            PlayBtn.IsEnabled = true;
+            PauseBtn.IsEnabled = false;
+            StopBtn.IsEnabled = false;
+            GC.Collect();
         }
 
         public void _Log(object o)
@@ -78,7 +103,11 @@ namespace TundraEngine.Studio
         {
             EditorTab? el = (args.Source as Button)!.DataContext! as EditorTab;
             if (el != null)
+            {
+                if (el.EditorType == EditorType.Game)
+                    OnStopGame(null, args);
                 ((MainWindowViewModel)DataContext!).Tabs.Remove(el);
+            }
         }
 
         public async void OnPlayBtnClicked(object? s, RoutedEventArgs args)
@@ -90,7 +119,14 @@ namespace TundraEngine.Studio
                 {
                     Log(d.Description);
                 }
-                RunGame(result.DllPath);
+                if (result.Success)
+                    RunGame(result.DllPath);
+                else
+                {
+                    PlayBtn.IsEnabled = true;
+                    PauseBtn.IsEnabled = false;
+                    StopBtn.IsEnabled = false;
+                }
             }
         }
 

@@ -74,5 +74,13 @@ namespace TundraEngine.Classes
             }
             return null;
         }
+
+        public void Dispose()
+        {
+            for (var i = 0; i < objects.Count; i++)
+            {
+                objects[i].Destroy();
+            }
+        }
     }
 }

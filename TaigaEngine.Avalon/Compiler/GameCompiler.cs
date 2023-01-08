@@ -42,13 +42,14 @@ namespace TundraEngine.Studio.Compiler
     }
     public class GameCompiler
     {
+        public static int _buildNumber = 0;
         public static async Task<CompileDiagnostics?> Compile(TundraProject project)
         {
             if (!MSBuildLocator.IsRegistered)
                 MSBuildLocator.RegisterDefaults();
-
+            
             CompileDiagnostics diagnostics = new();
-            var outputPath = Path.Join(project.Path, "bin", "TundraGame.dll");
+            var outputPath = Path.Join(project.Path, "bin", $"TundraGame{_buildNumber++}.dll");
             var result = await CompileSolution(Path.Join(project.Path, project.CSProject), outputPath);
             if (result == null) return null;
             foreach (var d in result.Diagnostics)
@@ -72,8 +73,10 @@ namespace TundraEngine.Studio.Compiler
         {
             using (var workspace = MSBuildWorkspace.Create())
             {
-                var project = await workspace.OpenProjectAsync(solutionUrl);
-                var compilation = await project.GetCompilationAsync();
+                if (File.Exists(outputPath))
+                    File.Delete(outputPath);
+                Project project = await workspace.OpenProjectAsync(solutionUrl);
+                Compilation? compilation = await project.GetCompilationAsync();
                 if (compilation == null)
                 {
                     Console.WriteLine("Can't get compilation target for " + solutionUrl);
@@ -84,6 +87,8 @@ namespace TundraEngine.Studio.Compiler
                 {
                     Console.WriteLine(d);
                 }
+                workspace.CloseSolution();
+                workspace.Dispose();
                 return result;
             }
         }

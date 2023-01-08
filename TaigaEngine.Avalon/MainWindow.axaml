@@ -67,10 +67,10 @@
 				<Button Name="PlayBtn" Click="OnPlayBtnClicked">
 					<svg:Svg Path="Assets/play_white.svg" Width="16" Height="16"/>
 				</Button>
-				<Button Name="PauseBtn">
+				<Button Name="PauseBtn" IsEnabled="false">
 					<svg:Svg Path="Assets/pause_white.svg" Width="16" Height="16"/>
 				</Button>
-				<Button Name="StopBtn">
+				<Button Name="StopBtn" IsEnabled="false" Click="OnStopGame">
 					<svg:Svg Path="Assets/stop_white.svg" Width="16" Height="16"/>
 				</Button>
 			</StackPanel>

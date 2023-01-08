@@ -30,6 +30,9 @@ namespace TundraEngine.Studio.Controls
 
         public bool GameStarted = false;
 
+        public delegate void OnGameStartedHandler();
+        public event OnGameStartedHandler? OnGameStarted;
+
         protected override void OnOpenGlInit(GlInterface gl, int fb)
         {
             base.OnOpenGlInit(gl, fb);
@@ -41,15 +44,26 @@ namespace TundraEngine.Studio.Controls
             {
                 Scene = new Scene(this);
                 Start();
+                OnGameStarted?.Invoke();
             }
         }
 
         public void Start()
         {
+            if (Game == null) {
+                Console.WriteLine("Game is null");
+                return;
+            }
             GameStarted = true;
             Game.OnStart();
             OnLoadAssets?.Invoke(Renderer);
             Game.Start();
+        }
+
+        public void Stop()
+        {
+            Game.Quit();
+            Game = null;
         }
 
 
@@ -79,11 +93,11 @@ namespace TundraEngine.Studio.Controls
                 (this as IGameWindow).IsInitialized = true;
                 // Flips the Camera on Y Axis, idk why though
                 var cam = Scene.FindObjectOrNull<Camera>();
-                if(cam != null)
+                if (cam != null)
                     cam.FlipY = true;
                 ClipToBounds = true;
             }
-            
+
             var bound = GetActualBounds();
             Renderer?.Clear();
             Gl?.Viewport(0, 0, (uint)bound.Width, (uint)bound.Height);
