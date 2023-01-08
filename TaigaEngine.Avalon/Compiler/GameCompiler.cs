@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.MSBuild;
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -12,6 +11,9 @@ using TundraEngine.Classes;
 
 namespace TundraEngine.Studio.Compiler
 {
+    /// <summary>
+    /// Compiler diagnostic type
+    /// </summary>
     public enum CompileDiagnosticsItemType
     {
         Error,
@@ -32,26 +34,43 @@ namespace TundraEngine.Studio.Compiler
         }
     }
 
-    public class CompileDiagnostics {
+    public class CompileDiagnostics
+    {
         public List<CompileDiagnosticsItem> Items;
         public bool Success = false;
         public string DllPath = "";
-        public CompileDiagnostics() {
+        public CompileDiagnostics()
+        {
             Items = new();
         }
     }
     public class GameCompiler
     {
         public static int _buildNumber = 0;
+        /// <summary>
+        /// Compiles the game project
+        /// </summary>
+        /// <param name="project"></param>
+        /// <returns></returns>
         public static async Task<CompileDiagnostics?> Compile(TundraProject project)
         {
+            // Register MSBuild variables
             if (!MSBuildLocator.IsRegistered)
                 MSBuildLocator.RegisterDefaults();
-            
+
+            // Create diagnostic result 
             CompileDiagnostics diagnostics = new();
+
+            // Output path for the dll
+            // build number needed because we still locking the previous build's dll (if any)
             var outputPath = Path.Join(project.Path, "bin", $"TundraGame{_buildNumber++}.dll");
-            var result = await CompileSolution(Path.Join(project.Path, project.CSProject), outputPath);
+
+            // Compile the solution/project
+            var result = await CompileCSProject(Path.Join(project.Path, project.CSProject), outputPath);
+
             if (result == null) return null;
+
+            // List the diagnostics as TundraEngine Studio's diagnostics
             foreach (var d in result.Diagnostics)
             {
                 if (d.Severity == DiagnosticSeverity.Error)
@@ -64,29 +83,47 @@ namespace TundraEngine.Studio.Compiler
                 Console.WriteLine("Build was successful");
             else
                 Console.WriteLine("Build was failed");
+
+            // Set the success state and the dllpath of the output
             diagnostics.Success = result.Success;
-            diagnostics.DllPath = result.Success? outputPath : "";
+            diagnostics.DllPath = result.Success ? outputPath : "";
             return diagnostics;
         }
 
-        private static async Task<EmitResult?> CompileSolution(string solutionUrl, string outputPath)
+        /// <summary>
+        /// Compile the project
+        /// </summary>
+        /// <param name="projectPath"></param>
+        /// <param name="outputDllPath"></param>
+        /// <returns></returns>
+        private static async Task<EmitResult?> CompileCSProject(string projectPath, string outputDllPath)
         {
             using (var workspace = MSBuildWorkspace.Create())
             {
-                if (File.Exists(outputPath))
-                    File.Delete(outputPath);
-                Project project = await workspace.OpenProjectAsync(solutionUrl);
+                // Delete output dll if exists
+                if (File.Exists(outputDllPath))
+                    File.Delete(outputDllPath);
+
+                // Open the project
+                Project project = await workspace.OpenProjectAsync(projectPath);
                 Compilation? compilation = await project.GetCompilationAsync();
+
                 if (compilation == null)
                 {
-                    Console.WriteLine("Can't get compilation target for " + solutionUrl);
+                    Console.WriteLine("Can't get compilation target for " + projectPath);
                     return null;
                 }
-                var result = compilation.Emit(outputPath);
+
+                // Run compilation
+                var result = compilation.Emit(outputDllPath);
+
+                // List diagnostics
                 foreach (var d in result.Diagnostics)
                 {
                     Console.WriteLine(d);
                 }
+
+                // Cleanup
                 workspace.CloseSolution();
                 workspace.Dispose();
                 return result;

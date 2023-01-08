@@ -23,6 +23,12 @@ namespace TundraEngine.Classes
             Path = path;
         }
 
+        /// <summary>
+        /// Parse a project.json file
+        /// </summary>
+        /// <param name="projectJsonPath"></param>
+        /// <returns>the project</returns>
+        /// <exception cref="Exception">If parsing the json failed</exception>
         public static TundraProject Parse(string projectJsonPath)
         {
             var content = File.ReadAllText(projectJsonPath);

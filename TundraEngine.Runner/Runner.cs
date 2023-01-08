@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.Loader;
+﻿using System.Runtime.Loader;
 
 namespace TundraEngine.Runner
 {
@@ -35,7 +33,7 @@ namespace TundraEngine.Runner
         /// Run the game from DLL path
         /// </summary>
         /// <param name="path"></param>
-        public Runner(string path, string? mainGameClass=null, IGameWindow? window = null)
+        public Runner(string path, string? mainGameClass = null, IGameWindow? window = null)
         {
             Console.WriteLine(path);
             CreateGameFromAssembly(path, mainGameClass, window);

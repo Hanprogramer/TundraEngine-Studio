@@ -50,7 +50,8 @@ namespace TundraEngine.Studio.Controls
 
         public void Start()
         {
-            if (Game == null) {
+            if (Game == null)
+            {
                 Console.WriteLine("Game is null");
                 return;
             }
