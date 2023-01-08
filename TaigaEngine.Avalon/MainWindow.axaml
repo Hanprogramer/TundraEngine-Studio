@@ -85,7 +85,7 @@
 							<DataTemplate>
 								<StackPanel Orientation="Horizontal"   Margin="10,0" VerticalAlignment="Stretch">
 									<TextBlock Text="{Binding Header}" VerticalAlignment="Center"/>
-									<Button Click="FileClose" Padding="2,2" Margin="10,0,0,0" Background="Transparent">
+									<Button Click="OnFileClose" Padding="2,2" Margin="10,0,0,0" Background="Transparent">
 										<svg:Svg Path="Assets/close_white.svg" Width="16" Height="16"/>
 									</Button>
 								</StackPanel>
