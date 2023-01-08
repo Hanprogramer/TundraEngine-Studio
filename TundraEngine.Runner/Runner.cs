@@ -35,10 +35,10 @@ namespace TundraEngine.Runner
         /// Run the game from DLL path
         /// </summary>
         /// <param name="path"></param>
-        public Runner(string path, IGameWindow? window = null)
+        public Runner(string path, string? mainGameClass=null, IGameWindow? window = null)
         {
             Console.WriteLine(path);
-            CreateGameFromAssembly(path, window);
+            CreateGameFromAssembly(path, mainGameClass, window);
         }
 
         public Game CreateGame(Type type, IGameWindow? window = null)
@@ -76,14 +76,24 @@ namespace TundraEngine.Runner
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
-        void CreateGameFromAssembly(string assemblyPath, IGameWindow? window)
+        void CreateGameFromAssembly(string assemblyPath, string? mainGameClass = null, IGameWindow? window = null)
         {
             var asl = new AssemblyLoadContext("GameLoader", true);
             var assm = asl.LoadFromAssemblyPath(assemblyPath);
-            var type = assm.GetType("TestGame1Game");
-            Console.WriteLine("Creating game object from " + type.Assembly.Location);
+
+            if (mainGameClass == null)
+                foreach (var t in assm.GetTypes())
+                {
+                    if (t.BaseType == typeof(Game))
+                    {
+                        mainGameClass = t.Name;
+                        break;
+                    }
+                }
+            var type = assm.GetType(mainGameClass);
             if (type == null) throw new Exception("Can't find the game class");
-            Game = CreateGame(type,window);
+            Console.WriteLine("Creating game object from " + type.Assembly.Location);
+            Game = CreateGame(type, window);
             asl.Unload();
         }
 

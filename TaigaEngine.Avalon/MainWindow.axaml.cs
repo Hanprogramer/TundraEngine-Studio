@@ -54,7 +54,7 @@ namespace TundraEngine.Studio
             StopBtn.IsEnabled = true;
             var tab = new EditorTab("Game", dllPath, EditorType.Game);
             var tv = tab.Content as TundraView;
-            Runner = new Runner.Runner(dllPath, tv);
+            Runner = new Runner.Runner(dllPath, window:tv);
             tv!.Game = Runner.Game;
             ((MainWindowViewModel)DataContext!).Tabs.Add(tab);
             FileTabs.SelectedItem = tab;
