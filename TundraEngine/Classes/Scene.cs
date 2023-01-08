@@ -65,5 +65,14 @@ namespace TundraEngine.Classes
             }
             throw new Exception("Object of type " + typeof(T).Name + " not found in the scene");
         }
+        public T? FindObjectOrNull<T>() where T : GameObject
+        {
+            for (var i = 0; i < objects.Count; i++)
+            {
+                if (objects[i].GetType() == typeof(T))
+                    return (T)objects[i];
+            }
+            return null;
+        }
     }
 }

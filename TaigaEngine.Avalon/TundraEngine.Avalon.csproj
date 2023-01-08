@@ -58,6 +58,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\TestGame1\TestGame1.csproj" />
+		<ProjectReference Include="..\TundraEngine.Runner\TundraEngine.Runner.csproj" />
 		<ProjectReference Include="..\TundraEngine\TundraEngine.csproj" />
 	</ItemGroup>
 	<ItemGroup>

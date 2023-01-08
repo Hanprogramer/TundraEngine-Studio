@@ -3,6 +3,7 @@ using Avalonia.Input;
 using Avalonia.OpenGL;
 using Avalonia.Threading;
 using Silk.NET.OpenGL;
+using System;
 using System.Runtime.InteropServices;
 using TundraEngine.Classes;
 using TundraEngine.Rendering;
@@ -27,14 +28,25 @@ namespace TundraEngine.Studio.Controls
         public event IGameWindow.OnLoadAssetsHandler OnLoadAssets;
         public event IGameWindow.OnUpdateHandler OnUpdate;
 
+        public bool GameStarted = false;
+
         protected override void OnOpenGlInit(GlInterface gl, int fb)
         {
             base.OnOpenGlInit(gl, fb);
-            Gl = GL.GetApi(gl.GetProcAddress);
-            Scene = new Scene(this);
-            Renderer = new Renderer(this, Gl);
-            Game = new TestGame1Game(this);
 
+            Gl = GL.GetApi(gl.GetProcAddress);
+            Renderer = new Renderer(this, Gl);
+
+            if (!GameStarted)
+            {
+                Scene = new Scene(this);
+                Start();
+            }
+        }
+
+        public void Start()
+        {
+            GameStarted = true;
             Game.OnStart();
             OnLoadAssets?.Invoke(Renderer);
             Game.Start();
@@ -66,11 +78,12 @@ namespace TundraEngine.Studio.Controls
             {
                 (this as IGameWindow).IsInitialized = true;
                 // Flips the Camera on Y Axis, idk why though
-                Scene.FindObject<Camera>().FlipY = true;
+                var cam = Scene.FindObjectOrNull<Camera>();
+                if(cam != null)
+                    cam.FlipY = true;
+                ClipToBounds = true;
             }
-
-            ClipToBounds = true;
-
+            
             var bound = GetActualBounds();
             Renderer?.Clear();
             Gl?.Viewport(0, 0, (uint)bound.Width, (uint)bound.Height);
@@ -90,6 +103,7 @@ namespace TundraEngine.Studio.Controls
 
         public void Initialize()
         {
+            Console.WriteLine("Initializing Scene");
             Scene.Initialize();
         }
 

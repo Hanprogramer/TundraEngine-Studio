@@ -32,7 +32,7 @@ namespace TundraEngine.Runner
         /// Run the game from DLL path
         /// </summary>
         /// <param name="path"></param>
-        public Runner(string path)
+        public Runner(string path, IGameWindow? window=null)
         {
             var assm = Assembly.LoadFrom(path);
             var types = assm.GetTypes();
@@ -40,7 +40,7 @@ namespace TundraEngine.Runner
             {
                 if (type.BaseType == typeof(Game))
                 {
-                    this.Game = CreateGame(type);
+                    this.Game = CreateGame(type, window);
                     break;
                 }
             }
@@ -50,14 +50,14 @@ namespace TundraEngine.Runner
             }
         }
 
-        public Game CreateGame(Type type)
+        public Game CreateGame(Type type, IGameWindow? window=null)
         {
             if (type.BaseType == typeof(Game))
             {
                 // Create instance of the game 
                 var constr = type.GetConstructor(new Type[] { typeof(IGameWindow) });
                 if (constr == null) throw new Exception("Error: Can't get constructor(IGameWindow) on " + type.Name);
-                var g = (Game?)constr.Invoke(new object[] { null });
+                var g = (Game?)constr.Invoke(new object[] { window });
                 if (g is Game)
                 {
                     return g;

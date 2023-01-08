@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
@@ -8,9 +9,11 @@ using AvaloniaEdit.TextMate;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using TextMateSharp.Grammars;
 using TundraEngine.Classes;
+using TundraEngine.Runner;
 using TundraEngine.Studio.Compiler;
 using TundraEngine.Studio.Controls;
 using TundraEngine.Studio.Util;
@@ -38,7 +41,15 @@ namespace TundraEngine.Studio
             fb.FileOpen += FileBrowser_FileOpen;
             DataContext = new MainWindowViewModel();
             Instance = this;
-
+        }
+        public void RunGame(string dllPath)
+        {
+            var tab = new EditorTab("Game", dllPath, EditorType.Game);
+            var tv = tab.Content as TundraView;
+            var runner = new Runner.Runner(dllPath, tv);
+            tv!.Game = runner.Game;
+            ((MainWindowViewModel)DataContext!).Tabs.Add(tab);
+            FileTabs.SelectedItem = tab;
         }
 
         public void _Log(object o)
@@ -75,10 +86,11 @@ namespace TundraEngine.Studio
             var result = await GameCompiler.Compile(CurrentProject);
             if (result != null)
             {
-                foreach (var d in result)
+                foreach (var d in result.Items)
                 {
                     Log(d.Description);
                 }
+                RunGame(result.DllPath);
             }
         }
 
@@ -130,49 +142,4 @@ namespace TundraEngine.Studio
         }
     }
 
-    public enum EditorType
-    {
-        RawText,
-        Image,
-        Sound
-    }
-
-    public class EditorTab
-    {
-        public string Header { get; set; }
-        public string FilePath { get; set; }
-
-        public EditorType EditorType { get; set; }
-
-        public Control Content { get; set; }
-
-        public EditorTab(string header, string filePath)
-        {
-            Header = header;
-            FilePath = filePath;
-
-            if (filePath.EndsWith(".png") || filePath.EndsWith(".jpg") || filePath.EndsWith(".bmp"))
-            {
-                EditorType = EditorType.Image;
-                var im = new Image();
-                im.Source = new Bitmap(filePath);
-                Content = im;
-
-            }
-            else if (filePath.EndsWith(".mp3") || filePath.EndsWith(".wav") || filePath.EndsWith(".ogg"))
-            {
-                EditorType = EditorType.Sound;
-            }
-            else
-            {
-                EditorType = EditorType.RawText;
-                var te = new TextEditor();
-                MainWindow.InitializeEditor(te);
-                te.Text = File.ReadAllText(filePath);
-                Content = te;
-            }
-
-
-        }
-    }
 }

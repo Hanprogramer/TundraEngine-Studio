@@ -31,30 +31,40 @@ namespace TundraEngine.Studio.Compiler
             Type = type;
         }
     }
+
+    public class CompileDiagnostics {
+        public List<CompileDiagnosticsItem> Items;
+        public bool Success = false;
+        public string DllPath = "";
+        public CompileDiagnostics() {
+            Items = new();
+        }
+    }
     public class GameCompiler
     {
-        public static async Task<List<CompileDiagnosticsItem>?> Compile(TundraProject project)
+        public static async Task<CompileDiagnostics?> Compile(TundraProject project)
         {
             if (!MSBuildLocator.IsRegistered)
                 MSBuildLocator.RegisterDefaults();
-            CompilerParameters cparams = new();
-            
-            List<CompileDiagnosticsItem> diagnostics = new();
 
-            var result = await CompileSolution(Path.Join(project.Path, project.CSProject), Path.Join(project.Path, "bin"));
+            CompileDiagnostics diagnostics = new();
+            var outputPath = Path.Join(project.Path, "bin", "TundraGame.dll");
+            var result = await CompileSolution(Path.Join(project.Path, project.CSProject), outputPath);
             if (result == null) return null;
             foreach (var d in result.Diagnostics)
             {
                 if (d.Severity == DiagnosticSeverity.Error)
-                    diagnostics.Add(new CompileDiagnosticsItem(d.Descriptor.Title.ToString(), d.Descriptor.Description.ToString(), CompileDiagnosticsItemType.Error));
+                    diagnostics.Items.Add(new CompileDiagnosticsItem(d.Descriptor.Title.ToString(), d.Descriptor.Description.ToString(), CompileDiagnosticsItemType.Error));
                 else if (d.Severity == DiagnosticSeverity.Warning)
-                    diagnostics.Add(new CompileDiagnosticsItem(d.Descriptor.Title.ToString(), d.Descriptor.Description.ToString(), CompileDiagnosticsItemType.Warning));
+                    diagnostics.Items.Add(new CompileDiagnosticsItem(d.Descriptor.Title.ToString(), d.Descriptor.Description.ToString(), CompileDiagnosticsItemType.Warning));
             }
 
             if (result.Success)
                 Console.WriteLine("Build was successful");
             else
                 Console.WriteLine("Build was failed");
+            diagnostics.Success = result.Success;
+            diagnostics.DllPath = result.Success? outputPath : "";
             return diagnostics;
         }
 
@@ -69,7 +79,7 @@ namespace TundraEngine.Studio.Compiler
                     Console.WriteLine("Can't get compilation target for " + solutionUrl);
                     return null;
                 }
-                var result = compilation.Emit(Path.Join(outputPath , "TundraGame.dll"));
+                var result = compilation.Emit(outputPath);
                 foreach (var d in result.Diagnostics)
                 {
                     Console.WriteLine(d);
