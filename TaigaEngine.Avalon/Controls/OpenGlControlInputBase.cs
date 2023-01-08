@@ -1,11 +1,13 @@
-﻿using Avalonia.Controls;
+﻿using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Logging;
 using Avalonia.Media;
+using Avalonia.OpenGL;
 using Avalonia.OpenGL.Imaging;
 using System;
 using static Avalonia.OpenGL.GlConsts;
 
-namespace Avalonia.OpenGL.Controls
+namespace TundraEngine.Studio.Controls
 {
     public abstract class OpenGlControlInputBase : Control
     {

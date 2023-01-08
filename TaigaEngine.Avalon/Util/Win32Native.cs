@@ -4,7 +4,7 @@ using Avalonia.Win32;
 using System;
 using System.Runtime.InteropServices;
 
-namespace TundraEngine.Studio
+namespace TundraEngine.Studio.Util
 {
     public static class Win32Native
     {

@@ -1,0 +1,3 @@
+﻿<LinearLayout Orientation="Vertical">
+	<Button Content="Hello World"/>
+</LinearLayout>

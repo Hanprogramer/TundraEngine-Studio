@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			 xmlns:svg="clr-namespace:Avalonia.Svg.Skia;assembly=Avalonia.Svg.Skia"
+			 xmlns:ext="using:TundraEngine.Studio.Util"
+             x:Class="TundraEngine.Studio.Controls.FileBrowser">
+	<DockPanel Background="#191919">
+		<DockPanel.Resources>
+			<ext:BitmapAssetValueConverter x:Key="variableImage"/>
+		</DockPanel.Resources>
+		<TreeView
+			Name="MainTree"
+			Items="{Binding FileBrowserItems, Mode=TwoWay}"
+			HorizontalAlignment="Stretch"
+			>
+			<TreeView.ItemTemplate>
+				<TreeDataTemplate ItemsSource="{Binding Items}">
+					<StackPanel Orientation="Horizontal" Margin="0">
+						<svg:Svg IsVisible="{Binding !UseCustomIcon}" Name="svgSvg" Path="{Binding Icon}" Width="14" Height="14" />
+						<Image IsVisible="{Binding UseCustomIcon}" Source="{Binding Icon, Converter={StaticResource variableImage}}" Width="14" Height="14"/>
+						<TextBlock Text="{Binding FileName}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="12"/>
+					</StackPanel>
+				</TreeDataTemplate>
+			</TreeView.ItemTemplate>
+		</TreeView>
+	</DockPanel>
+</UserControl>

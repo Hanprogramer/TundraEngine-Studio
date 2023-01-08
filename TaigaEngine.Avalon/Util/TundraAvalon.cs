@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TundraEngine.Studio
+namespace TundraEngine.Studio.Util
 {
     /// <summary>
     /// Helper class to communicate AvalonaUI and Tundra
@@ -12,10 +12,10 @@ namespace TundraEngine.Studio
         /// </summary>
         /// <param name="key">Avalona Key</param>
         /// <returns>Tundra/Silk.NET key</returns>
-        public static TundraEngine.Classes.Key? TranslateAvaloniaKeys(Avalonia.Input.Key key)
+        public static Classes.Key? TranslateAvaloniaKeys(Avalonia.Input.Key key)
         {
             string name = Enum.GetName(typeof(Avalonia.Input.Key), key)!;
-            if (Enum.TryParse<TundraEngine.Classes.Key>(name, false, out var result))
+            if (Enum.TryParse<Classes.Key>(name, false, out var result))
                 return result;
             else
             {
