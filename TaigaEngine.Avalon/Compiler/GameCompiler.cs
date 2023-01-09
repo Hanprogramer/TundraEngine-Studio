@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.MSBuild;
+using Silk.NET.Vulkan;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,12 +48,13 @@ namespace TundraEngine.Studio.Compiler
     public class GameCompiler
     {
         public static int _buildNumber = 0;
+        public delegate void LogFunction(string message);
         /// <summary>
         /// Compiles the game project
         /// </summary>
         /// <param name="project"></param>
         /// <returns></returns>
-        public static async Task<CompileDiagnostics?> Compile(TundraProject project)
+        public static async Task<CompileDiagnostics?> Compile(TundraProject project, LogFunction log)
         {
             // Register MSBuild variables
             if (!MSBuildLocator.IsRegistered)
@@ -80,9 +82,9 @@ namespace TundraEngine.Studio.Compiler
             }
 
             if (result.Success)
-                Console.WriteLine("Build was successful");
+                log("Build was successful");
             else
-                Console.WriteLine("Build was failed");
+                log.Invoke("Build was failed");
 
             // Set the success state and the dllpath of the output
             diagnostics.Success = result.Success;

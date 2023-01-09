@@ -20,8 +20,7 @@ namespace TundraEngine.Studio
         public string TestString = "TEST";
         public string ProjectPath = "D:\\Programming\\C#\\TaigaEngine.Avalon\\TestGame1\\project.json";
         public static FontFamily CodeFamily = FontFamily.Parse("avares://TundraEngine.Studio/Assets/JetBrainsMono-Regular.ttf#JetBrains Mono");
-        public static MainWindow? Instance;
-        private Runner.Runner Runner;
+        private Runner.Runner? Runner;
 
 
         public EditorTab? GameTab = null;
@@ -39,7 +38,6 @@ namespace TundraEngine.Studio
             fb.CurrentWorkingDirectory = CurrentProject.Path;
             fb.FileOpen += OnFileOpen;
             DataContext = new MainWindowViewModel();
-            Instance = this;
         }
 
         /// <summary>
@@ -84,7 +82,7 @@ namespace TundraEngine.Studio
         }
 
         // Internal logger function
-        public void _Log(object o)
+        public void Log(object o)
         {
             Console.WriteLine(o);
             if (TbConsole != null)
@@ -92,12 +90,6 @@ namespace TundraEngine.Studio
                 TbConsole.Text += o.ToString() + "\n";
                 TbConsole.CaretIndex = TbConsole.Text.Length;
             }
-        }
-
-        // Static method for logging
-        public static void Log(object o)
-        {
-            Instance?._Log(o);
         }
 
         // Event handler for file open
@@ -126,12 +118,13 @@ namespace TundraEngine.Studio
             PlayBtn.IsEnabled = false;
             PauseBtn.IsEnabled = false;
             StopBtn.IsEnabled = false;
-            var result = await GameCompiler.Compile(CurrentProject);
+            ClearConsole();
+            var result = await GameCompiler.Compile(CurrentProject, Log);
             if (result != null)
             {
                 foreach (var d in result.Items)
                 {
-                    Log(d.Description);
+                    Log(d.Title);
                 }
                 if (result.Success)
                     RunGame(result.DllPath);
@@ -151,6 +144,10 @@ namespace TundraEngine.Studio
             {
                 StopGame();
             }
+        }
+
+        public void ClearConsole() {
+            TbConsole.Clear();
         }
     }
 }
