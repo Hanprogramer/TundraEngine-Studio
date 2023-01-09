@@ -43,6 +43,9 @@
 			<Setter Property="Background" Value="#1e1e1e"/>
 		</Style>
 
+		<Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#00000080"/>
+		</Style>
 	</Window.Styles>
 	<DockPanel LastChildFill="True">
 		<Grid ColumnDefinitions="Auto,*,Auto" DockPanel.Dock="Top">

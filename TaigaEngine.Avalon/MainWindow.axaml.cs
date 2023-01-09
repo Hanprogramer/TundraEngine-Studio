@@ -48,9 +48,6 @@ namespace TundraEngine.Studio
         /// <param name="dllPath">Path to the dll file</param>
         public void RunGame(string dllPath)
         {
-            PlayBtn.IsEnabled = false;
-            PauseBtn.IsEnabled = true;
-            StopBtn.IsEnabled = true;
             var tab = new EditorTab("Game", dllPath, EditorType.Game);
             var tv = tab.Content as TundraView;
             Runner = new Runner.Runner(dllPath, window: tv);
@@ -58,10 +55,19 @@ namespace TundraEngine.Studio
             ((MainWindowViewModel)DataContext!).Tabs.Add(tab);
             FileTabs.SelectedItem = tab;
             GameTab = tab;
+
+            PlayBtn.IsEnabled = false;
+            PauseBtn.IsEnabled = true;
+            StopBtn.IsEnabled = true;
         }
 
         // When stop button pressed
         public void OnStopGame(object? sender, RoutedEventArgs e)
+        {
+            StopGame();
+        }
+
+        public void StopGame()
         {
             if (GameTab == null) return;
             var tv = (GameTab.Content as TundraView)!;
@@ -117,6 +123,9 @@ namespace TundraEngine.Studio
         // When the play button is clicked
         public async void OnPlayBtnClicked(object? s, RoutedEventArgs args)
         {
+            PlayBtn.IsEnabled = false;
+            PauseBtn.IsEnabled = false;
+            StopBtn.IsEnabled = false;
             var result = await GameCompiler.Compile(CurrentProject);
             if (result != null)
             {
@@ -132,6 +141,15 @@ namespace TundraEngine.Studio
                     PauseBtn.IsEnabled = false;
                     StopBtn.IsEnabled = false;
                 }
+            }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            if (GameTab != null)
+            {
+                StopGame();
             }
         }
     }
