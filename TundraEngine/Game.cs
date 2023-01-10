@@ -108,9 +108,9 @@ namespace TundraEngine
         public void Update()
         {
             var delta = (float)UpdateStopwatch.Elapsed.TotalSeconds;
-            UpdateStopwatch.Restart();
             if (delta > _updatePeriod)
             {
+                UpdateStopwatch.Restart();
                 Window.Update(delta);
                 OnUpdate?.Invoke(delta);
                 Ticks++;
