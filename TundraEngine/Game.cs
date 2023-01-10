@@ -25,6 +25,14 @@ namespace TundraEngine
         public System.Threading.Thread? UpdateThread;
 
         public float Ticks = 0;
+        private double _updatePeriod;
+
+        public double UpdatesPerSecond
+        {
+            get => _updatePeriod <= double.Epsilon ? 0 : 1 / _updatePeriod;
+            set => _updatePeriod = value <= double.Epsilon ? 0 : 1 / value;
+        }
+
         public AssetManager AssetManager;
 
         private Stopwatch UpdateStopwatch;
@@ -58,6 +66,7 @@ namespace TundraEngine
             GameObject.Game = this;
 
             UpdateStopwatch = new();
+            UpdatesPerSecond = 120;
         }
 
         public void Start(bool shouldCreateEventsLoop = false, bool shouldInitialize = true)
@@ -100,11 +109,13 @@ namespace TundraEngine
         {
             var delta = (float)UpdateStopwatch.Elapsed.TotalSeconds;
             UpdateStopwatch.Restart();
-            Window.Update(delta);
+            if (delta > _updatePeriod)
+            {
+                Window.Update(delta);
+                OnUpdate?.Invoke(delta);
+                Ticks++;
+            }
 
-            if (OnUpdate != null)
-                OnUpdate.Invoke(delta);
-            Ticks++;
         }
         public void Quit()
         {

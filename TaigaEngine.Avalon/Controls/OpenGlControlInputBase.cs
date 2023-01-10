@@ -23,20 +23,25 @@ namespace TundraEngine.Studio.Controls
         {
             if (!EnsureInitialized())
                 return;
-
-            using (_context.MakeCurrent())
+            try
             {
-                _context.GlInterface.BindFramebuffer(GL_FRAMEBUFFER, _fb);
-                EnsureTextureAttachment();
-                EnsureDepthBufferAttachment(_context.GlInterface);
-                if (!CheckFramebufferStatus(_context.GlInterface))
-                    return;
+                using (_context.MakeCurrent())
+                {
+                    _context.GlInterface.BindFramebuffer(GL_FRAMEBUFFER, _fb);
+                    EnsureTextureAttachment();
+                    EnsureDepthBufferAttachment(_context.GlInterface);
+                    if (!CheckFramebufferStatus(_context.GlInterface))
+                        return;
 
-                OnOpenGlRender(_context.GlInterface, _fb);
-                _attachment.Present();
+                    OnOpenGlRender(_context.GlInterface, _fb);
+                    _attachment.Present();
+                }
+
+                context.DrawImage(_bitmap, new Rect(_bitmap.Size), new Rect(Bounds.Size));
             }
-
-            context.DrawImage(_bitmap, new Rect(_bitmap.Size), new Rect(Bounds.Size));
+            catch (Exception ex) {
+                Console.WriteLine(ex);
+            }
             base.Render(context);
         }
 

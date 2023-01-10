@@ -44,7 +44,7 @@
 		</Style>
 
 		<Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="#00000080"/>
+			<Setter Property="Background" Value="#191919"/>
 		</Style>
 	</Window.Styles>
 	<DockPanel LastChildFill="True">

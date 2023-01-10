@@ -59,11 +59,16 @@ namespace TundraEngine.Rendering
         private int drawCalls = 0;
 
 
+
         public Renderer(IGameWindow window, GL gl)
         {
             Gl = gl;
             Window = window;
             Initialize();
+
+#if DEBUG
+            PrintRendererInfo();
+#endif
         }
 
         public void Initialize()
@@ -102,7 +107,6 @@ namespace TundraEngine.Rendering
             Shader.Use();
 
             Shader.SetUniform("uTexture0", 0);
-            //lastTexture.Bind();
             Gl.DrawElements(PrimitiveType.Triangles, indId, DrawElementsType.UnsignedInt, null);
 
             drawCalls++;
@@ -231,6 +235,17 @@ namespace TundraEngine.Rendering
             RenderHeight = height;
             PixelWidth = 1f / width;
             PixelHeight = 1f / height;
+        }
+
+        /// <summary>
+        /// Prints out the OpenGL vendor, driver etc.
+        /// </summary>
+        public unsafe void PrintRendererInfo()
+        {
+            string info = Gl.GetStringS(GLEnum.Vendor);
+            info += "\n" + Gl.GetStringS(GLEnum.Renderer);
+
+            Console.WriteLine(info);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace TundraEngine.Rendering
             Bind();
             fixed (void* d = data)
             {
-                _gl.BufferData(bufferType, (nuint)(length * sizeof(TDataType)), d, BufferUsageARB.DynamicDraw);
+                _gl.BufferData(bufferType, (nuint)(data.Length * sizeof(TDataType)), d, BufferUsageARB.StaticDraw);
             }
         }
 
@@ -27,7 +27,8 @@ namespace TundraEngine.Rendering
             Bind();
             fixed (void* d = data)
             {
-                _gl?.BufferData(_bufferType, (nuint)(length * sizeof(TDataType)), d, BufferUsageARB.DynamicDraw);
+                //_gl?.BufferData(_bufferType, (nuint)(length * sizeof(TDataType)), d, BufferUsageARB.StaticDraw);
+                _gl?.BufferSubData(_bufferType, 0, (nuint)(length * sizeof(TDataType)), d);
             }
         }
 

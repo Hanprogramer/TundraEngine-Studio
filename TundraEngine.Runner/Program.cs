@@ -11,6 +11,7 @@ else
 {
     // Find TundraGame.dll
     file = "TundraGame.dll";
+    file = "D:\\Programming\\C#\\TaigaEngine.Avalon\\TestGame1\\bin\\TundraGame0.dll";
 }
 
 var r = new Runner(file);

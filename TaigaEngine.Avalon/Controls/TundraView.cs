@@ -98,16 +98,22 @@ namespace TundraEngine.Studio.Controls
                     cam.FlipY = true;
                 ClipToBounds = true;
             }
+            try
+            {
+                var bound = GetActualBounds();
+                Renderer?.Clear();
+                Gl?.Viewport(0, 0, (uint)bound.Width, (uint)bound.Height);
 
-            var bound = GetActualBounds();
-            Renderer?.Clear();
-            Gl?.Viewport(0, 0, (uint)bound.Width, (uint)bound.Height);
+                Renderer?.Begin();
+                Scene.Render(Renderer);
+                Renderer?.End();
 
-            Renderer?.Begin();
-            Scene.Render(Renderer);
-            Renderer?.End();
-
-            Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);
+                Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Render);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
 
         public void Update(float dt)
