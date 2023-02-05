@@ -28,7 +28,14 @@ namespace TundraEngine.Studio
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .With(new Win32PlatformOptions() { UseWgl = true })
+                .With(new Win32PlatformOptions()
+                    {
+                        UseWgl = true,
+                        AllowEglInitialization = true,
+                        UseDeferredRendering = false,
+                        UseWindowsUIComposition = false
+                    })
+                .UseSkia()
                 .LogToTrace();
     }
 }

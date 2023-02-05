@@ -1,0 +1,20 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="170"
+		Width="400" Height="170"
+        x:Class="TundraEngine.Studio.Dialogs.CreateFileDialog"
+        Title="Create a new file">
+	<StackPanel Margin="12">
+		<TextBlock>File name</TextBlock>
+		<TextBox Margin="0,0,0,10" Name="TbFileName"/>
+		<TextBlock>Location</TextBlock>
+		<TextBox Margin="0,0,0,10" Name="TbFileLoc"/>
+		
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+			<Button Name="BtnCancel">Cancel</Button>
+			<Button Name="BtnCreate" IsDefault="True" Click="OnClickCreate">Create</Button>
+		</StackPanel>
+	</StackPanel>
+</Window>

@@ -1,28 +1,52 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
+using AvaloniaEdit.Utils;
+using DynamicData.Kernel;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using TundraEngine.Studio.Dialogs;
+using static AvaloniaEdit.Document.TextDocumentWeakEventManager;
 
 namespace TundraEngine.Studio.Controls
 {
-    public class FileBrowserItem
+    public class FileBrowserItem : ReactiveObject
     {
-        public string FileName { get; set; }
+        string fileName = "";
+        public string FileName
+        {
+            get => fileName; 
+            set
+            {
+                this.RaiseAndSetIfChanged(ref fileName, value);
+            }
+        }
         public string Path { get; set; }
         public bool IsDirectory;
-        public List<FileBrowserItem> Items { get; set; }
+        //public ObservableCollection<FileBrowserItem> Items { get; set; }
+        private ObservableCollection<FileBrowserItem> items;
+        public ObservableCollection<FileBrowserItem> Items
+        {
+            get => items;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref items, value);
+            }
+        }
         public string Icon { get; set; } = "/Assets/folder_white.svg";
         /// <summary>
         /// If the icon shown should be loaded from the file instead
         /// </summary>
         public bool UseCustomIcon { get; set; } = false;
 
-        public FileBrowserItem(string name, string path, bool isDirectory, List<FileBrowserItem>? Items = null, string? Icon = null)
+        public FileBrowserItem(string name, string path, bool isDirectory, ObservableCollection<FileBrowserItem>? Items = null, string? Icon = null)
         {
-            //Dock.Avalonia.Controls.DockControl dock;
             this.FileName = name;
             this.Path = path;
             IsDirectory = isDirectory;
@@ -33,27 +57,180 @@ namespace TundraEngine.Studio.Controls
 
             if (Icon != null) this.Icon = Icon;
         }
+
+        public FileBrowserItem? FindItem(string path, FileBrowserItem? startingPath = null)
+        {
+            FileBrowserItem obj = startingPath ?? this;
+            if (obj.Path == path) return obj;
+
+            if (obj.IsDirectory)
+            {
+                foreach (var item in obj.Items)
+                {
+                    if (path.StartsWith(item.Path))
+                    {
+                        var result = FindItem(item.Path, item);
+                        if (result != null) return result;
+                    }
+                }
+            }
+            return null;
+        }
     }
     public partial class FileBrowser : UserControl
     {
         private string _cwd = "";
-        public string CurrentWorkingDirectory { get => _cwd; set { _cwd = value; RefreshItems(); } }
+        public string CurrentWorkingDirectory
+        {
+            get => _cwd;
+            set
+            {
+                _cwd = value;
+                if (value != "") InitializeWatcher(value);
+                RefreshItems();
+            }
+        }
         public delegate void FileOpenHandler(FileBrowserItem item);
         public event FileOpenHandler? FileOpen;
         public bool InEditorUse { get; set; } = true;
+        public FileBrowserItem? SelectedFile { get; set; }
+        public bool HasFileSelected { get; set; }
+        FileSystemWatcher watcher;
+
+        public ObservableCollection<FileBrowserItem> Items { get; private set; }
+
         public FileBrowser()
         {
             InitializeComponent();
-            DataContext = this;
+            Items = new ObservableCollection<FileBrowserItem>();
             RefreshItems();
             MainTree.DoubleTapped += MainTree_DoubleTapped;
             MainTree.SelectionChanged += MainTree_SelectionChanged;
+            DataContext = this;
+        }
+
+        public void InitializeWatcher(string path)
+        {
+            watcher = new(_cwd);
+            watcher.NotifyFilter = NotifyFilters.Attributes
+                                 | NotifyFilters.CreationTime
+                                 | NotifyFilters.DirectoryName
+                                 | NotifyFilters.FileName
+                                 | NotifyFilters.LastAccess
+                                 | NotifyFilters.LastWrite
+            | NotifyFilters.Security
+                                 | NotifyFilters.Size;
+
+            watcher.Changed += OnChanged;
+            watcher.Created += OnCreated;
+            watcher.Deleted += OnDeleted;
+            watcher.Renamed += OnRenamed;
+            watcher.Error += OnError;
+
+            watcher.Filter = "*.*";
+            watcher.IncludeSubdirectories = true;
+            watcher.EnableRaisingEvents = true;
+        }
+
+        private void OnError(object sender, ErrorEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void OnRenamed(object sender, RenamedEventArgs e)
+        {
+            var oldPath = e.OldFullPath;
+            var oldName = e.OldName;
+            var newPath = e.FullPath;
+            var newName = e.Name;
+
+
+            var item = FindItem(oldPath);
+            if (item != null)
+            {
+                item.FileName = newName;
+                item.Path = newPath;
+                //TODO: might need the path to be reactive as well?
+            }
+            //Console.WriteLine($"Rename {oldName} to {newName}, {newPath}, found: {item != null}");
+
+        }
+
+        private void OnDeleted(object sender, FileSystemEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void OnCreated(object sender, FileSystemEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void OnChanged(object sender, FileSystemEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private FileBrowserItem? FindItem(string path)
+        {
+            foreach (var item in MainTree.Items)
+            {
+                var ti = (item as FileBrowserItem)!;
+                if (ti.Path == path) return ti;
+                if (ti.IsDirectory)
+                {
+                    var result = ti.FindItem(path);
+                    if (result != null) return result;
+                }
+            }
+            return null;
         }
 
         private void MainTree_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
-            //Console.WriteLine(e.ToString());
+            var item = e.AddedItems[0];
+            if (item != null)
+            {
+                SelectedFile = (FileBrowserItem?)item;
+                HasFileSelected = SelectedFile != null;
+            }
+            else
+                HasFileSelected = false;
         }
+
+        private void Item_PointerMoved(object? sender, PointerEventArgs e)
+        {
+            if (e.InputModifiers.HasFlag(InputModifiers.LeftMouseButton))
+            {
+                var item = ((IVisual)e.Source).GetSelfAndVisualAncestors()
+                    .OfType<TreeViewItem>()
+                    .FirstOrDefault();
+                DoDrag(e, item.DataContext as FileBrowserItem);
+            }
+
+        }
+
+        private async void DoDrag(PointerEventArgs e, FileBrowserItem item)
+        {
+            Console.WriteLine(item.Path);
+            DataObject dragData = new DataObject();
+            dragData.Set(DataFormats.Text, $"You have dragged text 0 times");
+
+            var result = await DragDrop.DoDragDrop(e, dragData, DragDropEffects.Copy);
+            switch (result)
+            {
+                case DragDropEffects.Copy:
+                    Console.WriteLine("The text was copied");
+                    break;
+                case DragDropEffects.Link:
+                    Console.WriteLine("The text was linked");
+                    break;
+                case DragDropEffects.None:
+                    Console.WriteLine("The drag operation was canceled");
+                    break;
+            }
+        }
+
 
         private void MainTree_DoubleTapped(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
@@ -75,19 +252,15 @@ namespace TundraEngine.Studio.Controls
             }
         }
 
-        public void HandleTreeViewItemClick(object? sender, RoutedEventArgs e)
-        {
-
-        }
-
         public void RefreshItems()
         {
-            MainTree.Items = GetFileBrowserItems(_cwd);
+            Items.AddRange(GetFileBrowserItems(_cwd));
+            //DataContext = this;
         }
         string[] skipFolders = new string[] { "bin", "obj", ".git", ".vscode" };
-        public List<FileBrowserItem> GetFileBrowserItems(string path)
+        public ObservableCollection<FileBrowserItem> GetFileBrowserItems(string path)
         {
-            var items = new List<FileBrowserItem>();
+            var items = new ObservableCollection<FileBrowserItem>();
 
             if (path != "")
             {
@@ -119,6 +292,12 @@ namespace TundraEngine.Studio.Controls
                 }
             }
             return items;
+        }
+
+        public void OnCreateFileClicked(object? sender, RoutedEventArgs e)
+        {
+            var dlg = new CreateFileDialog();
+            dlg.ShowDialog(this.FindAncestorOfType<Window>());
         }
     }
 }

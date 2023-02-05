@@ -10,17 +10,37 @@
 		<DockPanel.Resources>
 			<ext:BitmapAssetValueConverter x:Key="variableImage"/>
 		</DockPanel.Resources>
+		<DockPanel.ContextMenu>
+			<ContextMenu DataContext="{Binding SelectedFile}">
+				<TextBlock Text="{Binding FileName}" TextAlignment="Center" FontSize="10" IsVisible="{Binding HasFileSelected}"/>
+				<MenuItem Header="Copy"/>
+				<MenuItem Header="Paste"/>
+				<MenuItem Header="Dupplicate"/>
+				<Separator/>
+				<MenuItem Header="Create">
+					<MenuItem Header="Folder"/>
+					<Separator/>
+					<MenuItem Header="Game Object"/>
+					<MenuItem Header="Scene"/>
+					<MenuItem Header="Sprite"/>
+					<MenuItem Header="Text File" Name="MenuCreateText" Click="OnCreateFileClicked" />
+				</MenuItem>
+				<Separator/>
+				<MenuItem Header="Reveal In Explorer"/>
+				<MenuItem Header="Delete"/>
+			</ContextMenu>
+		</DockPanel.ContextMenu>
 		<TreeView
 			Name="MainTree"
-			Items="{Binding FileBrowserItems, Mode=TwoWay}"
+			Items="{Binding Items}"
 			HorizontalAlignment="Stretch"
 			>
-			<TreeView.ItemTemplate>
-				<TreeDataTemplate ItemsSource="{Binding Items}">
-					<StackPanel Orientation="Horizontal" Margin="0">
+			<TreeView.ItemTemplate >
+				<TreeDataTemplate ItemsSource="{Binding Items, Mode=OneWay}" >
+					<StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" PointerMoved="Item_PointerMoved">
 						<svg:Svg IsVisible="{Binding !UseCustomIcon}" Name="svgSvg" Path="{Binding Icon}" Width="14" Height="14" />
 						<Image IsVisible="{Binding UseCustomIcon}" Source="{Binding Icon, Converter={StaticResource variableImage}}" Width="14" Height="14"/>
-						<TextBlock Text="{Binding FileName}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="12"/>
+						<TextBlock Text="{Binding FileName, Mode=OneWay}" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="12"/>
 					</StackPanel>
 				</TreeDataTemplate>
 			</TreeView.ItemTemplate>

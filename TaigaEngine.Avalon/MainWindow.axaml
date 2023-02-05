@@ -11,41 +11,6 @@
 		Icon="Assets/TundraEngine.png"
         Title="TundraEngine v0.1 Beta">
 	<Window.Styles>
-
-		<Style Selector="TabControl">
-			<Setter Property="Background" Value="#1c1c1c"/>
-			<Setter Property="Margin" Value="0 0 0 0"/>
-			<Setter Property="Padding" Value="0 0"/>
-		</Style>
-		<Style Selector="TabControl WrapPanel">
-			<Setter Property="Background" Value="#111111"/>
-		</Style>
-
-		<Style Selector="TabItem">
-			<Setter Property="FontSize" Value="12"/>
-			<Setter Property="VerticalAlignment" Value="Center"/>
-			<Setter Property="Margin" Value="0 0 0 0"/>
-			<Setter Property="Padding" Value="0 0 0 0"/>
-			<Setter Property="Height" Value="30"/>
-
-			<Setter Property="MinHeight" Value="30"/>
-		</Style>
-
-		<Style Selector="TabItem:pointerover /template/ Border#PART_LayoutRoot">
-			<Setter Property="Background" Value="#1e1e1e"/>
-		</Style>
-
-		<Style Selector="TabItem:focus">
-			<Setter Property="Background" Value="#1e1e1e"/>
-		</Style>
-
-		<Style Selector="TabItem:selected">
-			<Setter Property="Background" Value="#1e1e1e"/>
-		</Style>
-
-		<Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="#191919"/>
-		</Style>
 	</Window.Styles>
 	<DockPanel LastChildFill="True">
 		<Grid ColumnDefinitions="Auto,*,Auto" DockPanel.Dock="Top">
@@ -65,7 +30,6 @@
 					<MenuItem Header="Paste"/>
 				</MenuItem>
 			</Menu>
-			<Border Grid.Column="1"/>
 			<StackPanel Grid.Column="2" Orientation="Horizontal">
 				<Button Name="PlayBtn" Click="OnPlayBtnClicked">
 					<svg:Svg Path="Assets/play_white.svg" Width="16" Height="16"/>
@@ -78,32 +42,29 @@
 				</Button>
 			</StackPanel>
 		</Grid>
-		<Grid ColumnDefinitions="200,4,*" DockPanel.Dock="Bottom">
-			<controls:FileBrowser Grid.Column="0" Name="FileBrowser"/>
+		<Grid ColumnDefinitions="*,4,200" DockPanel.Dock="Bottom">
+			<TabControl Name="FileTabs" Items="{Binding Tabs}" Grid.Column="0">
+				<TabControl.ItemTemplate>
+					<DataTemplate>
+						<DockPanel PointerReleased="TabItem_PointerReleased">
+							<StackPanel Orientation="Horizontal"   Margin="10,0">
+								<TextBlock Text="{Binding Header}" VerticalAlignment="Center"/>
+								<TextBlock Text="*" IsVisible="{Binding !IsSaved, Mode=TwoWay}" VerticalAlignment="Center"/>
+								<Button Click="OnFileClose" Padding="2,2" Margin="10,0,0,0" Background="Transparent">
+									<svg:Svg Path="Assets/close_white.svg" Width="16" Height="16"/>
+								</Button>
+							</StackPanel>
+						</DockPanel>
+					</DataTemplate>
+				</TabControl.ItemTemplate>
+				<TabControl.ContentTemplate>
+					<DataTemplate>
+						<UserControl Content="{Binding Content}" Margin="0" Padding="0"/>
+					</DataTemplate>
+				</TabControl.ContentTemplate>
+			</TabControl>
 			<GridSplitter Grid.Column="1" Background="Black" ResizeDirection="Columns"/>
-			<Panel Grid.Column="2">
-				<Grid RowDefinitions="*,4,128">
-					<TabControl Name="FileTabs" Items="{Binding Tabs}" Grid.Row="0">
-						<TabControl.ItemTemplate>
-							<DataTemplate>
-								<StackPanel Orientation="Horizontal"   Margin="10,0" VerticalAlignment="Stretch">
-									<TextBlock Text="{Binding Header}" VerticalAlignment="Center"/>
-									<Button Click="OnFileClose" Padding="2,2" Margin="10,0,0,0" Background="Transparent">
-										<svg:Svg Path="Assets/close_white.svg" Width="16" Height="16"/>
-									</Button>
-								</StackPanel>
-							</DataTemplate>
-						</TabControl.ItemTemplate>
-						<TabControl.ContentTemplate>
-							<DataTemplate>
-								<UserControl Content="{Binding Content}" Margin="0" Padding="0"/>
-							</DataTemplate>
-						</TabControl.ContentTemplate>
-					</TabControl>
-					<GridSplitter Grid.Row="1" Background="Black" ResizeDirection="Rows"/>
-					<TextBox Grid.Row="2" IsReadOnly="True" Name="TbConsole"/>
-				</Grid>
-			</Panel>
+			<controls:FileBrowser Grid.Column="2" Name="FileBrowser"/>
 		</Grid>
 	</DockPanel>
 

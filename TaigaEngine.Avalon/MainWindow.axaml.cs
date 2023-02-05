@@ -2,12 +2,8 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using AvaloniaEdit;
-using AvaloniaEdit.TextMate;
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using TextMateSharp.Grammars;
 using TundraEngine.Classes;
 using TundraEngine.Studio.Compiler;
 using TundraEngine.Studio.Controls;
@@ -24,72 +20,39 @@ namespace TundraEngine.Studio
 
 
         public EditorTab? GameTab = null;
-
-        public TundraProject CurrentProject;
         public MainWindow()
         {
             InitializeComponent();
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 //TODO: do this on application level maybe? Or for every window
                 Win32Native.ImplementDarkTitleBar(this);
-            CurrentProject = TundraProject.Parse(ProjectPath);
+            TundraStudio.CurrentProject = TundraProject.Parse(ProjectPath, this);
 
             var fb = this.FindControl<FileBrowser>("FileBrowser");
-            fb.CurrentWorkingDirectory = CurrentProject.Path;
+            fb.CurrentWorkingDirectory = TundraStudio.CurrentProject.Path;
             fb.FileOpen += OnFileOpen;
             DataContext = new MainWindowViewModel();
         }
 
         /// <summary>
-        /// Run the game in a new tab
+        /// Handler for TabItem middle pressed to close
         /// </summary>
-        /// <param name="dllPath">Path to the dll file</param>
-        public void RunGame(string dllPath)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TabItem_PointerReleased(object? sender, PointerReleasedEventArgs e)
         {
-            var tab = new EditorTab("Game", dllPath, EditorType.Game);
-            var tv = tab.Content as TundraView;
-            Runner = new Runner.Runner(dllPath, window: tv);
-            tv!.Game = Runner.Game;
-            ((MainWindowViewModel)DataContext!).Tabs.Add(tab);
-            FileTabs.SelectedItem = tab;
-            GameTab = tab;
-
-            PlayBtn.IsEnabled = false;
-            PauseBtn.IsEnabled = true;
-            StopBtn.IsEnabled = true;
+            var tab = (e.Source as Control)?.DataContext as EditorTab;
+            if (tab != null && e.InitialPressMouseButton == MouseButton.Middle)
+            {
+                CloseTab(tab);
+            }
         }
+
 
         // When stop button pressed
         public void OnStopGame(object? sender, RoutedEventArgs e)
         {
             StopGame();
-        }
-
-        public void StopGame()
-        {
-            if (GameTab == null) return;
-            var tv = (GameTab.Content as TundraView)!;
-
-            tv.Stop();
-
-            Runner?.Destroy();
-            ((MainWindowViewModel)DataContext!).Tabs.Remove(GameTab);
-            GameTab = null;
-            PlayBtn.IsEnabled = true;
-            PauseBtn.IsEnabled = false;
-            StopBtn.IsEnabled = false;
-            GC.Collect();
-        }
-
-        // Internal logger function
-        public void Log(object o)
-        {
-            Console.WriteLine(o);
-            if (TbConsole != null)
-            {
-                TbConsole.Text += o.ToString() + "\n";
-                TbConsole.CaretIndex = TbConsole.Text.Length;
-            }
         }
 
         // Event handler for file open
@@ -106,11 +69,10 @@ namespace TundraEngine.Studio
             EditorTab? el = (args.Source as Button)!.DataContext! as EditorTab;
             if (el != null)
             {
-                if (el.EditorType == EditorType.Game)
-                    OnStopGame(null, args);
-                ((MainWindowViewModel)DataContext!).Tabs.Remove(el);
+                CloseTab(el);
             }
         }
+
 
         // When the play button is clicked
         public async void OnPlayBtnClicked(object? s, RoutedEventArgs args)
@@ -119,7 +81,7 @@ namespace TundraEngine.Studio
             PauseBtn.IsEnabled = false;
             StopBtn.IsEnabled = false;
             ClearConsole();
-            var result = await GameCompiler.Compile(CurrentProject, Log);
+            var result = await GameCompiler.Compile(TundraStudio.CurrentProject, Log);
             if (result != null)
             {
                 foreach (var d in result.Items)
@@ -146,8 +108,70 @@ namespace TundraEngine.Studio
             }
         }
 
-        public void ClearConsole() {
-            TbConsole.Clear();
+        // Internal logger function
+        public void Log(object o)
+        {
+            Console.WriteLine(o);
+            //if (TbConsole != null)
+            //{
+            //    TbConsole.Text += o.ToString() + "\n";
+            //    TbConsole.CaretIndex = TbConsole.Text.Length;
+            //}
+        }
+
+        /// <summary>
+        /// Clears the console text
+        /// </summary>
+        public void ClearConsole()
+        {
+            //TbConsole.Clear();
+        }
+
+        /// <summary>
+        /// Close a tab
+        /// </summary>
+        /// <param name="tab"></param>
+        public void CloseTab(EditorTab tab)
+        {
+            if (tab.EditorType == EditorType.Game)
+                StopGame();
+            ((MainWindowViewModel)DataContext!).Tabs.Remove(tab);
+        }
+
+        /// <summary>
+        /// Run the game in a new tab
+        /// </summary>
+        /// <param name="dllPath">Path to the dll file</param>
+        public void RunGame(string dllPath)
+        {
+            var tab = new EditorTab("Game", dllPath, EditorType.Game);
+            var tv = tab.Content as TundraView;
+            Runner = new Runner.Runner(dllPath, window: tv);
+            tv!.Game = Runner.Game;
+            ((MainWindowViewModel)DataContext!).Tabs.Add(tab);
+            FileTabs.SelectedItem = tab;
+            GameTab = tab;
+
+            PlayBtn.IsEnabled = false;
+            PauseBtn.IsEnabled = true;
+            StopBtn.IsEnabled = true;
+        }
+
+
+        public void StopGame()
+        {
+            if (GameTab == null) return;
+            var tv = (GameTab.Content as TundraView)!;
+
+            tv.Stop();
+
+            Runner?.Destroy();
+            ((MainWindowViewModel)DataContext!).Tabs.Remove(GameTab);
+            GameTab = null;
+            PlayBtn.IsEnabled = true;
+            PauseBtn.IsEnabled = false;
+            StopBtn.IsEnabled = false;
+            GC.Collect();
         }
     }
 }
