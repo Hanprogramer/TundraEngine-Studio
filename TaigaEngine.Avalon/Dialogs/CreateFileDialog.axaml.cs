@@ -10,18 +10,31 @@ namespace TundraEngine.Studio.Dialogs
     public partial class CreateFileDialog : Window
     {
         public string FilePath { get; set; } = "";
-        
+
         public CreateFileDialog()
         {
             InitializeComponent();
         }
 
-        public void OnCreate(string path, string filename)
+        public void OnCreateFile(string path, string filename)
         {
             var root = TundraStudio.CurrentProject!.Path;
-            var filePath = Path.Join(root, path, filename);
-            File.Create(filePath);
-            this.Close();
+            var folder = Path.Join(root, path);
+            var filePath = Path.Join(folder, filename);
+
+            if (!Directory.Exists(folder))
+            {
+                MessageBox.Show("Can't create file", $"Can't find directory: {folder}", this);
+                return;
+            }
+            
+            if (File.Exists(filePath))
+                MessageBox.Show("File already exists", $"File {filename} already exists", this);
+            else
+            {
+                File.Create(filePath);
+                Close(true);
+            }
         }
 
         public void OnClickCreate(object? sender, RoutedEventArgs e)
@@ -32,7 +45,7 @@ namespace TundraEngine.Studio.Dialogs
             {
                 if (CheckValid(filePath))
                 {
-                    OnCreate(filePath, fileName);
+                    OnCreateFile(filePath, fileName);
                 }
             }
         }
@@ -41,13 +54,13 @@ namespace TundraEngine.Studio.Dialogs
         {
             if (pathString == "")
             {
-                MessageBox.Show("All parameters can't be empty", this);
+                MessageBox.Show("Error", "All parameters can't be empty", this);
                 return false;
             }
             var index = ValidateFileNameOrPath(pathString);
             if (index > -1)
             {
-                MessageBox.Show($"Invalid character(s) found: {pathString.ElementAt(index)}", this);
+                MessageBox.Show("Error", $"Invalid character(s) found: {pathString.ElementAt(index)}", this);
                 return false;
             }
             return true;

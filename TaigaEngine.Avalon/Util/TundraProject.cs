@@ -37,7 +37,7 @@ namespace TundraEngine.Studio.Util
         {
             if (!File.Exists(filePath))
             {
-                MessageBox.Show("Error: project file not found: " + filePath, parent);
+                MessageBox.Show("Error", "Error: project file not found: " + filePath, parent);
                 return null;
             }
 
@@ -50,7 +50,7 @@ namespace TundraEngine.Studio.Util
                     var dirPath = System.IO.Path.GetDirectoryName(filePath);
                     if (dirPath == null)
                     {
-                        MessageBox.Show("Error: Can't get directory path of project.json", parent);
+                        MessageBox.Show("Error", "Error: Can't get directory path of project.json", parent);
                         return null;
                     }
                     project.Path = dirPath;
@@ -60,11 +60,11 @@ namespace TundraEngine.Studio.Util
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                MessageBox.Show("Error parsing JSON: \n" + e.ToString(), parent);
+                MessageBox.Show("Error", "Error parsing JSON: \n" + e.ToString(), parent);
             }
 
             // If json is null
-            MessageBox.Show("Error: parsing project.json: " + filePath, parent);
+            MessageBox.Show("Error", "Error: parsing project.json: " + filePath, parent);
             return null;
         }
     }

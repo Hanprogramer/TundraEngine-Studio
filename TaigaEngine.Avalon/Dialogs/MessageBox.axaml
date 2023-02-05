@@ -7,7 +7,7 @@
         x:Class="TundraEngine.Studio.Dialogs.MessageBox"
         Title="MessageBox">
   <Grid RowDefinitions="*,32" Margin="8">
-	  <TextBlock Text="{Binding Message, Mode=TwoWay}" Grid.Row="0"/>
-      <Button Grid.Row="1" HorizontalAlignment="Right">Ok</Button>
+	  <TextBlock Text="{Binding Message, Mode=TwoWay}" Grid.Row="0" TextWrapping="Wrap"/>
+      <Button Grid.Row="1" HorizontalAlignment="Right" Click="OnOk">Ok</Button>
   </Grid>
 </Window>

@@ -66,5 +66,10 @@
 	<ItemGroup>
 	  <Content Include="TundraEngine.ico" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Dialogs\ConfirmationDialog.axaml.cs">
+	    <DependentUpon>ConfirmationDialog.axaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
 
 </Project>

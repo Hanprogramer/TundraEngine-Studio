@@ -11,11 +11,12 @@
 			<ext:BitmapAssetValueConverter x:Key="variableImage"/>
 		</DockPanel.Resources>
 		<DockPanel.ContextMenu>
-			<ContextMenu DataContext="{Binding SelectedFile}">
+			<ContextMenu DataContext="{Binding SelectedFile}" IsEnabled="{Binding HasFileSelected}">
 				<TextBlock Text="{Binding FileName}" TextAlignment="Center" FontSize="10" IsVisible="{Binding HasFileSelected}"/>
-				<MenuItem Header="Copy"/>
-				<MenuItem Header="Paste"/>
-				<MenuItem Header="Dupplicate"/>
+				<MenuItem Header="Cut" IsEnabled="False"/>
+				<MenuItem Header="Copy" IsEnabled="False"/>
+				<MenuItem Header="Paste" IsEnabled="False"/>
+				<MenuItem Header="Dupplicate" IsEnabled="False"/>
 				<Separator/>
 				<MenuItem Header="Create">
 					<MenuItem Header="Folder"/>
@@ -26,8 +27,9 @@
 					<MenuItem Header="Text File" Name="MenuCreateText" Click="OnCreateFileClicked" />
 				</MenuItem>
 				<Separator/>
-				<MenuItem Header="Reveal In Explorer"/>
-				<MenuItem Header="Delete"/>
+				<MenuItem Header="Reveal In Explorer" Click="OnRevealExplorer"/>
+				<MenuItem Header="Delete" Click="OnDeleteFile"/>
+				<MenuItem Header="Rename" Click="OnRenameFile"/>
 			</ContextMenu>
 		</DockPanel.ContextMenu>
 		<TreeView

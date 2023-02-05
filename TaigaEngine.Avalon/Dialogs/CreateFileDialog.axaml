@@ -5,6 +5,7 @@
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="170"
 		Width="400" Height="170"
         x:Class="TundraEngine.Studio.Dialogs.CreateFileDialog"
+		WindowStartupLocation="CenterOwner"
         Title="Create a new file">
 	<StackPanel Margin="12">
 		<TextBlock>File name</TextBlock>

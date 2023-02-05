@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using TundraEngine.Studio.Dialogs;
 using TundraEngine.Studio.Util;
 using static AvaloniaEdit.Document.TextDocumentWeakEventManager;
@@ -81,7 +82,10 @@ namespace TundraEngine.Studio.Controls
         public FileBrowserItem? FindItem(string path, FileBrowserItem? startingPath = null)
         {
             FileBrowserItem obj = startingPath ?? this;
-            if (obj.Path == path) return obj;
+            if (obj.Path == path)
+            {
+                return obj;
+            }
 
             if (obj.IsDirectory)
             {
@@ -89,7 +93,7 @@ namespace TundraEngine.Studio.Controls
                 {
                     if (path.StartsWith(item.Path))
                     {
-                        var result = FindItem(item.Path, item);
+                        var result = FindItem(path, item);
                         if (result != null) return result;
                     }
                 }
@@ -146,32 +150,31 @@ namespace TundraEngine.Studio.Controls
                                  | NotifyFilters.FileName
                                  | NotifyFilters.LastAccess
                                  | NotifyFilters.LastWrite
-            | NotifyFilters.Security
+                                 | NotifyFilters.Security
                                  | NotifyFilters.Size;
 
-            watcher.Changed += OnChanged;
-            watcher.Created += OnCreated;
-            watcher.Deleted += OnDeleted;
-            watcher.Renamed += OnRenamed;
-            watcher.Error += OnError;
+            watcher.Changed += OnFileWatcherChanged;
+            watcher.Created += OnFileWatcherCreated;
+            watcher.Deleted += OnFileWatcherDeleted;
+            watcher.Renamed += OnFileWatcherRenamed;
+            watcher.Error += OnFileWatcherError;
 
             watcher.Filter = "*.*";
             watcher.IncludeSubdirectories = true;
             watcher.EnableRaisingEvents = true;
         }
 
-        private void OnError(object sender, ErrorEventArgs e)
+        private void OnFileWatcherError(object sender, ErrorEventArgs e)
         {
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        private void OnRenamed(object sender, RenamedEventArgs e)
+        private void OnFileWatcherRenamed(object sender, RenamedEventArgs e)
         {
             var oldPath = e.OldFullPath;
             var oldName = e.OldName;
             var newPath = e.FullPath;
-            var newName = e.Name;
-
+            var newName = (e.Name ?? "").Split(Path.DirectorySeparatorChar).Last();
 
             var item = FindItem(oldPath);
             if (item != null)
@@ -180,11 +183,11 @@ namespace TundraEngine.Studio.Controls
                 item.Path = newPath;
                 //TODO: might need the path to be reactive as well?
             }
-            //Console.WriteLine($"Rename {oldName} to {newName}, {newPath}, found: {item != null}");
+            Console.WriteLine($"[{Path.DirectorySeparatorChar}] Rename {oldName} ({oldPath}) to {newName} ({newPath}), found: {item != null}");
 
         }
 
-        private void OnDeleted(object sender, FileSystemEventArgs e)
+        private void OnFileWatcherDeleted(object sender, FileSystemEventArgs e)
         {
             var item = FindItem(e.FullPath);
             if (item != null)
@@ -193,10 +196,10 @@ namespace TundraEngine.Studio.Controls
             }
         }
 
-        private void OnCreated(object sender, FileSystemEventArgs e)
+        private void OnFileWatcherCreated(object sender, FileSystemEventArgs e)
         {
             var path = e.FullPath;
-            var name = e.Name;
+            var name = (e.Name ?? "").Split(Path.DirectorySeparatorChar).Last();
             var isDirectory = File.GetAttributes(path).HasFlag(FileAttributes.Directory);
 
             var item = new FileBrowserItem(name, path, isDirectory);
@@ -214,9 +217,78 @@ namespace TundraEngine.Studio.Controls
             }
         }
 
-        private void OnChanged(object sender, FileSystemEventArgs e)
+        private void OnFileWatcherChanged(object sender, FileSystemEventArgs e)
         {
             //throw new NotImplementedException();
+        }
+
+
+        private async void OnRenameFile(object? sender, RoutedEventArgs e)
+        {
+            if (SelectedFile != null)
+            {
+                var window = this.FindAncestorOfType<Window>();
+                var newName = await RenameDialog.Show(
+                    $"Rename file '{SelectedFile.FileName}'",
+                    SelectedFile.FileName,
+                    SelectedFile,
+                    window);
+
+                if (newName != "" && newName != null)
+                {
+                    var oldFolder = Path.GetDirectoryName(SelectedFile.Path);
+                    var newPath = Path.Join(oldFolder, newName);
+                    try
+                    {
+                        File.Move(SelectedFile.Path, newPath, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error", $"Error renaming file: {ex}", window);
+                    }
+                }
+            }
+        }
+        private async void OnDeleteFile(object? sender, RoutedEventArgs e)
+        {
+            if (SelectedFile != null)
+            {
+                var window = this.FindAncestorOfType<Window>();
+                if (await ConfirmationDialog.Show(
+                    $"Delete '{SelectedFile.FileName}'?", 
+                    $"Are you sure you want to delete '{SelectedFile.FileName}'?", 
+                    window))
+                {
+                    try
+                    {
+                        File.Delete(SelectedFile.Path);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error", $"Error deleting file: {ex}", window);
+                    }
+                    finally
+                    {
+                        SelectedFile = null;
+                    }
+                }
+            }
+        }
+
+        public void OnRevealExplorer(object? sender, RoutedEventArgs e)
+        {
+            if (SelectedFile == null) return;
+            var IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+            if (IsWindows)
+            {
+                var args = @$"/select,""{SelectedFile.Path}""";
+                Process.Start("explorer.exe", args);
+            }
+            else
+            {
+                throw new NotImplementedException();
+                // TODO: implement for other platforms
+            }
         }
 
         private FileBrowserItem? FindItem(string path)
@@ -227,7 +299,7 @@ namespace TundraEngine.Studio.Controls
                 if (ti.Path == path) return ti;
                 if (ti.IsDirectory)
                 {
-                    var result = ti.FindItem(path);
+                    var result = ti.FindItem(path, ti);
                     if (result != null) return result;
                 }
             }

@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 
 namespace TundraEngine.Studio.Dialogs
 {
@@ -11,10 +12,22 @@ namespace TundraEngine.Studio.Dialogs
             DataContext = this;
         }
 
-        public static void Show(string message, Window? parent)
+        public MessageBox(string message)
         {
-            var msg = new MessageBox();
-            msg.Message = message;
+            Message = message;
+            InitializeComponent();
+            DataContext = this;
+        }
+
+        public void OnOk(object? sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        public static void Show(string title, string message, Window? parent)
+        {
+            var msg = new MessageBox(message);
+            msg.Title = title;
             if (parent != null)
                 msg.ShowDialog(parent);
             else
