@@ -27,9 +27,9 @@
 					<MenuItem Header="Text File" Name="MenuCreateText" Click="OnCreateFileClicked" />
 				</MenuItem>
 				<Separator/>
-				<MenuItem Header="Reveal In Explorer" Click="OnRevealExplorer"/>
-				<MenuItem Header="Delete" Click="OnDeleteFile"/>
-				<MenuItem Header="Rename" Click="OnRenameFile"/>
+				<MenuItem Header="Reveal In Explorer" Click="OnRevealExplorer"  IsEnabled="{Binding HasFileSelected}"/>
+				<MenuItem Header="Delete" Click="OnDeleteFile"  IsEnabled="{Binding HasFileSelected}"/>
+				<MenuItem Header="Rename" Click="OnRenameFile"  IsEnabled="{Binding HasFileSelected}"/>
 			</ContextMenu>
 		</DockPanel.ContextMenu>
 		<TreeView

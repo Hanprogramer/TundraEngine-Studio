@@ -11,8 +11,10 @@
 	<Grid RowDefinitions="*,32" Margin="8">
 		<TextBlock Grid.Row="0" Text="{Binding Message}" TextWrapping="Wrap"/>
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
-			<Button Click="OnNo">No</Button>
-			<Button Click="OnYes">Yes</Button>
+			<Button IsVisible="{Binding IsDangerous}" Margin="0,0,4,0" Click="OnYes" Background="Red" Content="{Binding PositiveAction}"></Button>
+			<Button IsVisible="{Binding !IsDangerous}" Margin="0,0,4,0" Click="OnYes" Content="{Binding PositiveAction}"></Button>
+			<Button IsVisible="{Binding ShowNegative}" Margin="0,0,4,0" Click="OnNo"  Content="{Binding NegativeAction}">No</Button>
+			<Button IsVisible="{Binding ShowCancel}" Click="OnNo">Cancel</Button>
 		</StackPanel>
 	</Grid>
 </Window>

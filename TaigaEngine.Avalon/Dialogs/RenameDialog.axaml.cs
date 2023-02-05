@@ -30,7 +30,7 @@ namespace TundraEngine.Studio.Dialogs
             var newPath = Path.Join(oldFolder, FileName);
             if (File.Exists(newPath) || Directory.Exists(newPath))
             {
-                if (await ConfirmationDialog.Show("File exists!", $"File '{FileName}' already exsists, overwrite?", this))
+                if (await ConfirmationDialog.Show("File exists!", $"File '{FileName}' already exsists, overwrite?", this) == true)
                 {
                     this.Close(FileName);
                 }

@@ -126,7 +126,7 @@ namespace TundraEngine.Studio.Controls
         public event FileOpenHandler? FileOpen;
         public bool InEditorUse { get; set; } = true;
         public FileBrowserItem? SelectedFile { get; set; }
-        public bool HasFileSelected { get; set; }
+        public bool HasFileSelected { get; set; } = false;
         FileSystemWatcher watcher;
 
         public ObservableCollection<FileBrowserItem> Items { get; private set; }
@@ -183,7 +183,7 @@ namespace TundraEngine.Studio.Controls
                 item.Path = newPath;
                 //TODO: might need the path to be reactive as well?
             }
-            Console.WriteLine($"[{Path.DirectorySeparatorChar}] Rename {oldName} ({oldPath}) to {newName} ({newPath}), found: {item != null}");
+            //Console.WriteLine($"[{Path.DirectorySeparatorChar}] Rename {oldName} ({oldPath}) to {newName} ({newPath}), found: {item != null}");
 
         }
 
@@ -240,7 +240,10 @@ namespace TundraEngine.Studio.Controls
                     var newPath = Path.Join(oldFolder, newName);
                     try
                     {
-                        File.Move(SelectedFile.Path, newPath, true);
+                        if(SelectedFile.IsDirectory)
+                            Directory.Move(SelectedFile.Path, newPath);
+                        else
+                            File.Move(SelectedFile.Path, newPath, true);
                     }
                     catch (Exception ex)
                     {
@@ -256,12 +259,15 @@ namespace TundraEngine.Studio.Controls
                 var window = this.FindAncestorOfType<Window>();
                 if (await ConfirmationDialog.Show(
                     $"Delete '{SelectedFile.FileName}'?", 
-                    $"Are you sure you want to delete '{SelectedFile.FileName}'?", 
-                    window))
+                    $"Are you sure you want to delete '{SelectedFile.FileName}'?\nThis action can't be undone!", 
+                    window, isDangerous: true, positiveAction: "Delete") == true)
                 {
                     try
                     {
-                        File.Delete(SelectedFile.Path);
+                        if (SelectedFile.IsDirectory)
+                            Directory.Delete(SelectedFile.Path, true);
+                        else
+                            File.Delete(SelectedFile.Path);
                     }
                     catch (Exception ex)
                     {
