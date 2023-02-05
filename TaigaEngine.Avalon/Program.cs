@@ -29,12 +29,12 @@ namespace TundraEngine.Studio
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .With(new Win32PlatformOptions()
-                    {
-                        UseWgl = true,
-                        AllowEglInitialization = true,
-                        UseDeferredRendering = false,
-                        UseWindowsUIComposition = false
-                    })
+                {
+                    UseWgl = true,
+                    AllowEglInitialization = true,
+                    UseDeferredRendering = false,
+                    UseWindowsUIComposition = false
+                })
                 .UseSkia()
                 .LogToTrace();
     }

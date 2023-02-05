@@ -27,7 +27,7 @@ public class TestGame1Game : Game
                 objt.Y = 32 * index;
                 objt.Width = 32;
                 objt.Height = 32;
-                
+
                 SpriteRenderer sprite2 = obj2.AddComponent<SpriteRenderer>();
                 sprite2.Texture = GameManager.AssetManager.AddTexture("Assets/silk.png");
                 Window.Scene.AddObject(obj2);

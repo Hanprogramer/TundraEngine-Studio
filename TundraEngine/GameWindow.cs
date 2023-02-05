@@ -1,10 +1,8 @@
 ﻿using Silk.NET.Core.Contexts;
-using Silk.NET.GLFW;
 using Silk.NET.Input;
 using Silk.NET.OpenGL;
 using Silk.NET.SDL;
 using Silk.NET.Windowing;
-using SixLabors.ImageSharp;
 using TundraEngine.Classes;
 using TundraEngine.Rendering;
 using Thread = System.Threading.Thread;
@@ -178,7 +176,7 @@ namespace TundraEngine
 
         public void PollEvents()
         {
-            if(renderOnSeparateThread)
+            if (renderOnSeparateThread)
                 _window.DoEvents();
         }
 

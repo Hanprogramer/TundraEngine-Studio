@@ -3,10 +3,8 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 using AvaloniaEdit.Utils;
-using DynamicData.Kernel;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -14,7 +12,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using TundraEngine.Studio.Dialogs;
 using TundraEngine.Studio.Util;
-using static AvaloniaEdit.Document.TextDocumentWeakEventManager;
 
 namespace TundraEngine.Studio.Controls
 {
@@ -240,7 +237,7 @@ namespace TundraEngine.Studio.Controls
                     var newPath = Path.Join(oldFolder, newName);
                     try
                     {
-                        if(SelectedFile.IsDirectory)
+                        if (SelectedFile.IsDirectory)
                             Directory.Move(SelectedFile.Path, newPath);
                         else
                             File.Move(SelectedFile.Path, newPath, true);
@@ -258,8 +255,8 @@ namespace TundraEngine.Studio.Controls
             {
                 var window = this.FindAncestorOfType<Window>();
                 if (await ConfirmationDialog.Show(
-                    $"Delete '{SelectedFile.FileName}'?", 
-                    $"Are you sure you want to delete '{SelectedFile.FileName}'?\nThis action can't be undone!", 
+                    $"Delete '{SelectedFile.FileName}'?",
+                    $"Are you sure you want to delete '{SelectedFile.FileName}'?\nThis action can't be undone!",
                     window, isDangerous: true, positiveAction: "Delete") == true)
                 {
                     try

@@ -4,7 +4,6 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using System;
 using System.Runtime.InteropServices;
-using TundraEngine.Classes;
 using TundraEngine.Studio.Compiler;
 using TundraEngine.Studio.Controls;
 using TundraEngine.Studio.Util;

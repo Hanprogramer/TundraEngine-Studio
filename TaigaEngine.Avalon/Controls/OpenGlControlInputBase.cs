@@ -40,7 +40,8 @@ namespace TundraEngine.Studio.Controls
                 context.DrawImage(_bitmap, new Rect(_bitmap.Size), new Rect(Bounds.Size));
                 base.Render(context);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex);
             }
         }

@@ -4,7 +4,6 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using AvaloniaEdit;
 using AvaloniaEdit.TextMate;
-using Microsoft.CodeAnalysis.Differencing;
 using System.Collections.Generic;
 using TextMateSharp.Grammars;
 

@@ -17,7 +17,7 @@ namespace TundraEngine.Studio.Dialogs
             InitializeComponent();
             DataContext = this;
         }
-        public ConfirmationDialog(string message, string? positiveAction = null, string? negativeAction = null, bool showCancel = true, bool showNegative=false, bool isDangerous = false)
+        public ConfirmationDialog(string message, string? positiveAction = null, string? negativeAction = null, bool showCancel = true, bool showNegative = false, bool isDangerous = false)
         {
             Message = message;
             PositiveAction = positiveAction ?? "Yes";
@@ -42,7 +42,7 @@ namespace TundraEngine.Studio.Dialogs
             this.Close();
         }
 
-        public static async Task<bool?> Show(string title, string message, Window owner, string? positiveAction = null, string? negativeAction = null, bool showCancel = true, bool showNegative=false, bool isDangerous = false)
+        public static async Task<bool?> Show(string title, string message, Window owner, string? positiveAction = null, string? negativeAction = null, bool showCancel = true, bool showNegative = false, bool isDangerous = false)
         {
             var dlg = new ConfirmationDialog(message, positiveAction, negativeAction, showCancel, showNegative, isDangerous);
             dlg.Title = title;

@@ -3,12 +3,10 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.MSBuild;
-using Silk.NET.Vulkan;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using TundraEngine.Classes;
 using TundraEngine.Studio.Util;
 
 namespace TundraEngine.Studio.Compiler

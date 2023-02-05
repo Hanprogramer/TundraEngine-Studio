@@ -1,16 +1,11 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using AvaloniaEdit;
-using AvaloniaEdit.TextMate;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using TextMateSharp.Grammars;
 using TundraEngine.Studio.Controls;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -88,7 +83,7 @@ namespace TundraEngine.Studio.Util
             {
                 var te = new TextEditor();
                 CodeEditor.InitializeTextEditor(te);
-                if(FilePath != null)
+                if (FilePath != null)
                     te.Text = File.ReadAllText(FilePath);
                 Content = te;
                 te.TextChanged += (o, e) =>
@@ -103,7 +98,7 @@ namespace TundraEngine.Studio.Util
             }
             else
             {
-                Content = new Label() { Content="This editor type isn't supported yet" };
+                Content = new Label() { Content = "This editor type isn't supported yet" };
             }
         }
     }

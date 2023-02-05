@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using System;
 using System.IO;
 using System.Linq;
 using TundraEngine.Studio.Util;
@@ -27,7 +26,7 @@ namespace TundraEngine.Studio.Dialogs
                 MessageBox.Show("Can't create file", $"Can't find directory: {folder}", this);
                 return;
             }
-            
+
             if (File.Exists(filePath))
                 MessageBox.Show("File already exists", $"File {filename} already exists", this);
             else
