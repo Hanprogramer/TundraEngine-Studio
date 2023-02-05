@@ -6,7 +6,7 @@ using TundraEngine.Rendering;
 public class TestGame1Game : Game
 {
     bool testUpdateSpeed = true;
-    int testCount = 50000;
+    int testCount = 5000;
     public TestGame1Game(IGameWindow window) : base("My Game", "v0.0.1", "1234412", window)
     {
         SetIcon("Assets/Ships/ship_0000.png");
@@ -27,7 +27,7 @@ public class TestGame1Game : Game
                 objt.Y = 32 * index;
                 objt.Width = 32;
                 objt.Height = 32;
-
+                
                 SpriteRenderer sprite2 = obj2.AddComponent<SpriteRenderer>();
                 sprite2.Texture = GameManager.AssetManager.AddTexture("Assets/silk.png");
                 Window.Scene.AddObject(obj2);

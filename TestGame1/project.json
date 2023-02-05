@@ -1,7 +1,7 @@
 {
 	"Title" : "TestGame1",
 	"Version" : "0.0.1 alpha",
-	"TundraVersion" : "0.0.1 alpha",
+	"TundraVersion" : [0,0,0,1],
 	"Author" : "Hanprogramer",
 	"CSProject" : "TestGame1.csproj"
 }
