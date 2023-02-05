@@ -38,11 +38,11 @@ namespace TundraEngine.Studio.Controls
                 }
 
                 context.DrawImage(_bitmap, new Rect(_bitmap.Size), new Rect(Bounds.Size));
+                base.Render(context);
             }
             catch (Exception ex) {
                 Console.WriteLine(ex);
             }
-            base.Render(context);
         }
 
         private void CheckError(GlInterface gl)
