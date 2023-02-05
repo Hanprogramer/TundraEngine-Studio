@@ -30,7 +30,7 @@ namespace TundraEngine.Studio.Controls
         public FileBrowserItem? Parent = null;
         public bool IsDirectory;
         public bool IsExpanded { get; set; } = false;
-        //public ObservableCollection<FileBrowserItem> Items { get; set; }
+
         private ObservableCollection<FileBrowserItem> items;
         public ObservableCollection<FileBrowserItem> Items
         {
