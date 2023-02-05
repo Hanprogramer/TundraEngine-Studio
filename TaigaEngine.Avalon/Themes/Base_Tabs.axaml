@@ -1,0 +1,59 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <TabControl Width="360" Height="400">
+			<TabControl.ItemTemplate>
+				<DataTemplate>
+					<DockPanel>
+						<StackPanel Orientation="Horizontal"   Margin="10,0">
+							<TextBlock Text="Header" VerticalAlignment="Center"/>
+						</StackPanel>
+					</DockPanel>
+				</DataTemplate>
+			</TabControl.ItemTemplate>
+			<TabItem Header="Test">
+				<TextBlock>Hello</TextBlock>
+			</TabItem>
+			<TabItem Header="Test2">
+				<TextBlock>Hello</TextBlock>
+			</TabItem>
+			
+        </TabControl>
+    </Design.PreviewWith>
+
+
+	<Style Selector="TabControl">
+		<Setter Property="Background" Value="#1c1c1c"/>
+		<Setter Property="Margin" Value="0 0 0 0"/>
+		<Setter Property="Padding" Value="0 0"/>
+	</Style>
+	<Style Selector="TabControl WrapPanel">
+		<Setter Property="Background" Value="#111111"/>
+	</Style>
+
+	<Style Selector="TabItem">
+		<Setter Property="FontSize" Value="12"/>
+		<Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="Margin" Value="0 0 0 0"/>
+		<Setter Property="Padding" Value="0 0 0 0"/>
+		<Setter Property="Height" Value="30"/>
+
+		<Setter Property="MinHeight" Value="30"/>
+	</Style>
+
+	<Style Selector="TabItem:pointerover /template/ Border#PART_LayoutRoot">
+		<Setter Property="Background" Value="#1e1e1e"/>
+	</Style>
+
+	<Style Selector="TabItem:focus">
+		<Setter Property="Background" Value="#1e1e1e"/>
+	</Style>
+
+	<Style Selector="TabItem:selected">
+		<Setter Property="Background" Value="#1e1e1e"/>
+	</Style>
+
+	<Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Background" Value="#191919"/>
+	</Style>
+</Styles>

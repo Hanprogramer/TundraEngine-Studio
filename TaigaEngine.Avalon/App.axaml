@@ -4,5 +4,6 @@
     <Application.Styles>
         <FluentTheme Mode="Dark"/>
 		<StyleInclude Source="avares://AvaloniaEdit/AvaloniaEdit.xaml"/>
+		<StyleInclude Source="/Themes/Base.axaml"/>
     </Application.Styles>
 </Application>
