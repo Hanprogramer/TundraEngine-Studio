@@ -35,8 +35,13 @@
 			Items="{Binding Items}"
 			HorizontalAlignment="Stretch"
 			>
+			<TreeView.Styles>
+				<Style Selector="TreeViewItem">
+					<Setter Property="IsExpanded" Value="{Binding Path=IsExpanded,Mode=TwoWay}" />
+				</Style>
+			</TreeView.Styles>
 			<TreeView.ItemTemplate >
-				<TreeDataTemplate ItemsSource="{Binding Items, Mode=OneWay}" >
+				<TreeDataTemplate ItemsSource="{Binding Items, Mode=OneWay}">
 					<StackPanel Orientation="Horizontal" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" PointerMoved="Item_PointerMoved">
 						<svg:Svg IsVisible="{Binding !UseCustomIcon}" Name="svgSvg" Path="{Binding Icon}" Width="14" Height="14" />
 						<Image IsVisible="{Binding UseCustomIcon}" Source="{Binding Icon, Converter={StaticResource variableImage}}" Width="14" Height="14"/>

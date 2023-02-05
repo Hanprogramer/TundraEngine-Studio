@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using TundraEngine.Studio.Dialogs;
+using TundraEngine.Studio.Util;
 using static AvaloniaEdit.Document.TextDocumentWeakEventManager;
 
 namespace TundraEngine.Studio.Controls
@@ -21,14 +22,16 @@ namespace TundraEngine.Studio.Controls
         string fileName = "";
         public string FileName
         {
-            get => fileName; 
+            get => fileName;
             set
             {
                 this.RaiseAndSetIfChanged(ref fileName, value);
             }
         }
         public string Path { get; set; }
+        public FileBrowserItem? Parent = null;
         public bool IsDirectory;
+        public bool IsExpanded { get; set; } = false;
         //public ObservableCollection<FileBrowserItem> Items { get; set; }
         private ObservableCollection<FileBrowserItem> items;
         public ObservableCollection<FileBrowserItem> Items
@@ -56,6 +59,23 @@ namespace TundraEngine.Studio.Controls
                 this.Items = new();
 
             if (Icon != null) this.Icon = Icon;
+            else
+            {
+                if (UseCustomIcon == false)
+                {
+                    // Auto determine file icon
+                    if (!IsDirectory)
+                    {
+                        this.Icon = "/Assets/file_white.svg";
+                        if (Path.EndsWith(".png"))
+                        {
+                            // TODO: Supports other format
+                            this.Icon = Path;
+                            this.UseCustomIcon = true;
+                        }
+                    }
+                }
+            }
         }
 
         public FileBrowserItem? FindItem(string path, FileBrowserItem? startingPath = null)
@@ -75,6 +95,14 @@ namespace TundraEngine.Studio.Controls
                 }
             }
             return null;
+        }
+
+        public void RemoveFromParent()
+        {
+            if (Parent != null)
+                Parent.Items.Remove(this);
+            else
+                throw new Exception("Item has no parent");
         }
     }
     public partial class FileBrowser : UserControl
@@ -158,12 +186,32 @@ namespace TundraEngine.Studio.Controls
 
         private void OnDeleted(object sender, FileSystemEventArgs e)
         {
-            //throw new NotImplementedException();
+            var item = FindItem(e.FullPath);
+            if (item != null)
+            {
+                item.RemoveFromParent();
+            }
         }
 
         private void OnCreated(object sender, FileSystemEventArgs e)
         {
-            //throw new NotImplementedException();
+            var path = e.FullPath;
+            var name = e.Name;
+            var isDirectory = File.GetAttributes(path).HasFlag(FileAttributes.Directory);
+
+            var item = new FileBrowserItem(name, path, isDirectory);
+            var parentPath = Path.GetDirectoryName(path);
+
+            var parent = FindItem(parentPath);
+            if (parent != null)
+            {
+                parent.Items.Add(item);
+                item.Parent = parent;
+            }
+            else
+            {
+                throw new DirectoryNotFoundException($"Parent item not found {parentPath}");
+            }
         }
 
         private void OnChanged(object sender, FileSystemEventArgs e)
@@ -254,11 +302,17 @@ namespace TundraEngine.Studio.Controls
 
         public void RefreshItems()
         {
-            Items.AddRange(GetFileBrowserItems(_cwd));
-            //DataContext = this;
+            if (TundraStudio.CurrentProject != null)
+            {
+                Items.Clear();
+                var root = new FileBrowserItem(TundraStudio.CurrentProject.Title, TundraStudio.CurrentProject.Path, true);
+                root.IsExpanded = true;
+                root.Items.AddRange(GetFileBrowserItems(_cwd, root));
+                Items.Add(root);
+            }
         }
         string[] skipFolders = new string[] { "bin", "obj", ".git", ".vscode" };
-        public ObservableCollection<FileBrowserItem> GetFileBrowserItems(string path)
+        public ObservableCollection<FileBrowserItem> GetFileBrowserItems(string path, FileBrowserItem? parent = null)
         {
             var items = new ObservableCollection<FileBrowserItem>();
 
@@ -274,20 +328,16 @@ namespace TundraEngine.Studio.Controls
                         continue;
                     }
                     var item = new FileBrowserItem(Path.GetFileName(dir), dir, true);
-                    item.Items = GetFileBrowserItems(item.Path);
+                    item.Items = GetFileBrowserItems(item.Path, item);
+                    item.Parent = parent;
                     items.Add(item);
                 }
 
                 // Files
                 foreach (var file in Directory.GetFiles(path))
                 {
-                    var item = new FileBrowserItem(Path.GetFileName(file), file, false, Icon: "/Assets/file_white.svg");
-                    if (file.EndsWith(".png"))
-                    {
-                        // TODO: handle other image formats
-                        item.Icon = file;
-                        item.UseCustomIcon = true;
-                    }
+                    var item = new FileBrowserItem(Path.GetFileName(file), file, false);
+                    item.Parent = parent;
                     items.Add(item);
                 }
             }
