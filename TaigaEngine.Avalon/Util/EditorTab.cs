@@ -4,6 +4,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using AvaloniaEdit;
+using ReactiveUI;
 using System;
 using System.IO;
 using TundraEngine.Studio.Controls;
@@ -19,9 +20,17 @@ namespace TundraEngine.Studio.Util
         Game
     }
 
-    public class EditorTab
+    public class EditorTab : ReactiveObject
     {
-        public string Header { get; set; }
+        string header = "";
+        public string Header
+        {
+            get => header; 
+            set
+            {
+                this.RaiseAndSetIfChanged(ref header, value);
+            }
+        }
         public string? FilePath { get; set; }
 
         public EditorType EditorType { get; set; }
