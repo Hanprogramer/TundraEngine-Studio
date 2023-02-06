@@ -9,7 +9,7 @@ namespace TundraEngine.Classes.Data
 
     public class GameComponentResource
     {
-        public string _class { get; set; }
+        public string component { get; set; }
         public object properties { get; set; }
     }
 

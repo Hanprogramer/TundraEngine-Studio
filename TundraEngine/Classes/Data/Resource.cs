@@ -17,7 +17,7 @@ namespace TundraEngine.Classes.Data
     {
         public virtual string uuid { get; set; }
         public ResourceType resource_type { get; set; }
-        public string? Path { get; set; }
+        public string? path { get; set; }
         public object? data { get; set; }
 
         public Resource(string uuid, ResourceType resourceType = ResourceType.RawFile)

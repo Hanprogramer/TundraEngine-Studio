@@ -6,20 +6,15 @@ using System.Threading.Tasks;
 
 namespace TundraEngine.Classes.Data
 {
+
     public class SceneResource : Resource
     {
-        public SceneResourceData Data { get; set; }
         public SceneResource(string uuid, ResourceType resourceType = ResourceType.Scene) : base(uuid, resourceType)
-        {
-        }
+        {}
+        public SceneObjectData[] objects { get; set; }
     }
 
-    public class SceneResourceData
-    {
-        public Object[] objects { get; set; }
-    }
-
-    public class Object
+    public class SceneObjectData
     {
         public string uuid { get; set; }
         public string name { get; set; }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TundraEngine.Classes.Data;
+using TundraEngine.Studio.Util;
 
 namespace TundraEngine.Studio.Compiler
 {
@@ -13,7 +14,7 @@ namespace TundraEngine.Studio.Compiler
     {
         public static string[] resourceFilters = { "*.tobj", "*.tscn", "*.tspr" };
 
-        public static async Task<Dictionary<string, Resource>> Compile(string path)
+        public static async Task<Dictionary<string, Resource>> Compile(string path, string outputFolder)
         {
             var resources = LoadResourcesFromFolder(path);
             var result = new Dictionary<string, Resource>();
@@ -49,6 +50,8 @@ namespace TundraEngine.Studio.Compiler
                             Console.WriteLine($"Unknown resource type for {filepath}");
                             break;
                     }
+                    finalData.uuid = json.uuid;
+                    finalData.path = filepath.Remove(0,TundraStudio.CurrentProject.Path.Length);
                     Console.WriteLine($"Added {filepath}");
                     result.Add(json.uuid, finalData);
                 }
@@ -58,6 +61,13 @@ namespace TundraEngine.Studio.Compiler
                     continue;
                 }
             }
+            // Writes out the compiled file
+            var outputPath = Path.Join(outputFolder, "resources.json");
+            if (File.Exists(outputPath))
+                File.Delete(outputPath);
+            await File.WriteAllTextAsync(outputPath, JsonConvert.SerializeObject(result, Formatting.Indented));
+
+
             return result;
 
 

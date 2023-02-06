@@ -81,7 +81,8 @@ namespace TundraEngine.Studio
             StopBtn.IsEnabled = false;
             ClearConsole();
 
-            await ResourceCompiler.Compile(TundraStudio.CurrentProject.Path);
+            var compileOutputPath = System.IO.Path.Join(TundraStudio.CurrentProject.Path, "bin");
+            await ResourceCompiler.Compile(TundraStudio.CurrentProject.Path, compileOutputPath);
             PlayBtn.IsEnabled = true;
 
             return;
