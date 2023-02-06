@@ -8,6 +8,6 @@ namespace TundraEngine
         public static Game Game;
         public static Renderer Renderer;
         public static IGameWindow GameWindow;
-        public static AssetManager AssetManager;
+        public static ResourceManager AssetManager;
     }
 }

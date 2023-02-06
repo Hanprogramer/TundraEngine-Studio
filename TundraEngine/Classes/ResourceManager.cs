@@ -1,19 +1,22 @@
-﻿using TundraEngine.Rendering;
+﻿using TundraEngine.Classes.Data;
+using TundraEngine.Rendering;
 
 namespace TundraEngine.Classes
 {
     /// <summary>
     /// A class for managing resources used in the game
     /// </summary>
-    public class AssetManager
+    public class ResourceManager
     {
         public Dictionary<string, Texture> Textures;
+        public Dictionary<string, Resource> Resources;
         public IGameWindow Window;
         public Renderer Renderer;
 
-        public AssetManager(IGameWindow Window)
+        public ResourceManager(IGameWindow Window)
         {
             Textures = new();
+            Resources = new();
             this.Window = Window;
             Renderer = Window.Renderer;
         }
@@ -58,6 +61,22 @@ namespace TundraEngine.Classes
         public void UnloadTexture(string path)
         {
             throw new NotImplementedException("Unload texture not implemented");
+        }
+
+        public string GenerateUUIDv4()
+        {
+            return Guid.NewGuid().ToString();
+        }
+
+
+
+        public Resource GetResource(string uuid)
+        {
+            if (Resources.ContainsKey(uuid))
+            {
+                return Resources[uuid];
+            }
+            throw new Exception("Resource not found");
         }
     }
 }
