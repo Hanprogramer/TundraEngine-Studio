@@ -33,7 +33,7 @@ namespace TundraEngine
             set => _updatePeriod = value <= double.Epsilon ? 0 : 1 / value;
         }
 
-        public AssetManager AssetManager;
+        public ResourceManager AssetManager;
 
         private Stopwatch UpdateStopwatch;
 
@@ -52,7 +52,7 @@ namespace TundraEngine
             else
                 Window = window;
 
-            AssetManager = new AssetManager(Window);
+            AssetManager = new ResourceManager(Window);
             Window.OnLoadAssets += (Renderer renderer) =>
             {
                 AssetManager.LoadTextures(renderer);

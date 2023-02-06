@@ -22,7 +22,7 @@ namespace TundraEngine.Classes
         // Static references
         public static Renderer Renderer;
         public static Game Game;
-        public static AssetManager AssetManager;
+        public static ResourceManager AssetManager;
 
         public List<Component> Components;
 

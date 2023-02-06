@@ -1,0 +1,18 @@
+{
+	"format_version": 1,
+	"resource_type" : 2,
+	"uuid": "88ca59c5-ca30-4c03-b4d8-5f19d0ceefaa",
+	"data" : {
+		"objects" : [
+			{
+				"uuid":"524885f3-4309-4847-b4f6-e40bbfae3e81",
+				"name": "Plane",
+				"description": "",
+				"properties":{
+					"x": 32,
+					"y": 32
+				}
+			}
+		]
+	}
+}

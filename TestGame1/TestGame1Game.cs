@@ -35,7 +35,7 @@ public class TestGame1Game : Game
         }
 
 
-        var obj = new Plane(Window.Scene);
+        var obj = new PlaneController(Window.Scene);
         var transform = obj.AddComponent<Transform>();
         transform.Width = 32;
         transform.Height = 32;

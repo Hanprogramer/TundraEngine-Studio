@@ -80,6 +80,11 @@ namespace TundraEngine.Studio
             PauseBtn.IsEnabled = false;
             StopBtn.IsEnabled = false;
             ClearConsole();
+
+            await ResourceCompiler.Compile(TundraStudio.CurrentProject.Path);
+            PlayBtn.IsEnabled = true;
+
+            return;
             var result = await GameCompiler.Compile(TundraStudio.CurrentProject, Log);
             if (result != null)
             {
