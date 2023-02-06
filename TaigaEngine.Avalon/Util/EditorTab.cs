@@ -25,7 +25,7 @@ namespace TundraEngine.Studio.Util
         string header = "";
         public string Header
         {
-            get => header; 
+            get => header;
             set
             {
                 this.RaiseAndSetIfChanged(ref header, value);

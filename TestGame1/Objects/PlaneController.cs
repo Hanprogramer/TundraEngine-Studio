@@ -8,7 +8,7 @@ namespace TestGame1.Objects
     {
         Transform transform;
         Camera camera;
-        public PlaneController(GameObject gameObject): base(gameObject)
+        public PlaneController(GameObject gameObject) : base(gameObject)
         {
         }
 

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TundraEngine.Classes.Data;
@@ -18,7 +17,7 @@ namespace TundraEngine.Studio.Compiler
         {
             var resources = LoadResourcesFromFolder(path);
             var result = new Dictionary<string, Resource>();
-            Console.WriteLine($"Compiling resources.. {path}"); 
+            Console.WriteLine($"Compiling resources.. {path}");
             foreach (var filepath in resources)
             {
                 try
@@ -51,7 +50,7 @@ namespace TundraEngine.Studio.Compiler
                             break;
                     }
                     finalData.uuid = json.uuid;
-                    finalData.path = filepath.Remove(0,TundraStudio.CurrentProject.Path.Length);
+                    finalData.path = filepath.Remove(0, TundraStudio.CurrentProject.Path.Length);
                     Console.WriteLine($"Added {filepath}");
                     result.Add(json.uuid, finalData);
                 }

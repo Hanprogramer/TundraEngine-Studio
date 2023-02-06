@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TundraEngine.Classes.Data
+﻿namespace TundraEngine.Classes.Data
 {
 
     public class SceneResource : Resource
     {
         public SceneResource(string uuid, ResourceType resourceType = ResourceType.Scene) : base(uuid, resourceType)
-        {}
+        { }
         public SceneObjectData[] objects { get; set; }
     }
 
