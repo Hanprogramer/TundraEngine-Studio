@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using TundraEngine.Classes.Data;
+using TundraEngine.Components;
 using TundraEngine.Studio.Util;
 
 namespace TundraEngine.Studio.Compiler
@@ -13,7 +14,15 @@ namespace TundraEngine.Studio.Compiler
     {
         public static string[] resourceFilters = { "*.tobj", "*.tscn", "*.tspr" };
 
-        public static async Task<Dictionary<string, Resource>> Compile(string path, string outputFolder)
+
+        /// <summary>
+        /// Compile the list of resources
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="outputFolder"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static async Task<string> Compile(string path, string outputFolder)
         {
             var resources = LoadResourcesFromFolder(path);
             var result = new Dictionary<string, Resource>();
@@ -26,7 +35,11 @@ namespace TundraEngine.Studio.Compiler
                     var json = JsonConvert.DeserializeObject<Resource>(content);
 
                     if (json == null)
-                        throw new Exception("Json is null"); // Very unlikely
+                    {
+                        // Very unlikely, unless the JSON is empty
+                        Console.WriteLine($"Json is null {filepath}");
+                        continue;
+                    }
 
                     ResourceType type = json.resource_type;
                     Resource finalData;
@@ -67,7 +80,7 @@ namespace TundraEngine.Studio.Compiler
             await File.WriteAllTextAsync(outputPath, JsonConvert.SerializeObject(result, Formatting.Indented));
 
 
-            return result;
+            return outputPath;
 
 
             // If it reaches here, then something wrong
