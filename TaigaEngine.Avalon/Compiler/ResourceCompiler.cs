@@ -81,10 +81,6 @@ namespace TundraEngine.Studio.Compiler
 
 
             return outputPath;
-
-
-            // If it reaches here, then something wrong
-            throw new Exception("Failed compiling resources");
         }
         public static string[] LoadResourcesFromFolder(string path)
         {
