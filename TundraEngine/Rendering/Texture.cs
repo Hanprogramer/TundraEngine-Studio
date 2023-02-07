@@ -61,7 +61,7 @@ namespace TundraEngine.Rendering
                 Height = img.Height;
                 //Reserve enough memory from the gpu for the whole image
                 _gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba8, (uint)img.Width, (uint)img.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, null);
-                
+
                 img.ProcessPixelRows(accessor =>
                 {
                     //ImageSharp 2 does not store images in contiguous memory by default, so we must send the image row by row

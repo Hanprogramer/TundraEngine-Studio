@@ -1,9 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TundraEngine.Classes.Data
 {
@@ -17,7 +12,7 @@ namespace TundraEngine.Classes.Data
         {
             var content = File.ReadAllText(path);
             var settings = JsonConvert.DeserializeObject<ProjectSettings>(content);
-            if(settings != null) 
+            if (settings != null)
                 return settings;
 
             // If it reaches here then it failed

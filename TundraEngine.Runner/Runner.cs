@@ -38,15 +38,15 @@ namespace TundraEngine.Runtime
             Console.WriteLine(assemblyPath);
             CreateGameFromAssembly(assemblyPath, resourcesPath, texturesPath, settingsPath, mainGameClass, window);
         }
-        
+
         public Game CreateGame(Type type, string resourcesPath, string texturesPath, string settingsPath, IGameWindow? window = null)
         {
             if (type.BaseType == typeof(Game))
             {
                 // Create instance of the game 
-                var constr = type.GetConstructor(new Type[] { typeof(IGameWindow),typeof(string),typeof(string),typeof(string) });
+                var constr = type.GetConstructor(new Type[] { typeof(IGameWindow), typeof(string), typeof(string), typeof(string) });
                 if (constr == null) throw new Exception("Error: Can't get constructor(IGameWindow,string,string,string) on " + type.Name);
-                var g = (Game?)constr.Invoke(new object[] { window, resourcesPath, texturesPath,settingsPath });
+                var g = (Game?)constr.Invoke(new object[] { window, resourcesPath, texturesPath, settingsPath });
                 if (g is Game)
                 {
                     return g;

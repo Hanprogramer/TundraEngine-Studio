@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Text.Json.Serialization;
 using TundraEngine.Classes.Data;
 using TundraEngine.Rendering;
 
@@ -128,9 +127,9 @@ namespace TundraEngine.Classes
             var json = JsonConvert.DeserializeObject<Dictionary<string, TextureData>>(content);
             foreach (var pair in json)
             {
-                var data = Convert.FromBase64String(pair.Value.Content.Remove(0, "data:image/png;base64,".Length));
+                var data = Convert.FromBase64String(pair.Value.Content);
                 var texture = new Texture(data, pair.Value.Width, pair.Value.Height);
-                Textures.Add(pair.Key,texture);
+                Textures.Add(pair.Key, texture);
             }
         }
     }

@@ -1,19 +1,12 @@
 ﻿using Newtonsoft.Json;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Advanced;
-using SixLabors.ImageSharp.ColorSpaces;
-using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using TundraEngine.Classes;
 using TundraEngine.Rendering;
-using TundraEngine.Studio.Util;
 
 namespace TundraEngine.Studio.Compiler
 {
@@ -38,10 +31,11 @@ namespace TundraEngine.Studio.Compiler
                 {
                     //var bytes = img.ToArray<Rgba32>(PngFormat.Instance);
                     var bytes = img.ToBase64String(PngFormat.Instance);
-                    textures[file.Remove(0, path.Length)] = new TextureData() { 
-                        Content = bytes, 
-                        Width = img.Width, 
-                        Height = img.Height 
+                    textures[file.Remove(0, path.Length)] = new TextureData()
+                    {
+                        Content = bytes.Remove(0, "data:image/png;base64,".Length),
+                        Width = img.Width,
+                        Height = img.Height
                     };
                 }
             }

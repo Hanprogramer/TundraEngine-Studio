@@ -98,7 +98,7 @@ namespace TundraEngine
             if (shouldInitialize)
                 Window.Initialize();
 
-            
+
 
             if (DoUpdateOnSeparateThread)
             {

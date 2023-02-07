@@ -5,7 +5,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using TundraEngine.Classes.Data;
-using TundraEngine.Components;
 using TundraEngine.Studio.Util;
 
 namespace TundraEngine.Studio.Compiler
