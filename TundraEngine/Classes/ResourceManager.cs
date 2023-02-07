@@ -1,4 +1,7 @@
-﻿using TundraEngine.Classes.Data;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Text.Json.Serialization;
+using TundraEngine.Classes.Data;
 using TundraEngine.Rendering;
 
 namespace TundraEngine.Classes
@@ -77,6 +80,36 @@ namespace TundraEngine.Classes
                 return Resources[uuid];
             }
             throw new Exception("Resource not found");
+        }
+
+        public void LoadResourcesFromFile(string path)
+        {
+            var content = File.ReadAllText(path);
+            var json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(content);
+
+            foreach (var pair in json)
+            {
+                Resource finalResource;
+                var res = pair.Value.ToObject<Resource>()!;
+                switch (res.resource_type)
+                {
+                    case ResourceType.Object:
+                        finalResource = pair.Value.ToObject<GameObjectResource>()!;
+                        break;
+                    case ResourceType.Scene:
+                        finalResource = pair.Value.ToObject<SceneResource>()!;
+                        break;
+                    case ResourceType.RawFile:
+                        finalResource = pair.Value.ToObject<Resource>()!;
+                        break;
+
+                    default:
+                        Console.WriteLine($"This resource type can't be imported yet [{res.resource_type}] {res.path}");
+                        continue;
+                        break;
+                }
+                Resources.Add(res.uuid, finalResource);
+            }
         }
     }
 }

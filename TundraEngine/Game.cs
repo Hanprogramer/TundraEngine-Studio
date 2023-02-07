@@ -41,7 +41,7 @@ namespace TundraEngine
 
         string? icon; //TODO: better icon loading
 
-        public Game(string title, string version, string buildNumber, IGameWindow? window = null)
+        public Game(string resourcesPath, string texturesPath, string title, string version, string buildNumber, IGameWindow? window = null)
         {
             Title = title;
             Version = version;
@@ -55,6 +55,7 @@ namespace TundraEngine
             AssetManager = new ResourceManager(Window);
             Window.OnLoadAssets += (Renderer renderer) =>
             {
+                AssetManager.LoadResourcesFromFile(resourcesPath);
                 AssetManager.LoadTextures(renderer);
                 if (icon != null)
                     Window.SetIcon(icon);

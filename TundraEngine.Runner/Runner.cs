@@ -38,7 +38,7 @@ namespace TundraEngine.Runtime
             Console.WriteLine(assemblyPath);
             CreateGameFromAssembly(assemblyPath, resourcesPath, texturesPath, mainGameClass, window);
         }
-
+        
         public Game CreateGame(Type type, string resourcesPath, string texturesPath, IGameWindow? window = null)
         {
             if (type.BaseType == typeof(Game))

@@ -5,7 +5,7 @@ namespace TundraEngine.Classes.Data
 
     public class SceneResource : Resource
     {
-        public SceneResource(string uuid, ResourceType resourceType = ResourceType.Scene) : base(uuid, resourceType)
+        public SceneResource(string uuid, ResourceType resourceType = ResourceType.Scene) : base(uuid, ResourceType.Scene)
         { }
 
         public Scene Instantiate(IGameWindow window)
