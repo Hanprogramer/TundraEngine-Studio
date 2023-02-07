@@ -57,7 +57,7 @@
 		<PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\TundraEngine.Runner\TundraEngine.Runner.csproj" />
+		<ProjectReference Include="..\TundraEngine.Runner\TundraEngine.Runtime.csproj" />
 		<ProjectReference Include="..\TundraEngine\TundraEngine.csproj" />
 	</ItemGroup>
 	<ItemGroup>

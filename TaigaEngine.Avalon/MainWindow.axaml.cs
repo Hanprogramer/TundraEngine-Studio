@@ -15,7 +15,7 @@ namespace TundraEngine.Studio
         public string TestString = "TEST";
         public string ProjectPath = "D:\\Programming\\C#\\TaigaEngine.Avalon\\TestGame1\\project.json";
         public static FontFamily CodeFamily = FontFamily.Parse("avares://TundraEngine.Studio/Assets/JetBrainsMono-Regular.ttf#JetBrains Mono");
-        private Runner.Runner? Runner;
+        private Runtime.Runner? Runner;
 
 
         public EditorTab? GameTab = null;
@@ -76,17 +76,17 @@ namespace TundraEngine.Studio
         // When the play button is clicked
         public async void OnPlayBtnClicked(object? s, RoutedEventArgs args)
         {
+            if (TundraStudio.CurrentProject == null) return;
             PlayBtn.IsEnabled = false;
             PauseBtn.IsEnabled = false;
             StopBtn.IsEnabled = false;
             ClearConsole();
 
             var compileOutputPath = System.IO.Path.Join(TundraStudio.CurrentProject.Path, "bin");
-            await ResourceCompiler.Compile(TundraStudio.CurrentProject.Path, compileOutputPath);
-            PlayBtn.IsEnabled = true;
-
-            return;
+            var resources = await ResourceCompiler.Compile(TundraStudio.CurrentProject.Path, compileOutputPath);
+            var textures = await TextureCompiler.Compile(TundraStudio.CurrentProject.Path, compileOutputPath);
             var result = await GameCompiler.Compile(TundraStudio.CurrentProject, Log);
+
             if (result != null)
             {
                 foreach (var d in result.Items)
@@ -94,7 +94,7 @@ namespace TundraEngine.Studio
                     Log(d.Title);
                 }
                 if (result.Success)
-                    RunGame(result.DllPath);
+                    RunGame(result.DllPath, resources, textures);
                 else
                 {
                     PlayBtn.IsEnabled = true;
@@ -147,11 +147,11 @@ namespace TundraEngine.Studio
         /// Run the game in a new tab
         /// </summary>
         /// <param name="dllPath">Path to the dll file</param>
-        public void RunGame(string dllPath)
+        public void RunGame(string dllPath, string resourcesPath, string texturesPath)
         {
             var tab = new EditorTab("Game", dllPath, EditorType.Game);
             var tv = tab.Content as TundraView;
-            Runner = new Runner.Runner(dllPath, window: tv);
+            Runner = new Runtime.Runner(dllPath, resourcesPath, texturesPath, window: tv);
             tv!.Game = Runner.Game;
             ((MainWindowViewModel)DataContext!).Tabs.Add(tab);
             FileTabs.SelectedItem = tab;

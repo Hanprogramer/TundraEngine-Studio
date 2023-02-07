@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TundraEngine", "TundraEngin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestGame1", "TestGame1\TestGame1.csproj", "{B7950FA4-9D4B-4DD5-8030-A43EE160A05E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TundraEngine.Runner", "TundraEngine.Runner\TundraEngine.Runner.csproj", "{E4C75479-5542-44A4-B4CE-6E05FE3EB8E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TundraEngine.Runtime", "TundraEngine.Runner\TundraEngine.Runtime.csproj", "{E4C75479-5542-44A4-B4CE-6E05FE3EB8E5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tamarix", "..\Tamarix\Tamarix\Tamarix.csproj", "{65F051BB-50D2-4E7B-9510-C3D0D5FA2489}"
 EndProject

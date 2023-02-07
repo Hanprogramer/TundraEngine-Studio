@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Loader;
 
-namespace TundraEngine.Runner
+namespace TundraEngine.Runtime
 {
     public class Runner
     {
@@ -19,9 +19,9 @@ namespace TundraEngine.Runner
         /// </summary>
         /// <param name="type"></param>
         /// <exception cref="Exception"></exception>
-        public Runner(Type type)
+        public Runner(Type type, string resourcesPath, string texturesPath)
         {
-            this.Game = CreateGame(type);
+            this.Game = CreateGame(type, resourcesPath, texturesPath);
         }
         public List<string> GetAllGames()
         {
@@ -32,21 +32,21 @@ namespace TundraEngine.Runner
         /// <summary>
         /// Run the game from DLL path
         /// </summary>
-        /// <param name="path"></param>
-        public Runner(string path, string? mainGameClass = null, IGameWindow? window = null)
+        /// <param name="assemblyPath"></param>
+        public Runner(string assemblyPath, string resourcesPath, string texturesPath, string? mainGameClass = null, IGameWindow? window = null)
         {
-            Console.WriteLine(path);
-            CreateGameFromAssembly(path, mainGameClass, window);
+            Console.WriteLine(assemblyPath);
+            CreateGameFromAssembly(assemblyPath, resourcesPath, texturesPath, mainGameClass, window);
         }
 
-        public Game CreateGame(Type type, IGameWindow? window = null)
+        public Game CreateGame(Type type, string resourcesPath, string texturesPath, IGameWindow? window = null)
         {
             if (type.BaseType == typeof(Game))
             {
                 // Create instance of the game 
-                var constr = type.GetConstructor(new Type[] { typeof(IGameWindow) });
+                var constr = type.GetConstructor(new Type[] { typeof(IGameWindow),typeof(string),typeof(string) });
                 if (constr == null) throw new Exception("Error: Can't get constructor(IGameWindow) on " + type.Name);
-                var g = (Game?)constr.Invoke(new object[] { window });
+                var g = (Game?)constr.Invoke(new object[] { window, resourcesPath, texturesPath });
                 if (g is Game)
                 {
                     return g;
@@ -74,7 +74,7 @@ namespace TundraEngine.Runner
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
-        void CreateGameFromAssembly(string assemblyPath, string? mainGameClass = null, IGameWindow? window = null)
+        void CreateGameFromAssembly(string assemblyPath, string resourcesPath, string texturesPath, string? mainGameClass = null, IGameWindow? window = null)
         {
             var asl = new AssemblyLoadContext("GameLoader", true);
             var assm = asl.LoadFromAssemblyPath(assemblyPath);
@@ -91,7 +91,7 @@ namespace TundraEngine.Runner
             var type = assm.GetType(mainGameClass);
             if (type == null) throw new Exception("Can't find the game class");
             Console.WriteLine("Creating game object from " + type.Assembly.Location);
-            Game = CreateGame(type, window);
+            Game = CreateGame(type, resourcesPath, texturesPath, window);
             asl.Unload();
         }
 

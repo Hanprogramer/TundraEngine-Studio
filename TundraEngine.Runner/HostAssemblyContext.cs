@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.Loader;
 
-namespace TundraEngine.Runner
+namespace TundraEngine.Runtime
 {// This is a collectible (unloadable) AssemblyLoadContext that loads the dependencies
     // of the plugin from the plugin's binary directory.
     class HostAssemblyLoadContext : AssemblyLoadContext

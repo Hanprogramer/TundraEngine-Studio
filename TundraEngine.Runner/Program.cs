@@ -1,19 +1,24 @@
-﻿using TundraEngine.Runner;
+﻿using TundraEngine.Runtime;
 
-string file = "";
+string assemblyPath = "";
+string resourcePath = "";
+string texturesPath = "";
 if (args.Length > 0)
 {
     // Run on the selected DLL
-    file = args[0];
+    assemblyPath = args[0];
+    resourcePath = args[1];
+    texturesPath = args[2];
 
 }
 else
 {
+    throw new NotImplementedException();
     // Find TundraGame.dll
-    file = "TundraGame.dll";
-    file = "D:\\Programming\\C#\\TaigaEngine.Avalon\\TestGame1\\bin\\TundraGame0.dll";
+    assemblyPath = "TundraGame.dll";
+    assemblyPath = "D:\\Programming\\C#\\TaigaEngine.Avalon\\TestGame1\\bin\\TundraGame0.dll";
 }
 
-var r = new Runner(file);
+var r = new Runner(assemblyPath, resourcePath, texturesPath);
 r.Run();
 Console.ReadLine();
