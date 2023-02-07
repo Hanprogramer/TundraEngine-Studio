@@ -101,6 +101,11 @@ namespace TundraEngine.Classes
             return AddComponent<T>(ref obj, props);
         }
 
+        public void AddComponent(Component comp)
+        {
+            this.Components.Add(comp);
+        }
+
         public static T AddComponent<T>(ref GameObject gameObject, ComponentProperties props) where T : Component
         {
             var comp = CreateComponent<T>(gameObject, props);

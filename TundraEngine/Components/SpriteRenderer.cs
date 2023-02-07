@@ -11,7 +11,7 @@ namespace TundraEngine.Components
     {
         public Texture Texture;
         public Transform Transform;
-        public SpriteRenderer(GameObject gameObject, ComponentProperties props) : base(gameObject, props)
+        public SpriteRenderer(GameObject gameObject) : base(gameObject)
         {
             //Texture = props.GetValue<Texture>("Texture");
             Transform = gameObject.GetComponent<Transform>();

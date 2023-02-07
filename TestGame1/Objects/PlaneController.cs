@@ -4,7 +4,7 @@ using TundraEngine.Rendering;
 
 namespace TestGame1.Objects
 {
-    public class PlaneController : GameComponent
+    public class PlaneController : Component
     {
         Transform transform;
         Camera camera;
@@ -20,8 +20,8 @@ namespace TestGame1.Objects
         public override void Initialize()
         {
             base.Initialize();
-            transform = GameObject.GetComponent<Transform>();
-            camera = GameObject.Scene.FindObject<Camera>();
+            transform = Object.GetComponent<Transform>();
+            camera = Object.Scene.FindObject<Camera>();
         }
 
         public override void Update(float dt)

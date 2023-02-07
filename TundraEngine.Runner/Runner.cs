@@ -44,9 +44,9 @@ namespace TundraEngine.Runtime
             if (type.BaseType == typeof(Game))
             {
                 // Create instance of the game 
-                var constr = type.GetConstructor(new Type[] { typeof(IGameWindow),typeof(string),typeof(string) });
-                if (constr == null) throw new Exception("Error: Can't get constructor(IGameWindow) on " + type.Name);
-                var g = (Game?)constr.Invoke(new object[] { window, resourcesPath, texturesPath });
+                var constr = type.GetConstructor(new Type[] { typeof(IGameWindow),typeof(string),typeof(string),typeof(string) });
+                if (constr == null) throw new Exception("Error: Can't get constructor(IGameWindow,string,string,string) on " + type.Name);
+                var g = (Game?)constr.Invoke(new object[] { window, resourcesPath, texturesPath,settingsPath });
                 if (g is Game)
                 {
                     return g;

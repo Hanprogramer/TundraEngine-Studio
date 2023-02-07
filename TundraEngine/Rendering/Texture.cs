@@ -7,7 +7,7 @@ namespace TundraEngine.Rendering
 {
     public struct TextureData
     {
-        public byte[] Bytes;
+        public string Content;
         public int Width;
         public int Height;
     }
@@ -61,7 +61,7 @@ namespace TundraEngine.Rendering
                 Height = img.Height;
                 //Reserve enough memory from the gpu for the whole image
                 _gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba8, (uint)img.Width, (uint)img.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, null);
-
+                
                 img.ProcessPixelRows(accessor =>
                 {
                     //ImageSharp 2 does not store images in contiguous memory by default, so we must send the image row by row
@@ -91,14 +91,36 @@ namespace TundraEngine.Rendering
             //Generating the opengl handle;
             _handle = _gl.GenTexture();
             Bind();
-
-            //We want the ability to create a texture using data generated from code aswell.
-            fixed (void* d = &data[0])
+            using (var img = SixLabors.ImageSharp.Image.Load<Rgba32>(data))
             {
-                //Setting the data of a texture.
-                _gl.TexImage2D(TextureTarget.Texture2D, 0, (int)InternalFormat.Rgba, (uint)Width, (uint)Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, d);
-                SetParameters();
+                Width = img.Width;
+                Height = img.Height;
+                //Reserve enough memory from the gpu for the whole image
+                _gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba8, (uint)img.Width, (uint)img.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, null);
+
+                img.ProcessPixelRows(accessor =>
+                {
+                    //ImageSharp 2 does not store images in contiguous memory by default, so we must send the image row by row
+                    for (int y = 0; y < accessor.Height; y++)
+                    {
+                        fixed (void* data = accessor.GetRowSpan(y))
+                        {
+                            //Loading the actual image.
+                            _gl.TexSubImage2D(TextureTarget.Texture2D, 0, 0, y, (uint)accessor.Width, 1, PixelFormat.Rgba, PixelType.UnsignedByte, data);
+                        }
+                    }
+                });
             }
+            IsLoaded = true;
+
+            SetParameters();
+            //We want the ability to create a texture using data generated from code aswell.
+            //fixed (void* d = &data[0])
+            //{
+            //    //Setting the data of a texture.
+            //    _gl.TexImage2D(TextureTarget.Texture2D, 0, (int)InternalFormat.Rgba, (uint)Width, (uint)Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, d);
+            //    SetParameters();
+            //}
             IsLoaded = true;
         }
 

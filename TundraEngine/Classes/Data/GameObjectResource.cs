@@ -4,7 +4,7 @@
     public class GameComponentResource
     {
         public string component { get; set; }
-        public object properties { get; set; }
+        public Dictionary<string,string> properties { get; set; }
     }
 
     public class GameObjectResource : Resource
@@ -22,6 +22,10 @@
             this.description = description;
             this.components = components;
             this.children = children;
+        }
+        public GameObject Instantiate()
+        {
+            throw new Exception("Failed to instantiate this object");
         }
     }
 

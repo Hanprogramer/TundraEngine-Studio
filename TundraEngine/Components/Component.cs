@@ -5,6 +5,7 @@ namespace TundraEngine.Components
 {
     public class Component
     {
+        public Component(GameObject gameObject) { Object = gameObject; }
         public Component(GameObject gameObject, ComponentProperties props) { Object = gameObject; }
         public Component(ComponentProperties props) { }
         public GameObject Object { get; set; }

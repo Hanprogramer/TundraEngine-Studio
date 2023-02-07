@@ -128,7 +128,8 @@ namespace TundraEngine.Classes
             var json = JsonConvert.DeserializeObject<Dictionary<string, TextureData>>(content);
             foreach (var pair in json)
             {
-                var texture = new Texture(pair.Value.Bytes, pair.Value.Width, pair.Value.Height);
+                var data = Convert.FromBase64String(pair.Value.Content.Remove(0, "data:image/png;base64,".Length));
+                var texture = new Texture(data, pair.Value.Width, pair.Value.Height);
                 Textures.Add(pair.Key,texture);
             }
         }

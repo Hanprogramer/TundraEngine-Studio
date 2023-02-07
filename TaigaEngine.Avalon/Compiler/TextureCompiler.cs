@@ -1,4 +1,9 @@
 ﻿using Newtonsoft.Json;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.ColorSpaces;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
@@ -8,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TundraEngine.Classes;
 using TundraEngine.Rendering;
+using TundraEngine.Studio.Util;
 
 namespace TundraEngine.Studio.Compiler
 {
@@ -30,9 +36,10 @@ namespace TundraEngine.Studio.Compiler
                 var content = await File.ReadAllBytesAsync(file);
                 using (var img = SixLabors.ImageSharp.Image.Load<Rgba32>(file))
                 {
-
+                    //var bytes = img.ToArray<Rgba32>(PngFormat.Instance);
+                    var bytes = img.ToBase64String(PngFormat.Instance);
                     textures[file.Remove(0, path.Length)] = new TextureData() { 
-                        Bytes = content, 
+                        Content = bytes, 
                         Width = img.Width, 
                         Height = img.Height 
                     };
@@ -43,7 +50,6 @@ namespace TundraEngine.Studio.Compiler
             await File.WriteAllTextAsync(finalPath, JsonConvert.SerializeObject(textures, Formatting.Indented));
             return finalPath;
         }
-
 
         public static string[] LoadResourcesFromFolder(string path)
         {

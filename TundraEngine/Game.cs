@@ -60,6 +60,7 @@ namespace TundraEngine
                 ResourceManager.LoadResourcesFromFile(resourcesPath);
                 ResourceManager.LoadTexturesFromFile(texturesPath);
                 ResourceManager.LoadTextures(renderer);
+                InitializeDefaultScene();
                 if (icon != null)
                     Window.SetIcon(icon);
             };
@@ -74,6 +75,21 @@ namespace TundraEngine
             UpdatesPerSecond = 120;
         }
 
+        public void InitializeDefaultScene()
+        {
+            var default_scene = ProjectSettings.starting_scene;
+            var res = ResourceManager.GetResource<SceneResource>(default_scene);
+            if (res != null)
+            {
+                var scene = res.Instantiate(Window, ResourceManager);
+                var camera = new Camera(scene);
+                scene.AddObject(camera);
+                Window.Scene = scene;
+                return;
+            }
+            throw new Exception("Project doesn't have default scene!");
+        }
+
         public void Start(bool shouldCreateEventsLoop = false, bool shouldInitialize = true)
         {
             //OnStart();
@@ -81,6 +97,9 @@ namespace TundraEngine
             UpdateStopwatch.Start();
             if (shouldInitialize)
                 Window.Initialize();
+
+            
+
             if (DoUpdateOnSeparateThread)
             {
                 // Run update on separate thread
