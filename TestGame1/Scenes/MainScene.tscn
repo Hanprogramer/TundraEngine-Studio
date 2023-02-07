@@ -8,9 +8,8 @@
 				"uuid":"524885f3-4309-4847-b4f6-e40bbfae3e81",
 				"name": "Plane",
 				"description": "",
+				"position" : [32,32],
 				"properties":{
-					"x": 32,
-					"y": 32
 				}
 			}
 		]

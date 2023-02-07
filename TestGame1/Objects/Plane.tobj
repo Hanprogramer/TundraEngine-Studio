@@ -8,6 +8,12 @@
 		"description" : "The main player game object",
 		"components": [
 			{
+				"component": "TundraEngine.Components.SpriteRenderer",
+				"properties" : {
+					"Texture" : "Assets/silk.png"
+				}
+			},
+			{
 				"component": "TestGame1.Objects.PlaneController",
 				"properties" : {}
 			}
