@@ -83,8 +83,9 @@ namespace TundraEngine.Studio
             ClearConsole();
 
             var compileOutputPath = System.IO.Path.Join(TundraStudio.CurrentProject.Path, "bin");
-            var resources = await ResourceCompiler.Compile(TundraStudio.CurrentProject.Path, compileOutputPath);
-            var textures = await TextureCompiler.Compile(TundraStudio.CurrentProject.Path, compileOutputPath);
+            var resourcesPath = await ResourceCompiler.Compile(TundraStudio.CurrentProject.Path, compileOutputPath);
+            var texturesPath = await TextureCompiler.Compile(TundraStudio.CurrentProject.Path, compileOutputPath);
+            var settingsPath = await GameCompiler.CompileProjectSettings(TundraStudio.CurrentProject.Path, compileOutputPath);
             var result = await GameCompiler.Compile(TundraStudio.CurrentProject, Log);
 
             if (result != null)
@@ -94,7 +95,7 @@ namespace TundraEngine.Studio
                     Log(d.Title);
                 }
                 if (result.Success)
-                    RunGame(result.DllPath, resources, textures);
+                    RunGame(result.DllPath, resourcesPath, texturesPath, settingsPath);
                 else
                 {
                     PlayBtn.IsEnabled = true;
@@ -147,11 +148,11 @@ namespace TundraEngine.Studio
         /// Run the game in a new tab
         /// </summary>
         /// <param name="dllPath">Path to the dll file</param>
-        public void RunGame(string dllPath, string resourcesPath, string texturesPath)
+        public void RunGame(string dllPath, string resourcesPath, string texturesPath, string settingsPath)
         {
             var tab = new EditorTab("Game", dllPath, EditorType.Game);
             var tv = tab.Content as TundraView;
-            Runner = new Runtime.Runner(dllPath, resourcesPath, texturesPath, window: tv);
+            Runner = new Runtime.Runner(dllPath, resourcesPath, texturesPath, settingsPath, window: tv);
             tv!.Game = Runner.Game;
             ((MainWindowViewModel)DataContext!).Tabs.Add(tab);
             FileTabs.SelectedItem = tab;

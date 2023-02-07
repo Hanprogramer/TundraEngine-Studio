@@ -3,10 +3,12 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.MSBuild;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using TundraEngine.Classes.Data;
 using TundraEngine.Studio.Util;
 
 namespace TundraEngine.Studio.Compiler
@@ -129,6 +131,23 @@ namespace TundraEngine.Studio.Compiler
                 workspace.Dispose();
                 return result;
             }
+        }
+
+        public static async Task<string> CompileProjectSettings(string path, string outputPath)
+        {
+            var finalPath = Path.Join(outputPath, "project_settings.json");
+            var existingPath = Path.Join(path, "project_settings.json");
+            if (File.Exists(existingPath))
+            {
+                File.Copy(existingPath, finalPath, true);
+            }
+            else
+            {
+                var content = JsonConvert.SerializeObject(new ProjectSettings());
+                await File.WriteAllTextAsync(finalPath, content);
+            }
+
+            return finalPath;
         }
     }
 }

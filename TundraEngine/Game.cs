@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using TundraEngine.Classes;
+using TundraEngine.Classes.Data;
 using TundraEngine.Rendering;
 
 namespace TundraEngine
@@ -34,6 +35,7 @@ namespace TundraEngine
         }
 
         public ResourceManager ResourceManager;
+        public ProjectSettings ProjectSettings;
 
         private Stopwatch UpdateStopwatch;
 
@@ -41,7 +43,7 @@ namespace TundraEngine
 
         string? icon; //TODO: better icon loading
 
-        public Game(string resourcesPath, string texturesPath, string title, string version, string buildNumber, IGameWindow? window = null)
+        public Game(string resourcesPath, string texturesPath, string settingsPath, string title, string version, string buildNumber, IGameWindow? window = null)
         {
             Title = title;
             Version = version;
@@ -61,6 +63,7 @@ namespace TundraEngine
                 if (icon != null)
                     Window.SetIcon(icon);
             };
+            ProjectSettings = ProjectSettings.Load(settingsPath);
             GameManager.Game = this;
             GameManager.AssetManager = ResourceManager;
             GameManager.GameWindow = Window;

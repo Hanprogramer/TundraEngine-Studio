@@ -19,9 +19,9 @@ namespace TundraEngine.Runtime
         /// </summary>
         /// <param name="type"></param>
         /// <exception cref="Exception"></exception>
-        public Runner(Type type, string resourcesPath, string texturesPath)
+        public Runner(Type type, string resourcesPath, string texturesPath, string settingsPath)
         {
-            this.Game = CreateGame(type, resourcesPath, texturesPath);
+            this.Game = CreateGame(type, resourcesPath, texturesPath, settingsPath);
         }
         public List<string> GetAllGames()
         {
@@ -33,13 +33,13 @@ namespace TundraEngine.Runtime
         /// Run the game from DLL path
         /// </summary>
         /// <param name="assemblyPath"></param>
-        public Runner(string assemblyPath, string resourcesPath, string texturesPath, string? mainGameClass = null, IGameWindow? window = null)
+        public Runner(string assemblyPath, string resourcesPath, string texturesPath, string settingsPath, string? mainGameClass = null, IGameWindow? window = null)
         {
             Console.WriteLine(assemblyPath);
-            CreateGameFromAssembly(assemblyPath, resourcesPath, texturesPath, mainGameClass, window);
+            CreateGameFromAssembly(assemblyPath, resourcesPath, texturesPath, settingsPath, mainGameClass, window);
         }
         
-        public Game CreateGame(Type type, string resourcesPath, string texturesPath, IGameWindow? window = null)
+        public Game CreateGame(Type type, string resourcesPath, string texturesPath, string settingsPath, IGameWindow? window = null)
         {
             if (type.BaseType == typeof(Game))
             {
@@ -74,7 +74,7 @@ namespace TundraEngine.Runtime
             GC.Collect();
             GC.WaitForPendingFinalizers();
         }
-        void CreateGameFromAssembly(string assemblyPath, string resourcesPath, string texturesPath, string? mainGameClass = null, IGameWindow? window = null)
+        void CreateGameFromAssembly(string assemblyPath, string resourcesPath, string texturesPath, string settingsPath, string? mainGameClass = null, IGameWindow? window = null)
         {
             var asl = new AssemblyLoadContext("GameLoader", true);
             var assm = asl.LoadFromAssemblyPath(assemblyPath);
@@ -91,7 +91,7 @@ namespace TundraEngine.Runtime
             var type = assm.GetType(mainGameClass);
             if (type == null) throw new Exception("Can't find the game class");
             Console.WriteLine("Creating game object from " + type.Assembly.Location);
-            Game = CreateGame(type, resourcesPath, texturesPath, window);
+            Game = CreateGame(type, resourcesPath, texturesPath, settingsPath, window);
             asl.Unload();
         }
 

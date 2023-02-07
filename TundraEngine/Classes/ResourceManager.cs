@@ -83,6 +83,15 @@ namespace TundraEngine.Classes
             throw new Exception("Resource not found");
         }
 
+        public T GetResource<T>(string uuid) where T : Resource
+        {
+            if (Resources.ContainsKey(uuid))
+            {
+                return (T)Resources[uuid];
+            }
+            throw new Exception("Resource not found");
+        }
+
         public void LoadResourcesFromFile(string path)
         {
             var content = File.ReadAllText(path);

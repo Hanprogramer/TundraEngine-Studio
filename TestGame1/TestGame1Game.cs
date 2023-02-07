@@ -7,7 +7,7 @@ public class TestGame1Game : Game
 {
     //bool testUpdateSpeed = true;
     //int testCount = 5000;
-    public TestGame1Game(IGameWindow window, string resourcesPath, string texturesPath) : base(resourcesPath,texturesPath, "My Game", "v0.0.1", "1234412", window)
+    public TestGame1Game(IGameWindow window, string resourcesPath, string texturesPath, string settingsPath) : base(resourcesPath,texturesPath,settingsPath, "My Game", "v0.0.1", "1234412", window)
     {
         SetIcon("Assets/Ships/ship_0000.png");
         Console.WriteLine("Hey this is from the game");
