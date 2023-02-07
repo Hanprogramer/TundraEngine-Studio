@@ -1,17 +1,16 @@
 ﻿using Newtonsoft.Json;
+using SixLabors.ImageSharp.PixelFormats;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TundraEngine.Classes;
+using TundraEngine.Rendering;
 
 namespace TundraEngine.Studio.Compiler
 {
-    internal struct TextureCompileData
-    {
-        public string Path;
-    }
     internal class TextureCompiler
     {
         public static string[] fileFilters = { "*.png", "*.bmp", "*.jpg" };
@@ -23,13 +22,21 @@ namespace TundraEngine.Studio.Compiler
         /// <returns>the path to the compiled textures exact file</returns>
         public static async Task<string> Compile(string path, string outputPath)
         {
-            Dictionary<string, byte[]> textures = new();
+            Dictionary<string, TextureData> textures = new();
             var files = LoadResourcesFromFolder(path);
 
             foreach (var file in files)
             {
                 var content = await File.ReadAllBytesAsync(file);
-                textures[file.Remove(0, path.Length)] = content;
+                using (var img = SixLabors.ImageSharp.Image.Load<Rgba32>(file))
+                {
+
+                    textures[file.Remove(0, path.Length)] = new TextureData() { 
+                        Bytes = content, 
+                        Width = img.Width, 
+                        Height = img.Height 
+                    };
+                }
             }
 
             var finalPath = Path.Join(outputPath, "textures.json");

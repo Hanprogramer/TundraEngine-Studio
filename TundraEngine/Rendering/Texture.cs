@@ -5,6 +5,12 @@ using PixelType = Silk.NET.OpenGL.PixelType;
 
 namespace TundraEngine.Rendering
 {
+    public struct TextureData
+    {
+        public byte[] Bytes;
+        public int Width;
+        public int Height;
+    }
     public class Texture : IDisposable
     {
         private uint _handle;
@@ -13,14 +19,35 @@ namespace TundraEngine.Rendering
         private RendererFilter filter;
 
         public bool IsLoaded = false;
-        public string Path { get; private set; } = "";
+        public int Width { get; private set; }
+        public int Height { get; private set; }
+        public string? Path { get; private set; }
+        public byte[]? Bytes { get; private set; }
 
         public Texture(string path)
         {
             Path = path;
         }
+        public Texture(byte[] bytes, int width, int height)
+        {
+            Bytes = bytes;
+            Width = width;
+            Height = height;
+        }
         public unsafe void Load(Renderer renderer)
         {
+            if (Path == null)
+            {
+                if (Bytes != null)
+                {
+                    Load(renderer, Bytes);
+                    return;
+                }
+                else
+                {
+                    throw new Exception("Error: texture doesn't have filepath or bytes data! Can't load");
+                }
+            }
             _renderer = renderer;
             //_gl = renderer.Gl;
             filter = renderer.RendererFilter;
@@ -30,6 +57,8 @@ namespace TundraEngine.Rendering
             //Loading an image using imagesharp.
             using (var img = SixLabors.ImageSharp.Image.Load<Rgba32>(Path))
             {
+                Width = img.Width;
+                Height = img.Height;
                 //Reserve enough memory from the gpu for the whole image
                 _gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba8, (uint)img.Width, (uint)img.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, null);
 
@@ -52,7 +81,7 @@ namespace TundraEngine.Rendering
 
         }
 
-        public unsafe void Load(Renderer renderer, Span<byte> data, uint width, uint height)
+        public unsafe void Load(Renderer renderer, Span<byte> data)
         {
             //Saving the gl instance.
             _renderer = renderer;
@@ -67,7 +96,7 @@ namespace TundraEngine.Rendering
             fixed (void* d = &data[0])
             {
                 //Setting the data of a texture.
-                _gl.TexImage2D(TextureTarget.Texture2D, 0, (int)InternalFormat.Rgba, width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, d);
+                _gl.TexImage2D(TextureTarget.Texture2D, 0, (int)InternalFormat.Rgba, (uint)Width, (uint)Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, d);
                 SetParameters();
             }
             IsLoaded = true;

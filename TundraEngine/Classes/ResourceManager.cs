@@ -6,6 +6,7 @@ using TundraEngine.Rendering;
 
 namespace TundraEngine.Classes
 {
+
     /// <summary>
     /// A class for managing resources used in the game
     /// </summary>
@@ -109,6 +110,17 @@ namespace TundraEngine.Classes
                         break;
                 }
                 Resources.Add(res.uuid, finalResource);
+            }
+        }
+
+        public void LoadTexturesFromFile(string path)
+        {
+            var content = File.ReadAllText(path);
+            var json = JsonConvert.DeserializeObject<Dictionary<string, TextureData>>(content);
+            foreach (var pair in json)
+            {
+                var texture = new Texture(pair.Value.Bytes, pair.Value.Width, pair.Value.Height);
+                Textures.Add(pair.Key,texture);
             }
         }
     }

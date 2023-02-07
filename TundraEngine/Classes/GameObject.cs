@@ -33,7 +33,7 @@ namespace TundraEngine.Classes
             if (Game != null)
             {
                 Game = scene.GameWindow.Game;
-                AssetManager = Game.AssetManager;
+                AssetManager = Game.ResourceManager;
             }
             Components = new();
         }

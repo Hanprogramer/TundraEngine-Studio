@@ -33,7 +33,7 @@ namespace TundraEngine
             set => _updatePeriod = value <= double.Epsilon ? 0 : 1 / value;
         }
 
-        public ResourceManager AssetManager;
+        public ResourceManager ResourceManager;
 
         private Stopwatch UpdateStopwatch;
 
@@ -52,16 +52,17 @@ namespace TundraEngine
             else
                 Window = window;
 
-            AssetManager = new ResourceManager(Window);
+            ResourceManager = new ResourceManager(Window);
             Window.OnLoadAssets += (Renderer renderer) =>
             {
-                AssetManager.LoadResourcesFromFile(resourcesPath);
-                AssetManager.LoadTextures(renderer);
+                ResourceManager.LoadResourcesFromFile(resourcesPath);
+                ResourceManager.LoadTexturesFromFile(texturesPath);
+                ResourceManager.LoadTextures(renderer);
                 if (icon != null)
                     Window.SetIcon(icon);
             };
             GameManager.Game = this;
-            GameManager.AssetManager = AssetManager;
+            GameManager.AssetManager = ResourceManager;
             GameManager.GameWindow = Window;
 
             GameObject.Game = this;
