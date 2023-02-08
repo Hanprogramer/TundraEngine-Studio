@@ -49,15 +49,15 @@ namespace TundraEngine.Classes
             return t;
         }
 
-        public Texture GetTexture(string path)
+        public Texture GetTexture(string uuid)
         {
-            if (Textures.TryGetValue(path, out Texture? texture))
+            if (Textures.TryGetValue(uuid, out Texture? texture))
             {
                 return texture;
             }
             else
             {
-                throw new Exception("Texture " + path + " not found");
+                throw new Exception("Texture " + uuid + " not found");
             }
         }
 
@@ -115,7 +115,6 @@ namespace TundraEngine.Classes
                     default:
                         Console.WriteLine($"This resource type can't be imported yet [{res.resource_type}] {res.path}");
                         continue;
-                        break;
                 }
                 Resources.Add(res.uuid, finalResource);
             }

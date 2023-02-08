@@ -1,0 +1,15 @@
+{
+  "uuid": "04cd9e1d-25da-42ad-8e88-fe86fd8978ff",
+  "resource_type": 3,
+  "path": null,
+  "data": {
+    "width": 192,
+    "height": 160,
+    "format": "1",
+    "content": "\\Assets\\Tilemap\\tiles_packed.png",
+    "uuid": "04cd9e1d-25da-42ad-8e88-fe86fd8978ff",
+    "resource_type": 3,
+    "path": null,
+    "data": null
+  }
+}

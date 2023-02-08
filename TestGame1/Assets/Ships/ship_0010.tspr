@@ -1,0 +1,15 @@
+{
+  "uuid": "d029ce82-0838-4b49-9d3b-825343528150",
+  "resource_type": 3,
+  "path": null,
+  "data": {
+    "width": 32,
+    "height": 32,
+    "format": "1",
+    "content": "\\Assets\\Ships\\ship_0010.png",
+    "uuid": "d029ce82-0838-4b49-9d3b-825343528150",
+    "resource_type": 3,
+    "path": null,
+    "data": null
+  }
+}

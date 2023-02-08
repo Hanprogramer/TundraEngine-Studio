@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TundraEngine.Classes.Data;
@@ -23,7 +24,7 @@ namespace TundraEngine.Studio.Compiler
         /// <exception cref="Exception"></exception>
         public static async Task<string> Compile(string path, string outputFolder)
         {
-            var resources = LoadResourcesFromFolder(path);
+            var resources = FindResourcesInFolder(path);
             var result = new Dictionary<string, Resource>();
             Console.WriteLine($"Compiling resources.. {path}");
             foreach (var filepath in resources)
@@ -81,19 +82,19 @@ namespace TundraEngine.Studio.Compiler
 
             return outputPath;
         }
-        public static string[] LoadResourcesFromFolder(string path)
+        public static string[] FindResourcesInFolder(string path)
         {
             //Dictionary<string, Resource> Resources;
             path = Path.GetFullPath(path);
 
             var list = new List<string>();
-            getResourcesFromFolder(path, list);
+            findResources(path, list);
             foreach (var item in list)
                 Console.WriteLine(item.ToString());
             return list.ToArray();
         }
 
-        private static void getResourcesFromFolder(string path, List<string> list)
+        private static void findResources(string path, List<string> list)
         {
             foreach (var filter in resourceFilters)
             {
@@ -105,7 +106,10 @@ namespace TundraEngine.Studio.Compiler
 
             foreach (var folder in Directory.GetDirectories(path))
             {
-                getResourcesFromFolder(folder, list);
+                // Skip certain folders
+                if (GameCompiler.SKIP_FOLDERS.Any(Path.GetFileName(folder).Equals))
+                    continue;
+                findResources(folder, list);
             }
         }
     }

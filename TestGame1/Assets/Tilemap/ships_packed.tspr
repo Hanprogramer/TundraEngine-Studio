@@ -1,0 +1,15 @@
+{
+  "uuid": "7ffefa5d-65fe-4742-94c8-6e750d9500e0",
+  "resource_type": 3,
+  "path": null,
+  "data": {
+    "width": 128,
+    "height": 192,
+    "format": "1",
+    "content": "\\Assets\\Tilemap\\ships_packed.png",
+    "uuid": "7ffefa5d-65fe-4742-94c8-6e750d9500e0",
+    "resource_type": 3,
+    "path": null,
+    "data": null
+  }
+}

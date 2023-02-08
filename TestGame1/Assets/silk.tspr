@@ -1,9 +1,15 @@
 {
-	"uuid": "0dc00f17-436b-468d-b185-d3fea438e233",
-	"data" : {
-		"width" : 32,
-		"height" : 32,
-		"format" : "png",
-		"content" : "silk.png"
-	}
+  "uuid": "1f45d159-f55c-44ea-b191-7d3c7ac015b4",
+  "resource_type": 3,
+  "path": null,
+  "data": {
+    "width": 359,
+    "height": 359,
+    "format": "1",
+    "content": "\\Assets\\silk.png",
+    "uuid": "1f45d159-f55c-44ea-b191-7d3c7ac015b4",
+    "resource_type": 3,
+    "path": null,
+    "data": null
+  }
 }

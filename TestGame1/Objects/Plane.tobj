@@ -10,7 +10,7 @@
 			{
 				"component": "TundraEngine.Components.SpriteRenderer",
 				"properties" : {
-					"Texture" : "\\Assets\\silk.png"
+					"Texture" : "1f45d159-f55c-44ea-b191-7d3c7ac015b4"
 				}
 			},
 			{

@@ -49,6 +49,8 @@ namespace TundraEngine.Studio.Compiler
     public class GameCompiler
     {
         public static int _buildNumber = 0;
+        public static string[] SKIP_FOLDERS = { "bin", "obj" };
+
         public delegate void LogFunction(string message);
         /// <summary>
         /// Compiles the game project
