@@ -28,7 +28,6 @@ namespace TundraEngine.Classes.Data
 
                 spr.width = img.Width;
                 spr.height = img.Height;
-                spr.format = "1";
                 spr.content = path;
                 return spr;
             }
@@ -37,7 +36,6 @@ namespace TundraEngine.Classes.Data
 
         public int width { get; set; }
         public int height { get; set; }
-        public string format { get; set; }
         public string content { get; set; }
     }
 

@@ -14,6 +14,8 @@
         public string? path { get; set; }
         public object? data { get; set; }
 
+        public int format_version { get; set; } = 1;
+
         public Resource(string uuid, ResourceType resourceType = ResourceType.RawFile)
         {
             this.uuid = uuid;
