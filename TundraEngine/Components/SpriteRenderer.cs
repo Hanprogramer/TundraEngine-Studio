@@ -9,7 +9,7 @@ namespace TundraEngine.Components
     /// </summary>
     public class SpriteRenderer : Component
     {
-        public Texture Texture;
+        public Texture Texture { get; set; }
         public Transform Transform;
         public SpriteRenderer(GameObject gameObject) : base(gameObject)
         {

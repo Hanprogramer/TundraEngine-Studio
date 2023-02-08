@@ -17,7 +17,9 @@ namespace TundraEngine.Studio.Util
         RawText,
         Image,
         Sound,
-        Game
+        Game,
+        Object,
+        Scene
     }
 
     public class EditorTab : ReactiveObject
@@ -47,6 +49,8 @@ namespace TundraEngine.Studio.Util
                 EditorType = EditorType.Image;
             else if (filePath.EndsWith(".mp3") || filePath.EndsWith(".wav") || filePath.EndsWith(".ogg"))
                 EditorType = EditorType.Sound;
+            else if (filePath.EndsWith(".tobj"))
+                EditorType = EditorType.Object;
             else
                 EditorType = EditorType.RawText;
 
@@ -104,6 +108,10 @@ namespace TundraEngine.Studio.Util
             {
                 var tv = new TundraView();
                 Content = tv;
+            }
+            else if (EditorType == EditorType.Object)
+            {
+                Content = new ObjectEditor();
             }
             else
             {

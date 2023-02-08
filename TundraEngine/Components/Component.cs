@@ -8,7 +8,7 @@ namespace TundraEngine.Components
         public Component(GameObject gameObject) { Object = gameObject; }
         public Component(GameObject gameObject, ComponentProperties props) { Object = gameObject; }
         public Component(ComponentProperties props) { }
-        public GameObject Object { get; set; }
+        public GameObject Object;
         public virtual void Initialize() { }
         public virtual void Update(float dt) { }
         public virtual void Render(Renderer Renderer) { }

@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:Class="TundraEngine.Studio.Controls.ObjectEditor">
+	<Grid ColumnDefinitions="150,4,*,4,200">
+		<StackPanel Background="#191919" Grid.Column="0">
+			<StackPanel Margin="4">
+				<TextBlock>Object name</TextBlock>
+				<TextBox/>
+			</StackPanel>
+		</StackPanel>
+
+		<GridSplitter Grid.Column="1"/>
+
+		<Panel Grid.Column="2">
+			<TextBlock>Editor</TextBlock>
+		</Panel>
+
+		<GridSplitter Grid.Column="3"/>
+
+		<Panel Background="#191919" Grid.Column="4" VerticalAlignment="Stretch">
+			<TabControl>
+				<TabItem Header="Components" Padding="10,0">
+					<Grid RowDefinitions="*,32" VerticalAlignment="Stretch">
+						<ScrollViewer DockPanel.Dock="Top">
+							<ItemsControl Items="{Binding Components}">
+								<ItemsControl.ItemTemplate>
+									<DataTemplate>
+										<Expander Header="{Binding Data.Name}" Margin="4" IsExpanded="True" HorizontalContentAlignment="Stretch">
+											<ItemsControl Items="{Binding Properties}" HorizontalAlignment="Stretch">
+												<ItemsControl.ItemTemplate>
+													<DataTemplate>
+														<ContentControl Content="{Binding Control}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch"/>
+													</DataTemplate>
+												</ItemsControl.ItemTemplate>
+											</ItemsControl>
+										</Expander>
+									</DataTemplate>
+								</ItemsControl.ItemTemplate>
+							</ItemsControl>
+						</ScrollViewer>
+						<Button Name="AddCompBtn" Grid.Row="1" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Add Component">
+							<Button.Flyout>
+								<Flyout>
+									<Grid RowDefinitions="32,*">
+										<TextBox Watermark="Search component"></TextBox>
+										<ListBox Grid.Row="1" Items="{Binding AvailableComponents}">
+											<ListBox.Styles>
+												<Style Selector="ListBoxItem">
+													<Setter Property="Padding" Value="0" />
+													<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+												</Style>
+											</ListBox.Styles>
+											<ListBox.ItemTemplate>
+												<DataTemplate>
+													<TextBlock Text="{Binding Name}" Padding="16,4" DoubleTapped="OnComponentMenuDlbClick"/>
+												</DataTemplate>
+											</ListBox.ItemTemplate>
+										</ListBox>
+									</Grid>
+								</Flyout>
+							</Button.Flyout>
+						</Button>
+					</Grid>
+				</TabItem>
+				<TabItem Header="Events" Padding="10,0">Events</TabItem>
+			</TabControl>
+		</Panel>
+	</Grid>
+</UserControl>

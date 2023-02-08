@@ -1,8 +1,11 @@
 <Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<Design.PreviewWith>
-		
-	</Design.PreviewWith>
 	<StyleInclude Source="/Themes/Base_Tabs.axaml"/>
 	<StyleInclude Source="/Themes/Base_TreeView.axaml"/>
+	<Style Selector="Button">
+		<Setter Property="FontSize" Value="12"/>
+	</Style>
+	<Style Selector="Window">
+		<Setter Property="FontSize" Value="12"/>
+	</Style>
 </Styles>
