@@ -23,6 +23,12 @@
             this.components = components;
             this.children = children;
         }
+
+        /// <summary>
+        /// Create an instance of this game object resource
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public GameObject Instantiate()
         {
             throw new Exception("Failed to instantiate this object");

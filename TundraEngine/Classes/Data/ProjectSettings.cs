@@ -8,6 +8,13 @@ namespace TundraEngine.Classes.Data
         public string title;
 
         public bool fullscreen = false;
+
+        /// <summary>
+        /// Loads the project settings from a file
+        /// </summary>
+        /// <param name="path">path to the file</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static ProjectSettings Load(string path)
         {
             var content = File.ReadAllText(path);

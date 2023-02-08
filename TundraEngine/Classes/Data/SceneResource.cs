@@ -11,6 +11,13 @@ namespace TundraEngine.Classes.Data
         public SceneResource(string uuid, ResourceType resourceType = ResourceType.Scene) : base(uuid, ResourceType.Scene)
         { }
 
+        /// <summary>
+        /// Create an instance of the scene
+        /// </summary>
+        /// <param name="window">Current game window</param>
+        /// <param name="rm">Resource manager</param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public Scene Instantiate(IGameWindow window, ResourceManager rm)
         {
             var scene = new Scene(window);

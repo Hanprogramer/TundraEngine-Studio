@@ -3,18 +3,19 @@ using TundraEngine.Components;
 
 namespace TestGame1.Objects
 {
-    public class TestObject : GameObject
+    public class TestObject : Component
     {
         float ticks = 0;
         Transform transform;
-        public TestObject(Scene scene) : base(scene)
+
+        public TestObject(GameObject gameObject) : base(gameObject)
         {
         }
 
         public override void Initialize()
         {
             base.Initialize();
-            transform = GetComponent<Transform>();
+            transform = Object.GetComponent<Transform>();
         }
 
         public override void Update(float dt)

@@ -135,6 +135,12 @@ namespace TundraEngine.Studio.Compiler
             }
         }
 
+        /// <summary>
+        /// Compile and write project settings
+        /// </summary>
+        /// <param name="path">project root</param>
+        /// <param name="outputPath">output folder</param>
+        /// <returns>path to the project settings file</returns>
         public static async Task<string> CompileProjectSettings(string path, string outputPath)
         {
             var finalPath = Path.Join(outputPath, "project_settings.json");

@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
@@ -15,6 +14,9 @@ namespace TundraEngine.Studio.Compiler
 {
     internal class TextureCompiler
     {
+        /// <summary>
+        /// Filter to all supported textures formats. Includes wildcard
+        /// </summary>
         public static string[] fileFilters = { "*.png" }; // TODO: implement more format
 
 
@@ -72,12 +74,15 @@ namespace TundraEngine.Studio.Compiler
             return finalPath;
         }
 
+        /// <summary>
+        /// Search for every single textures in the game
+        /// </summary>
+        /// <param name="path">root path to search for</param>
+        /// <returns>list of textures path</returns>
         public static string[] FindTexturesInFolder(string path)
         {
             var list = new List<string>();
             findTextures(path, path, list);
-            foreach (var item in list)
-                Console.WriteLine(item.ToString());
             return list.ToArray();
         }
 

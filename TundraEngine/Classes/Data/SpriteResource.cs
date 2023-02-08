@@ -1,9 +1,4 @@
 ﻿using SixLabors.ImageSharp.PixelFormats;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TundraEngine.Classes.Data
 {
@@ -20,7 +15,7 @@ namespace TundraEngine.Classes.Data
         /// <param name="path">Relative path to the file</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static async Task<SpriteResource> New(string uuid,string rootPath, string path)
+        public static async Task<SpriteResource> New(string uuid, string rootPath, string path)
         {
             using (var img = await SixLabors.ImageSharp.Image.LoadAsync<Rgba32>(Path.Join(rootPath, path)))
             {

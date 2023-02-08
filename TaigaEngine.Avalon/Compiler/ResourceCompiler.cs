@@ -12,6 +12,9 @@ namespace TundraEngine.Studio.Compiler
 {
     public static class ResourceCompiler
     {
+        /// <summary>
+        /// Filters to all resource file formats
+        /// </summary>
         public static string[] resourceFilters = { "*.tobj", "*.tscn", "*.tspr" };
 
 
@@ -82,15 +85,18 @@ namespace TundraEngine.Studio.Compiler
 
             return outputPath;
         }
+
+        /// <summary>
+        /// Find resources in folder
+        /// </summary>
+        /// <param name="path">root path to search</param>
+        /// <returns>list of resouce paths</returns>
         public static string[] FindResourcesInFolder(string path)
         {
-            //Dictionary<string, Resource> Resources;
             path = Path.GetFullPath(path);
 
             var list = new List<string>();
             findResources(path, list);
-            foreach (var item in list)
-                Console.WriteLine(item.ToString());
             return list.ToArray();
         }
 
