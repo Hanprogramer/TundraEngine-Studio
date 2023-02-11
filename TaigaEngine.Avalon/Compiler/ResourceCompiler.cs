@@ -27,6 +27,24 @@ namespace TundraEngine.Studio.Compiler
         /// <exception cref="Exception"></exception>
         public static async Task<string> Compile(string path, string outputFolder)
         {
+            var result = await Analyze(path);
+            // Writes out the compiled file
+            var outputPath = Path.Join(outputFolder, "resources.json");
+            if (File.Exists(outputPath))
+                File.Delete(outputPath);
+            await File.WriteAllTextAsync(outputPath, JsonConvert.SerializeObject(result, Formatting.Indented));
+
+
+            return outputPath;
+        }
+
+        /// <summary>
+        /// Analyzes a directory and retrieve the parsed resources
+        /// </summary>
+        /// <param name="path">Path to the folder to analyze</param>
+        /// <returns>The dictionary of resources</returns>
+        public static async Task<Dictionary<string, Resource>> Analyze(string path, bool includePath=false)
+        {
             var resources = FindResourcesInFolder(path);
             var result = new Dictionary<string, Resource>();
             Console.WriteLine($"Compiling resources.. {path}");
@@ -60,13 +78,20 @@ namespace TundraEngine.Studio.Compiler
                             )!;
                             break;
 
+                        case ResourceType.Sprite:
+                            finalData = JsonConvert.DeserializeObject<SpriteResource>(
+                                JsonConvert.SerializeObject(json.data)
+                            )!;
+                            break;
+
                         default:
                             finalData = json;
                             Console.WriteLine($"Unknown resource type for {filepath}");
                             break;
                     }
                     finalData.uuid = json.uuid;
-                    finalData.path = filepath.Remove(0, TundraStudio.CurrentProject.Path.Length);
+                    if(includePath)
+                        finalData.path = filepath.Remove(0, TundraStudio.CurrentProject.Path.Length);
                     Console.WriteLine($"Added {filepath}");
                     result.Add(json.uuid, finalData);
                 }
@@ -76,14 +101,7 @@ namespace TundraEngine.Studio.Compiler
                     continue;
                 }
             }
-            // Writes out the compiled file
-            var outputPath = Path.Join(outputFolder, "resources.json");
-            if (File.Exists(outputPath))
-                File.Delete(outputPath);
-            await File.WriteAllTextAsync(outputPath, JsonConvert.SerializeObject(result, Formatting.Indented));
-
-
-            return outputPath;
+            return result;
         }
 
         /// <summary>

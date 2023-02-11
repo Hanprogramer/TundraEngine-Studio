@@ -1,4 +1,6 @@
-﻿namespace TundraEngine.Classes.Data
+﻿using Newtonsoft.Json;
+
+namespace TundraEngine.Classes.Data
 {
 
     public class GameComponentResource
@@ -22,6 +24,11 @@
             this.description = description;
             this.components = components;
             this.children = children;
+        }
+
+        public static async Task<GameObjectResource> Load(string path)
+        {
+            return await Load<GameObjectResource>(path, ".tobj");
         }
 
         /// <summary>

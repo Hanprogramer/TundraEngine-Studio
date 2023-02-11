@@ -1,7 +1,11 @@
 ﻿using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using TundraEngine.Classes.Data;
+using TundraEngine.Studio.Compiler;
 using TundraEngine.Studio.Dialogs;
 
 namespace TundraEngine.Studio.Util
@@ -17,6 +21,8 @@ namespace TundraEngine.Studio.Util
         public string CSProject { get; set; }
         public int FormatVersion { get; set; }
 
+        internal Dictionary<string, Resource> Resources;
+
         public TundraProject(string path, string title, string version, int[] tundraVersion, string author, string cSProject, int formatVersion)
         {
             Path = path;
@@ -26,6 +32,11 @@ namespace TundraEngine.Studio.Util
             Author = author;
             CSProject = cSProject;
             FormatVersion = formatVersion;
+        }
+
+        private async void Initialize(string path)
+        {
+            Resources = await ResourceCompiler.Analyze(path, true);
         }
         /// <summary>
         /// Parse a tundra project.json file
@@ -54,6 +65,7 @@ namespace TundraEngine.Studio.Util
                         return null;
                     }
                     project.Path = dirPath;
+                    project.Initialize(dirPath);
                     return project;
                 }
             }

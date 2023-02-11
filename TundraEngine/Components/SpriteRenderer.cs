@@ -1,4 +1,5 @@
 ﻿using TundraEngine.Classes;
+using TundraEngine.Classes.Data;
 using TundraEngine.Rendering;
 using Texture = TundraEngine.Rendering.Texture;
 
@@ -9,7 +10,8 @@ namespace TundraEngine.Components
     /// </summary>
     public class SpriteRenderer : Component
     {
-        public Texture Texture { get; set; }
+        public SpriteResource Sprite { get; set; }
+        public Texture Texture;
         public Transform Transform;
         public SpriteRenderer(GameObject gameObject) : base(gameObject)
         {

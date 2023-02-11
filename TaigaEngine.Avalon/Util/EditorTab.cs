@@ -7,6 +7,7 @@ using AvaloniaEdit;
 using ReactiveUI;
 using System;
 using System.IO;
+using TundraEngine.Classes.Data;
 using TundraEngine.Studio.Controls;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -36,8 +37,9 @@ namespace TundraEngine.Studio.Util
         public string? FilePath { get; set; }
 
         public EditorType EditorType { get; set; }
+        public Control content;
 
-        public Control Content { get; set; }
+        public Control Content { get => content; set { this.RaiseAndSetIfChanged(ref content, value); } }
         public bool IsSaved { get; set; } = true;
 
         public EditorTab(string header, string filePath)
@@ -70,7 +72,7 @@ namespace TundraEngine.Studio.Util
         /// Initialize the content of the tab
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        public void Initialize()
+        public async void Initialize()
         {
             if (EditorType == EditorType.Image)
             {
@@ -109,9 +111,10 @@ namespace TundraEngine.Studio.Util
                 var tv = new TundraView();
                 Content = tv;
             }
-            else if (EditorType == EditorType.Object)
+            else if (EditorType == EditorType.Object && FilePath != null)
             {
-                Content = new ObjectEditor();
+                var obj = await GameObjectResource.Load(FilePath);
+                Content = new ObjectEditor(obj);
             }
             else
             {

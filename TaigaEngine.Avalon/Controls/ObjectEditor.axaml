@@ -8,7 +8,7 @@
 		<StackPanel Background="#191919" Grid.Column="0">
 			<StackPanel Margin="4">
 				<TextBlock>Object name</TextBlock>
-				<TextBox/>
+				<TextBox Name="TbObjectName" Watermark="Object Name"/>
 			</StackPanel>
 		</StackPanel>
 
@@ -32,7 +32,7 @@
 											<ItemsControl Items="{Binding Properties}" HorizontalAlignment="Stretch">
 												<ItemsControl.ItemTemplate>
 													<DataTemplate>
-														<ContentControl Content="{Binding Control}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch"/>
+														<UserControl Content="{Binding Content}" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch"/>
 													</DataTemplate>
 												</ItemsControl.ItemTemplate>
 											</ItemsControl>

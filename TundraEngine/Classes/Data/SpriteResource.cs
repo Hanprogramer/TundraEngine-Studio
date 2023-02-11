@@ -1,4 +1,5 @@
-﻿using SixLabors.ImageSharp.PixelFormats;
+﻿using Newtonsoft.Json;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace TundraEngine.Classes.Data
 {
@@ -28,6 +29,13 @@ namespace TundraEngine.Classes.Data
             }
             throw new Exception("Failed to import texture " + path);
         }
+
+        public static async Task<SpriteResource> Load(string path)
+        {
+            return await Load<SpriteResource>(path, ".tspr");
+        }
+
+        
 
         public int width { get; set; }
         public int height { get; set; }

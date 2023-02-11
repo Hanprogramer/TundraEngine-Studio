@@ -335,23 +335,23 @@ namespace TundraEngine.Studio.Controls
 
         private async void DoDrag(PointerEventArgs e, FileBrowserItem item)
         {
-            Console.WriteLine(item.Path);
+            //Console.WriteLine(item.Path);
             DataObject dragData = new DataObject();
-            dragData.Set(DataFormats.Text, $"You have dragged text 0 times");
-
+            dragData.Set(DataFormats.Text, item.Path);
+            
             var result = await DragDrop.DoDragDrop(e, dragData, DragDropEffects.Copy);
-            switch (result)
-            {
-                case DragDropEffects.Copy:
-                    Console.WriteLine("The text was copied");
-                    break;
-                case DragDropEffects.Link:
-                    Console.WriteLine("The text was linked");
-                    break;
-                case DragDropEffects.None:
-                    Console.WriteLine("The drag operation was canceled");
-                    break;
-            }
+            //switch (result)
+            //{
+            //    case DragDropEffects.Copy:
+            //        Console.WriteLine("The text was copied");
+            //        break;
+            //    case DragDropEffects.Link:
+            //        Console.WriteLine("The text was linked");
+            //        break;
+            //    case DragDropEffects.None:
+            //        Console.WriteLine("The drag operation was canceled");
+            //        break;
+            //}
         }
 
 

@@ -5,16 +5,22 @@ namespace TundraEngine.Studio.Controls
     public partial class NumberEditor : UserControl
     {
         public string Label { get; set; } = "Prop.Label";
-        public float Value { get; set; } = 0;
+        public float Value { get => Data.Value; set { Data.Value = value; } }
+        ObjectEditorPropertiesData Data;
         public NumberEditor()
         {
             InitializeComponent();
             DataContext = this;
         }
-        public NumberEditor(string label, float value)
+        public NumberEditor(ObjectEditorPropertiesData data)
         {
-            Label = label;
-            Value = value;
+            Data = data;
+            Label = data.Name;
+
+            // Set default value
+            if (Data.Value == null)
+                Value = 0;
+
             InitializeComponent();
             DataContext = this;
         }

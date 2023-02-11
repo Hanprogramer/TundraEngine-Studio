@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="40"
+			 MinHeight="40"
+             x:Class="TundraEngine.Studio.Controls.SpritePropEditor">
+	<Grid ColumnDefinitions="*,4,*" HorizontalAlignment="Stretch">
+		<TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Text="{Binding Label}"/>
+		<Panel Grid.Column="2"
+			   Name="MainPanel"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch">
+			<Button Name="MainButton"
+					Grid.Column="2"
+					HorizontalAlignment="Stretch"
+					VerticalAlignment="Stretch">
+				<StackPanel Margin="4">
+					<Image Name="MainImage" RenderOptions.BitmapInterpolationMode="Default"/>
+					<TextBlock Name="MainText" Text="No Sprite"/>
+				</StackPanel>
+				<Button.Flyout>
+					<MenuFlyout>
+						<MenuItem Header="Open" Click="OnOpenClicked"/>
+						<MenuItem Header="Remove" Click="OnRemoveClicked"/>
+					</MenuFlyout>
+				</Button.Flyout>
+			</Button>
+		</Panel>
+	</Grid>
+</UserControl>
