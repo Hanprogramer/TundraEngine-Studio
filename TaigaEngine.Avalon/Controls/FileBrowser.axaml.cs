@@ -390,7 +390,7 @@ namespace TundraEngine.Studio.Controls
             // Directories
             foreach (var dir in Directory.GetDirectories(path))
             {
-                var relativePath = dir.Remove(0, path.Length);
+                var relativePath = dir.Remove(0, path.Length+1);
                 if (InEditorUse && skipFolders.Contains(relativePath))
                 {
                     // Hide some folders
