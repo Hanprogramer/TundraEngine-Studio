@@ -70,6 +70,11 @@ namespace TundraEngine.Classes.Data
             return scene;
         }
         public SceneObjectData[] objects { get; set; }
+
+        public static async Task<SceneResource> Load(string path)
+        {
+            return await Load<SceneResource>(path, ".tscn");
+        }
     }
 
     public class SceneObjectData
