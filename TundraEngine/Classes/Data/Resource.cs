@@ -49,6 +49,21 @@ namespace TundraEngine.Classes.Data
             }
             throw new Exception($"Failed to load Sprite resource {path}");
         }
+        public static T LoadSync<T>(string path, string extension) where T: Resource
+        {
+            if (!path.EndsWith(extension)) throw new FileLoadException($"Can't load files other than {extension}");
+            var res = JsonConvert.DeserializeObject<Resource>(File.ReadAllText(path));
+            if (res != null)
+            {
+                var data = JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(res.data));
+                if (data != null)
+                {
+                    data.path = path;
+                    return data;
+                }
+            }
+            throw new Exception($"Failed to load Sprite resource {path}");
+        }
 
     }
 

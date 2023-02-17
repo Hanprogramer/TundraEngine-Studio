@@ -35,6 +35,11 @@ namespace TundraEngine.Classes.Data
             return await Load<SpriteResource>(path, ".tspr");
         }
 
+        public static SpriteResource LoadSync(string path)
+        {
+            return LoadSync<SpriteResource>(path, ".tspr");
+        }
+
         
 
         public int width { get; set; }
