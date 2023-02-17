@@ -87,6 +87,10 @@
 	    <DependentUpon>SpritePropEditor.axaml</DependentUpon>
 	    <SubType>Code</SubType>
 	  </Compile>
+	  <Compile Update="Controls\Editor\ObjectEditor.axaml.cs">
+	    <DependentUpon>ObjectEditor.axaml</DependentUpon>
+	    <SubType>Code</SubType>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

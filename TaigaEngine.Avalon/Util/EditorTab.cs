@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using TundraEngine.Classes.Data;
 using TundraEngine.Studio.Controls;
+using TundraEngine.Studio.Controls.Editor;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 namespace TundraEngine.Studio.Util
@@ -53,6 +54,8 @@ namespace TundraEngine.Studio.Util
                 EditorType = EditorType.Sound;
             else if (filePath.EndsWith(".tobj"))
                 EditorType = EditorType.Object;
+            else if (filePath.EndsWith(".tscn"))
+                EditorType = EditorType.Scene;
             else
                 EditorType = EditorType.RawText;
 
@@ -116,10 +119,14 @@ namespace TundraEngine.Studio.Util
                 var obj = await GameObjectResource.Load(FilePath);
                 Content = new ObjectEditor(obj);
             }
-            else
+            else if (EditorType == EditorType.Scene)
             {
-                Content = new Label() { Content = "This editor type isn't supported yet" };
+                var scene = await SceneResource.Load(FilePath);
+                Content = new SceneEditor(scene);
             }
+            else
+                Content = new Label() { Content = "This editor type isn't supported yet" };
+            
         }
     }
 }

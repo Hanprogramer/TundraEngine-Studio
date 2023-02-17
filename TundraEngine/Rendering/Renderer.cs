@@ -58,6 +58,12 @@ namespace TundraEngine.Rendering
         private uint indId = 0;
         private int drawCalls = 0;
 
+        public float[] clearColor =
+        {
+            // 0.94f, 0.79f, 0.64f, 1.0f
+            0.3f,0.3f,0.3f,1.0f
+        };
+
 
 
         public Renderer(IGameWindow window, GL gl)
@@ -91,7 +97,7 @@ namespace TundraEngine.Rendering
         public unsafe void Clear()
         {
 
-            Gl.ClearColor(0.94f, 0.79f, 0.64f, 1.0f);
+            Gl.ClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
             Gl.Clear((uint)(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
             Gl.Enable(EnableCap.Blend);
             Gl.BlendFunc(BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha);
@@ -246,6 +252,23 @@ namespace TundraEngine.Rendering
             info += "\n" + Gl.GetStringS(GLEnum.Renderer);
 
             Console.WriteLine(info);
+        }
+
+        /// <summary>
+        /// Sets the default clear color
+        /// </summary>
+        /// <param name="r"></param>
+        /// <param name="g"></param>
+        /// <param name="b"></param>
+        /// <param name="a"></param>
+        public void SetClearColor(float r, float g, float b, float a)
+        {
+            clearColor = new float[]
+            {
+                r,g,b,a
+            };
+
+
         }
     }
 }

@@ -4,6 +4,7 @@
     <option name="projectPerEditor">
       <map>
         <entry key="TaigaEngine.Avalon/Controls/BooleanEditor.axaml" value="TaigaEngine.Avalon/TundraEngine.Avalon.csproj" />
+        <entry key="TaigaEngine.Avalon/Controls/Editor/SceneEditor.axaml" value="TaigaEngine.Avalon/TundraEngine.Avalon.csproj" />
         <entry key="TaigaEngine.Avalon/Controls/FileBrowser.axaml" value="TaigaEngine.Avalon/TundraEngine.Avalon.csproj" />
         <entry key="TaigaEngine.Avalon/Controls/NumberEditor.axaml" value="TaigaEngine.Avalon/TundraEngine.Avalon.csproj" />
         <entry key="TaigaEngine.Avalon/Controls/ObjectEditor.axaml" value="TaigaEngine.Avalon/TundraEngine.Avalon.csproj" />
