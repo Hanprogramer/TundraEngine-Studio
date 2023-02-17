@@ -59,7 +59,7 @@ namespace TundraEngine.Studio.Controls
                     if (!IsDirectory)
                     {
                         this.Icon = "/Assets/file_white.svg";
-                        if (Path.EndsWith(".png"))
+                        if (Path.EndsWith(".tspr"))
                         {
                             // TODO: Supports other format
                             this.Icon = Path;

@@ -5,6 +5,7 @@ using Avalonia.Platform;
 using System;
 using System.Globalization;
 using System.IO;
+using TundraEngine.Classes.Data;
 
 namespace TundraEngine.Studio.Util
 {
@@ -47,7 +48,22 @@ namespace TundraEngine.Studio.Util
                     //string assemblyName = Assembly.GetEntryAssembly().GetName().Name;
                     //uri = new Uri($"avares://{assemblyName}{rawUri}");
                     //Console.WriteLine("loading " + rawUri);
-                    
+                    if (TundraStudio.CurrentProject != null)
+                    {
+                        if (rawUri.EndsWith(".tspr"))
+                        {
+                            // Handle sprite resource
+                            var res = SpriteResource.LoadSync(rawUri);
+                            var contentPath = Path.Join(TundraStudio.CurrentProject.Path, res.content);
+                            return new Bitmap(contentPath);
+                        }
+                        else
+                        {
+                            if (File.Exists(rawUri))
+                                return new Bitmap(rawUri);
+                        }
+                    }
+                    else
                     if (File.Exists(rawUri))
                         return new Bitmap(rawUri);
                 }
