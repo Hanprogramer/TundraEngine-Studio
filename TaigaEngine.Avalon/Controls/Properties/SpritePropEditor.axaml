@@ -15,9 +15,9 @@
 					Grid.Column="2"
 					HorizontalAlignment="Stretch"
 					VerticalAlignment="Stretch">
-				<StackPanel Margin="4">
-					<Image Name="MainImage" RenderOptions.BitmapInterpolationMode="Default"/>
-					<TextBlock Name="MainText" Text="No Sprite"/>
+				<StackPanel Margin="4" VerticalAlignment="Center">
+					<Image MaxHeight="100" Name="MainImage" RenderOptions.BitmapInterpolationMode="Default"/>
+					<TextBlock Name="MainText" Text="None"/>
 				</StackPanel>
 				<Button.Flyout>
 					<MenuFlyout>

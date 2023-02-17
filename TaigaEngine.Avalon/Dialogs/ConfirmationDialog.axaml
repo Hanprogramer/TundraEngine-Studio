@@ -13,7 +13,7 @@
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
 			<Button IsVisible="{Binding IsDangerous}" Margin="0,0,4,0" Click="OnYes" Background="Red" Content="{Binding PositiveAction}"></Button>
 			<Button IsVisible="{Binding !IsDangerous}" Margin="0,0,4,0" Click="OnYes" Content="{Binding PositiveAction}"></Button>
-			<Button IsVisible="{Binding ShowNegative}" Margin="0,0,4,0" Click="OnNo"  Content="{Binding NegativeAction}">No</Button>
+			<Button IsVisible="{Binding ShowNegative}" Margin="0,0,4,0" Click="OnNo"  Content="{Binding NegativeAction}"></Button>
 			<Button IsVisible="{Binding ShowCancel}" Click="OnNo">Cancel</Button>
 		</StackPanel>
 	</Grid>

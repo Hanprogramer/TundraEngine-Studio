@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="TaigaEngine.Avalon/Controls/BooleanEditor.axaml" value="TaigaEngine.Avalon/TundraEngine.Avalon.csproj" />
+        <entry key="TaigaEngine.Avalon/Controls/FileBrowser.axaml" value="TaigaEngine.Avalon/TundraEngine.Avalon.csproj" />
+        <entry key="TaigaEngine.Avalon/Controls/NumberEditor.axaml" value="TaigaEngine.Avalon/TundraEngine.Avalon.csproj" />
+        <entry key="TaigaEngine.Avalon/Controls/ObjectEditor.axaml" value="TaigaEngine.Avalon/TundraEngine.Avalon.csproj" />
+        <entry key="TaigaEngine.Avalon/Controls/Properties/BooleanEditor.axaml" value="TaigaEngine.Avalon/TundraEngine.Avalon.csproj" />
+        <entry key="TaigaEngine.Avalon/Controls/Properties/SpritePropEditor.axaml" value="TaigaEngine.Avalon/TundraEngine.Avalon.csproj" />
+        <entry key="TaigaEngine.Avalon/Controls/StringPropEditor.axaml" value="TaigaEngine.Avalon/TundraEngine.Avalon.csproj" />
+        <entry key="TaigaEngine.Avalon/Dialogs/ConfirmationDialog.axaml" value="TaigaEngine.Avalon/TundraEngine.Avalon.csproj" />
+        <entry key="TaigaEngine.Avalon/MainWindow.axaml" value="TaigaEngine.Avalon/TundraEngine.Avalon.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

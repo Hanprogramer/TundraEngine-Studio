@@ -34,12 +34,12 @@ namespace TundraEngine.Studio.Util
             FormatVersion = formatVersion;
         }
 
-        private async void Initialize(string path)
+        public async void Initialize()
         {
-            Resources = await ResourceCompiler.Analyze(path, true);
+            Resources = await ResourceCompiler.Analyze(Path, true);
         }
         /// <summary>
-        /// Parse a tundra project.json file
+        /// Parse a tundra project.json file. Note that project is not initialized automatically
         /// </summary>
         /// <param name="filePath">absolute path to project.json file</param>
         /// <param name="parent">parent window to show error message dialog</param>
@@ -65,7 +65,6 @@ namespace TundraEngine.Studio.Util
                         return null;
                     }
                     project.Path = dirPath;
-                    project.Initialize(dirPath);
                     return project;
                 }
             }

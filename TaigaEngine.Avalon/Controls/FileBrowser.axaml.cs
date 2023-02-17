@@ -21,10 +21,7 @@ namespace TundraEngine.Studio.Controls
         public string FileName
         {
             get => fileName;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref fileName, value);
-            }
+            set => this.RaiseAndSetIfChanged(ref fileName, value);
         }
         public string Path { get; set; }
         public FileBrowserItem? Parent = null;
@@ -35,10 +32,7 @@ namespace TundraEngine.Studio.Controls
         public ObservableCollection<FileBrowserItem> Items
         {
             get => items;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref items, value);
-            }
+            set => this.RaiseAndSetIfChanged(ref items, value);
         }
         public string Icon { get; set; } = "/Assets/folder_white.svg";
         /// <summary>
@@ -361,17 +355,16 @@ namespace TundraEngine.Studio.Controls
                 .OfType<TreeViewItem>()
                 .FirstOrDefault();
 
-            if (item != null)
-            {
-                // Do whatever you need with item here.
-                e.Handled = true;
+            if (item == null)
+                return;
+            // Do whatever you need with item here.
+            e.Handled = true;
 
-                FileBrowserItem fbi = (FileBrowserItem)item.DataContext!;
-                if (fbi.IsDirectory == false)
-                {
-                    // Open a new tab
-                    FileOpen?.Invoke(fbi);
-                }
+            FileBrowserItem fbi = (FileBrowserItem)item.DataContext!;
+            if (fbi.IsDirectory == false)
+            {
+                // Open a new tab
+                FileOpen?.Invoke(fbi);
             }
         }
 
@@ -386,35 +379,44 @@ namespace TundraEngine.Studio.Controls
                 Items.Add(root);
             }
         }
-        string[] skipFolders = new string[] { "bin", "obj", ".git", ".vscode" };
+        string[] skipFolders = { "bin", "obj", ".git", ".vscode" };
+        private string[] skipExtensions = { ".png", ".exe", ".dll" };
         public ObservableCollection<FileBrowserItem> GetFileBrowserItems(string path, FileBrowserItem? parent = null)
         {
             var items = new ObservableCollection<FileBrowserItem>();
 
-            if (path != "")
+            if (path == "")
+                return items;
+            // Directories
+            foreach (var dir in Directory.GetDirectories(path))
             {
-                // Directories
-                foreach (var dir in Directory.GetDirectories(path))
+                var relativePath = dir.Remove(0, path.Length);
+                if (InEditorUse && skipFolders.Contains(relativePath))
                 {
-                    var relativePath = dir.Remove(0, path.Length);
-                    if (InEditorUse && skipFolders.Contains(relativePath))
-                    {
-                        // Hide some folders
-                        continue;
-                    }
-                    var item = new FileBrowserItem(Path.GetFileName(dir), dir, true);
-                    item.Items = GetFileBrowserItems(item.Path, item);
-                    item.Parent = parent;
-                    items.Add(item);
+                    // Hide some folders
+                    continue;
                 }
+                var item = new FileBrowserItem(Path.GetFileName(dir), dir, true);
+                item.Items = GetFileBrowserItems(item.Path, item);
+                item.Parent = parent;
+                items.Add(item);
+            }
 
-                // Files
-                foreach (var file in Directory.GetFiles(path))
+            // Files
+            foreach (var file in Directory.GetFiles(path))
+            {
+                foreach (var ext in skipExtensions)
                 {
-                    var item = new FileBrowserItem(Path.GetFileName(file), file, false);
-                    item.Parent = parent;
-                    items.Add(item);
+                    if (file.EndsWith(ext))
+                        goto End;
                 }
+                var item = new FileBrowserItem(Path.GetFileName(file), file, false)
+                {
+                    Parent = parent
+                };
+                items.Add(item);
+                    
+                End: ;
             }
             return items;
         }

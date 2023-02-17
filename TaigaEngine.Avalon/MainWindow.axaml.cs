@@ -26,6 +26,7 @@ namespace TundraEngine.Studio
                 //TODO: do this on application level maybe? Or for every window
                 Win32Native.ImplementDarkTitleBar(this);
             TundraStudio.CurrentProject = TundraProject.Parse(ProjectPath, this);
+            TundraStudio.CurrentProject.Initialize();
 
             var fb = this.FindControl<FileBrowser>("FileBrowser");
             fb.CurrentWorkingDirectory = TundraStudio.CurrentProject.Path;

@@ -54,6 +54,7 @@ namespace TundraEngine.Studio.Util
 
             Register<Transform>();
             Register<SpriteRenderer>();
+            Register<TestComponent>();
         }
 
         public void Register<T>() where T : Component

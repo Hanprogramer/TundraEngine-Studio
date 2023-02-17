@@ -13,6 +13,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<None Remove=".gitignore" />
+		<None Remove="Controls\BooleanEditor.axaml~" />
 	</ItemGroup>
 	<ItemGroup>
 		<!--This helps with theme dll-s trimming.
@@ -69,6 +70,22 @@
 	<ItemGroup>
 	  <Compile Update="Dialogs\ConfirmationDialog.axaml.cs">
 	    <DependentUpon>ConfirmationDialog.axaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Controls\Properties\BooleanEditor.axaml.cs">
+	    <DependentUpon>BooleanEditor.axaml</DependentUpon>
+	    <SubType>Code</SubType>
+	  </Compile>
+	  <Compile Update="Controls\Properties\NumberEditor.axaml.cs">
+	    <DependentUpon>NumberEditor.axaml</DependentUpon>
+	    <SubType>Code</SubType>
+	  </Compile>
+	  <Compile Update="Controls\Properties\StringPropEditor.axaml.cs">
+	    <DependentUpon>StringPropEditor.axaml</DependentUpon>
+	    <SubType>Code</SubType>
+	  </Compile>
+	  <Compile Update="Controls\Properties\SpritePropEditor.axaml.cs">
+	    <DependentUpon>SpritePropEditor.axaml</DependentUpon>
+	    <SubType>Code</SubType>
 	  </Compile>
 	</ItemGroup>
 

@@ -8,28 +8,18 @@
 		xmlns:edit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
 		xmlns:controls="clr-namespace:TundraEngine.Studio.Controls"
 		xmlns:svg="clr-namespace:Avalonia.Svg.Skia;assembly=Avalonia.Svg.Skia"
-		Icon="Assets/TundraEngine.png"
+		Icon="/Assets/TundraEngine.png"
         Title="TundraEngine v0.1 Beta">
 	<Window.Styles>
 	</Window.Styles>
 	<DockPanel LastChildFill="True">
 		<Grid ColumnDefinitions="Auto,*,Auto" DockPanel.Dock="Top">
-			<Menu DockPanel.Dock="Top" Grid.Column="0">
-				<MenuItem Header="_File">
-					<MenuItem Header="_Open..."/>
-					<MenuItem Header="Create new">
-						<MenuItem Header="Object"/>
-						<MenuItem Header="Scene"/>
-						<MenuItem Header="Sprite"/>
-					</MenuItem>
-					<Separator/>
-					<MenuItem Header="_Exit"/>
-				</MenuItem>
-				<MenuItem Header="_Edit">
-					<MenuItem Header="Copy"/>
-					<MenuItem Header="Paste"/>
-				</MenuItem>
-			</Menu>
+			<StackPanel Grid.Row="0" VerticalAlignment="Stretch" Background="#121212">
+				<!-- Menu Bar -->
+				<Button>
+					<svg:Svg Path="/Assets/save_white.svg" Width="16" Height="16"/>
+				</Button>
+			</StackPanel>
 			<StackPanel Grid.Column="2" Orientation="Horizontal">
 				<Button Name="PlayBtn" Click="OnPlayBtnClicked">
 					<svg:Svg Path="Assets/play_white.svg" Width="16" Height="16"/>

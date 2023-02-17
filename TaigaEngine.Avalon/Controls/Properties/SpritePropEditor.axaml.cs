@@ -40,7 +40,7 @@ namespace TundraEngine.Studio.Controls
                 {
                     MainImage.Source = null;
                     MainButton.IsEnabled = false;
-                    ValueLabel = "No sprite";
+                    ValueLabel = "None";
                 }
             }
         }

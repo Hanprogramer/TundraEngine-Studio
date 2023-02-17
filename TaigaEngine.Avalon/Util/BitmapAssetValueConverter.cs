@@ -47,6 +47,7 @@ namespace TundraEngine.Studio.Util
                     //string assemblyName = Assembly.GetEntryAssembly().GetName().Name;
                     //uri = new Uri($"avares://{assemblyName}{rawUri}");
                     //Console.WriteLine("loading " + rawUri);
+                    
                     if (File.Exists(rawUri))
                         return new Bitmap(rawUri);
                 }

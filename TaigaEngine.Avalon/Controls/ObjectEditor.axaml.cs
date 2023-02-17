@@ -26,12 +26,16 @@ namespace TundraEngine.Studio.Controls
         /// <returns></returns>
         public Control GetContent()
         {
-            if (PropType == typeof(float))
+            if (PropType == typeof(float) || PropType == typeof(int))
                 return new NumberEditor(this);
             if (PropType == typeof(SpriteResource))
                 return new SpritePropEditor(this);
-            else
-                return new TextBlock() { Text = $"Unsupported data type [{PropType}]" };
+            if (PropType == typeof(bool))
+                return new BooleanEditor(this);
+            if (PropType == typeof(string))
+                return new StringPropEditor(this);
+            
+            return new TextBlock() { Text = $"Unsupported data type [{PropType}]" };
         }
         public ObjectEditorPropertiesData(PropertyInfo info)
         {

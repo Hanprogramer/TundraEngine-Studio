@@ -90,9 +90,13 @@ namespace TundraEngine.Studio.Compiler
                             break;
                     }
                     finalData.uuid = json.uuid;
-                    if(includePath)
+                    if (includePath)
+                    {
                         finalData.path = filepath.Remove(0, TundraStudio.CurrentProject.Path.Length);
+                    }
                     Console.WriteLine($"Added {filepath}");
+
+
                     result.Add(json.uuid, finalData);
                 }
                 catch (Exception e)
