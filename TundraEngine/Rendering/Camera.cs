@@ -23,9 +23,9 @@ namespace TundraEngine.Rendering
                 return Matrix4X4.CreateOrthographicOffCenter(left, right, bottom, top, 0.01f, 10f) * Matrix4X4.CreateScale(Zoom);
             }
         }
-        public Camera(Scene scene) : base(scene)
+        public Camera(Scene scene, IGameWindow window) : base(scene)
         {
-            _window = Game.Window;
+            _window = window;
             Zoom = 1f;
             Position = AddComponent<Transform>();
             Position.X = 0;

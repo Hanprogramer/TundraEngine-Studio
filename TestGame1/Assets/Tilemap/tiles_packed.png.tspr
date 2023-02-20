@@ -1,0 +1,18 @@
+{
+  "uuid": "b94812c7-4fc1-4721-9256-96be887cb60c",
+  "resource_type": 3,
+  "path": null,
+  "data": {
+    "width": 192,
+    "height": 160,
+    "content": "\\Assets\\Tilemap\\tiles_packed.png",
+    "uuid": "b94812c7-4fc1-4721-9256-96be887cb60c",
+    "resource_type": 3,
+    "path": null,
+    "data": null,
+    "format_version": 1,
+    "filename": null
+  },
+  "format_version": 1,
+  "filename": null
+}

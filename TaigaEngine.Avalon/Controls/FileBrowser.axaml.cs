@@ -189,22 +189,31 @@ namespace TundraEngine.Studio.Controls
 
         private void OnFileWatcherCreated(object sender, FileSystemEventArgs e)
         {
-            var path = e.FullPath;
-            var name = (e.Name ?? "").Split(Path.DirectorySeparatorChar).Last();
-            var isDirectory = File.GetAttributes(path).HasFlag(FileAttributes.Directory);
-
-            var item = new FileBrowserItem(name, path, isDirectory);
-            var parentPath = Path.GetDirectoryName(path);
-
-            var parent = FindItem(parentPath);
-            if (parent != null)
+            try
             {
-                parent.Items.Add(item);
-                item.Parent = parent;
+                var path = e.FullPath;
+                var name = (e.Name ?? "").Split(Path.DirectorySeparatorChar).Last();
+                var isDirectory = File.GetAttributes(path).HasFlag(FileAttributes.Directory);
+
+                var item = new FileBrowserItem(name, path, isDirectory);
+                var parentPath = Path.GetDirectoryName(path);
+
+                var parent = FindItem(parentPath);
+                if (parent != null)
+                {
+                    parent.Items.Add(item);
+                    item.Parent = parent;
+                }
+                else
+                {
+                    throw new DirectoryNotFoundException($"Parent item not found {parentPath}");
+                }
             }
-            else
+            catch (Exception error)
             {
-                throw new DirectoryNotFoundException($"Parent item not found {parentPath}");
+                // TODO: auto create new folder item if not exists
+                // plus skip some folders 
+                Console.WriteLine(error);
             }
         }
 

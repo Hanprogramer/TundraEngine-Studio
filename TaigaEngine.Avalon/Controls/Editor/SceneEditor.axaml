@@ -14,7 +14,7 @@
         </Grid>
         <GridSplitter Grid.Column="1"/>
         <Panel Grid.Column="2" Background="Black">
-            <tundra:TundraView/>
+            <tundra:TundraView Name="MainTundraView"/>
         </Panel>
     </Grid>
 </UserControl>

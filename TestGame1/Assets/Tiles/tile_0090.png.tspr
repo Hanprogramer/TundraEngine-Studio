@@ -1,0 +1,18 @@
+{
+  "uuid": "424ab85d-c14d-4d5a-bcfc-3a20fe362bbb",
+  "resource_type": 3,
+  "path": null,
+  "data": {
+    "width": 16,
+    "height": 16,
+    "content": "\\Assets\\Tiles\\tile_0090.png",
+    "uuid": "424ab85d-c14d-4d5a-bcfc-3a20fe362bbb",
+    "resource_type": 3,
+    "path": null,
+    "data": null,
+    "format_version": 1,
+    "filename": null
+  },
+  "format_version": 1,
+  "filename": null
+}

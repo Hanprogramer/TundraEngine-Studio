@@ -53,7 +53,7 @@ namespace TundraEngine.Rendering
             filter = renderer.RendererFilter;
 
             _handle = _gl.GenTexture();
-            Bind();
+            Bind(checkLoaded:false);
             //Loading an image using imagesharp.
             using (var img = SixLabors.ImageSharp.Image.Load<Rgba32>(Path))
             {
@@ -90,7 +90,7 @@ namespace TundraEngine.Rendering
 
             //Generating the opengl handle;
             _handle = _gl.GenTexture();
-            Bind();
+            Bind(checkLoaded:false);
             using (var img = SixLabors.ImageSharp.Image.Load<Rgba32>(data))
             {
                 Width = img.Width;
@@ -147,10 +147,12 @@ namespace TundraEngine.Rendering
             _gl.GenerateMipmap(TextureTarget.Texture2D);
         }
 
-        public void Bind(TextureUnit textureSlot = TextureUnit.Texture0)
+        public void Bind(TextureUnit textureSlot = TextureUnit.Texture0, bool checkLoaded = true)
         {
-            if (_gl == null) throw new Exception("Texture hasn't been loaded yet");
-            //When we bind a texture we can choose which textureslot we can bind it to.
+            if ((_gl == null || !IsLoaded) && checkLoaded)
+                throw new Exception("Texture hasn't been loaded yet");
+            
+            //When we bind a texture we can choose which textureSlot we can bind it to.
             _gl.ActiveTexture(textureSlot);
             _gl.BindTexture(TextureTarget.Texture2D, _handle);
         }

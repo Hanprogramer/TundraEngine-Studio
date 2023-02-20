@@ -47,7 +47,7 @@ namespace TundraEngine.Classes.Data
                                 var compInst = ctr.Invoke(new object[] { gobj });
                                 if (compInst is SpriteRenderer sr)
                                 {
-                                    var texProp = comp.properties["Texture"]!;
+                                    var texProp = comp.properties["Sprite"]!;
                                     var tex = rm.GetTexture(texProp);
                                     sr.Texture = tex;
                                 }

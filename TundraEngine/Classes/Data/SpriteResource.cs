@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SixLabors.ImageSharp.PixelFormats;
+using TundraEngine.Rendering;
 
 namespace TundraEngine.Classes.Data
 {
@@ -38,6 +39,15 @@ namespace TundraEngine.Classes.Data
         public static SpriteResource LoadSync(string path)
         {
             return LoadSync<SpriteResource>(path, ".tspr");
+        }
+
+        public Texture CreateTexture(Renderer renderer)
+        {
+            //TODO: use the content property instead
+            var contentPath = path.Remove(path.Length-".tspr".Length);
+            var texture = new Texture(contentPath);
+            texture.Load(renderer);
+            return texture;
         }
 
         

@@ -128,7 +128,7 @@ namespace TundraEngine
                 {
                     context?.MakeCurrent();
                     Gl = GL.GetApi(context);
-                    Renderer = new Rendering.Renderer(this, Gl);
+                    Renderer = new Rendering.Renderer(Gl);
                     Renderer.SetSize(_window.Size.X, _window.Size.Y);
                     if (Scene == null) Scene = new Scene(this);
                     Scene.Initialize();
@@ -152,7 +152,7 @@ namespace TundraEngine
             else
             {
                 Gl = GL.GetApi(_window);
-                Renderer = new Rendering.Renderer(this, Gl);
+                Renderer = new Rendering.Renderer(Gl);
                 Renderer.SetSize(_window.Size.X, _window.Size.Y);
                 if (Scene == null) Scene = new Scene(this);
                 Scene.Initialize();

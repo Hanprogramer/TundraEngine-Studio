@@ -33,8 +33,7 @@ namespace TundraEngine.Studio.Compiler
 
             foreach (var file in files)
             {
-                var name = Path.GetFileNameWithoutExtension(file);
-                var resPath = Path.Join(Path.GetDirectoryName(file), name + ".tspr");
+                var resPath = file + ".tspr";
 
                 string uuid;
                 // If a texture doesn't have .tspr, generate one

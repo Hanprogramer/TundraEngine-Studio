@@ -23,9 +23,6 @@ namespace TundraEngine.Rendering
         // Default Shader
         private Shader Shader;
 
-        // Windowing
-        public IGameWindow Window;
-
         // Render stuffs
         public Scene Scene;
         public Texture lastTexture;
@@ -63,17 +60,12 @@ namespace TundraEngine.Rendering
             // 0.94f, 0.79f, 0.64f, 1.0f
             0.3f,0.3f,0.3f,1.0f
         };
-
-
-
-        public Renderer(IGameWindow window, GL gl)
+        public Renderer(GL gl)
         {
             Gl = gl;
-            Window = window;
             Initialize();
-
 #if DEBUG
-            PrintRendererInfo();
+            //PrintRendererInfo();
 #endif
         }
 

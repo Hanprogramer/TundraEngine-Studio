@@ -13,19 +13,22 @@ namespace TundraEngine.Classes
     {
         public Dictionary<string, Texture> Textures;
         public Dictionary<string, Resource> Resources;
-        public IGameWindow Window;
-        public Renderer Renderer;
+        public Renderer? Renderer;
 
         public ResourceManager(IGameWindow Window)
         {
             Textures = new();
             Resources = new();
-            this.Window = Window;
             Renderer = Window.Renderer;
         }
-        public void LoadTextures(Renderer renderer)
+        public ResourceManager(Renderer? renderer)
         {
+            Textures = new();
+            Resources = new();
             Renderer = renderer;
+        }
+        public void LoadTextures()
+        {
             foreach (var key in Textures.Keys)
             {
                 Console.WriteLine("Loading texture " + key);
@@ -93,6 +96,7 @@ namespace TundraEngine.Classes
 
         public void LoadResourcesFromFile(string path)
         {
+            Resources.Clear();
             var content = File.ReadAllText(path);
             var json = JsonConvert.DeserializeObject<Dictionary<string, JObject>>(content);
 
@@ -111,6 +115,9 @@ namespace TundraEngine.Classes
                     case ResourceType.RawFile:
                         finalResource = pair.Value.ToObject<Resource>()!;
                         break;
+                    case ResourceType.Sprite:
+                        finalResource = pair.Value.ToObject<SpriteResource>()!;
+                        break;
 
                     default:
                         Console.WriteLine($"This resource type can't be imported yet [{res.resource_type}] {res.path}");
@@ -122,6 +129,7 @@ namespace TundraEngine.Classes
 
         public void LoadTexturesFromFile(string path)
         {
+            Textures.Clear();
             var content = File.ReadAllText(path);
             var json = JsonConvert.DeserializeObject<Dictionary<string, TextureData>>(content);
             foreach (var pair in json)

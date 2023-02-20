@@ -1,0 +1,18 @@
+{
+  "uuid": "5ce6b53b-8e8b-44d7-9671-4803ff3c87bc",
+  "resource_type": 3,
+  "path": null,
+  "data": {
+    "width": 131,
+    "height": 197,
+    "content": "\\Assets\\Tilemap\\ships.png",
+    "uuid": "5ce6b53b-8e8b-44d7-9671-4803ff3c87bc",
+    "resource_type": 3,
+    "path": null,
+    "data": null,
+    "format_version": 1,
+    "filename": null
+  },
+  "format_version": 1,
+  "filename": null
+}

@@ -13,17 +13,17 @@ namespace TundraEngine.Studio.Controls
 {
     public class TundraView : OpenGlControlInputBase, IGameWindow
     {
-        Renderer? Renderer;
+        public Renderer? Renderer;
 
-        private GL? Gl;
+        public GL? Gl;
 
-        Renderer IGameWindow.Renderer { get; set; }
+        TundraEngine.Rendering.Renderer IGameWindow.Renderer { get; set; }
         GL IGameWindow.Gl { get; set; }
         bool IGameWindow.IsInitialized { get; set; } = false;
         public Game Game { get; set; }
         int IGameWindow.Width { get => (int)GetActualBounds().Width; set { } }
         int IGameWindow.Height { get => (int)GetActualBounds().Height; set { } }
-        public Scene Scene { get; set; }
+        public Scene? Scene { get; set; }
 
         public event IGameWindow.OnLoadAssetsHandler OnLoadAssets;
         public event IGameWindow.OnUpdateHandler OnUpdate;
@@ -36,13 +36,12 @@ namespace TundraEngine.Studio.Controls
         protected override void OnOpenGlInit(GlInterface gl, int fb)
         {
             base.OnOpenGlInit(gl, fb);
-
             Gl = GL.GetApi(gl.GetProcAddress);
-            Renderer = new Renderer(this, Gl);
-
+            Renderer = new Renderer(Gl);
+            Console.WriteLine("Initializing OpenGL Context for Avalonia");
             if (!GameStarted)
             {
-                Scene = new Scene(this);
+                Scene ??= new Scene(this);
                 Start();
                 OnGameStarted?.Invoke();
             }

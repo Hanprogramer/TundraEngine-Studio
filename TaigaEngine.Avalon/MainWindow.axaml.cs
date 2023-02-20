@@ -4,6 +4,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using System;
 using System.Runtime.InteropServices;
+using TundraEngine.Rendering;
 using TundraEngine.Studio.Compiler;
 using TundraEngine.Studio.Controls;
 using TundraEngine.Studio.Util;
@@ -26,8 +27,7 @@ namespace TundraEngine.Studio
                 //TODO: do this on application level maybe? Or for every window
                 Win32Native.ImplementDarkTitleBar(this);
             TundraStudio.CurrentProject = TundraProject.Parse(ProjectPath, this);
-            TundraStudio.CurrentProject.Initialize();
-
+            TundraStudio.CurrentProject.InitializeResourceManager(null);
             var fb = this.FindControl<FileBrowser>("FileBrowser");
             fb.CurrentWorkingDirectory = TundraStudio.CurrentProject.Path;
             fb.FileOpen += OnFileOpen;

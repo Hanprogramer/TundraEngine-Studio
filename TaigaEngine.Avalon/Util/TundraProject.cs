@@ -4,7 +4,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
+using TundraEngine.Classes;
 using TundraEngine.Classes.Data;
+using TundraEngine.Rendering;
 using TundraEngine.Studio.Compiler;
 using TundraEngine.Studio.Dialogs;
 
@@ -21,7 +24,10 @@ namespace TundraEngine.Studio.Util
         public string CSProject { get; set; }
         public int FormatVersion { get; set; }
 
-        internal Dictionary<string, Resource> Resources;
+        public bool IsRmInitialized = false;
+        public bool IsTexturesLoaded = false;
+
+        public ResourceManager ResourceManager;
 
         public TundraProject(string path, string title, string version, int[] tundraVersion, string author, string cSProject, int formatVersion)
         {
@@ -34,10 +40,28 @@ namespace TundraEngine.Studio.Util
             FormatVersion = formatVersion;
         }
 
-        public async void Initialize()
+        public async Task InitializeResourceManager(Renderer? renderer)
         {
-            Resources = await ResourceCompiler.Analyze(Path, true);
+            if (!IsRmInitialized)
+            {
+                ResourceManager = new(renderer);
+                await ResourceCompiler.Compile(Path, System.IO.Path.Join(Path, "bin"));
+                ResourceManager.LoadTexturesFromFile(System.IO.Path.Join(Path, "bin", "textures.json"));
+                ResourceManager.LoadResourcesFromFile(System.IO.Path.Join(Path, "bin", "resources.json"));
+            }
+            IsRmInitialized = true;
         }
+
+        public void EnsureTextureLoaded(Renderer renderer)
+        {
+            if (!IsTexturesLoaded)
+            {
+                IsTexturesLoaded = true;
+                ResourceManager.Renderer = renderer;
+                ResourceManager.LoadTextures();
+            }
+        }
+        
         /// <summary>
         /// Parse a tundra project.json file. Note that project is not initialized automatically
         /// </summary>

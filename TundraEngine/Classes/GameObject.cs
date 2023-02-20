@@ -92,7 +92,7 @@ namespace TundraEngine.Classes
             throw new Exception("Component of type " + typeof(T) + " not found");
         }
 
-        public T AddComponent<T>(ComponentProperties? props = null) where T : Component
+        public T AddComponent<T>(ComponentProperties? props = null) where T: Component
         {
             // Calls the static function
             GameObject obj = this;

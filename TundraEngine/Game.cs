@@ -57,9 +57,10 @@ namespace TundraEngine
             ResourceManager = new ResourceManager(Window);
             Window.OnLoadAssets += (Renderer renderer) =>
             {
+                ResourceManager.Renderer = renderer;
                 ResourceManager.LoadResourcesFromFile(resourcesPath);
                 ResourceManager.LoadTexturesFromFile(texturesPath);
-                ResourceManager.LoadTextures(renderer);
+                ResourceManager.LoadTextures();
                 InitializeDefaultScene();
                 if (icon != null)
                     Window.SetIcon(icon);
@@ -82,7 +83,7 @@ namespace TundraEngine
             if (res != null)
             {
                 var scene = res.Instantiate(Window, ResourceManager);
-                var camera = new Camera(scene);
+                var camera = new Camera(scene, Window);
                 scene.AddObject(camera);
                 Window.Scene = scene;
                 return;
