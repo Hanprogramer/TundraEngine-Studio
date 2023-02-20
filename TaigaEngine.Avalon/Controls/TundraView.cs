@@ -86,6 +86,16 @@ namespace TundraEngine.Studio.Controls
                 return Bounds;
         }
 
+        public float ToActualPixel(float a)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var scaling = Win32Native.GetScreenScaling(this);
+                return (float)(a * scaling);
+            }
+            throw new NotImplementedException("ToActualPixel is not implemented on this OS");
+        }
+
         protected override unsafe void OnOpenGlRender(GlInterface gl, int fb)
         {
             if (!(this as IGameWindow).IsInitialized)
