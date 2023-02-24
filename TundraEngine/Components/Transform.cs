@@ -7,7 +7,7 @@ namespace TundraEngine.Components
         public float x, y;
     }
     
-    [Component(Name = "Transform", DisplayOnEditor = true)]
+    [Component(DisplayName = "Transform", DisplayOnEditor = true)]
     public class Transform : Component
     {
         public float X { get; set; } 
