@@ -8,6 +8,7 @@ namespace TundraEngine.Components
     /// <summary>
     /// A basic component to draw a texture onto the screen
     /// </summary>
+    [Component]
     public class SpriteRenderer : Component
     {
         public SpriteResource Sprite { get; set; }

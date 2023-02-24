@@ -5,6 +5,7 @@ namespace TundraEngine.Components
     /// <summary>
     /// Testing component to see all the stuffs
     /// </summary>
+    [Component]
     public class TestComponent : Component
     {
         public int NumberVal { get; set; }
