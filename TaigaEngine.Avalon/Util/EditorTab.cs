@@ -40,8 +40,11 @@ namespace TundraEngine.Studio.Util
         public EditorType EditorType { get; set; }
         public Control content;
 
-        public Control Content { get => content; set { this.RaiseAndSetIfChanged(ref content, value); } }
-        public bool IsSaved { get; set; } = true;
+        public Control Content { get => content; set => this.RaiseAndSetIfChanged(ref content, value);
+        }
+
+        private bool isSaved = true;
+        public bool IsSaved { get => isSaved; set => this.RaiseAndSetIfChanged(ref isSaved, value); }
 
         public EditorTab(string header, string filePath)
         {
@@ -68,6 +71,25 @@ namespace TundraEngine.Studio.Util
             EditorType = editorType;
             FilePath = filePath;
             Initialize();
+        }
+
+        /// <summary>
+        /// Save the editor file
+        /// </summary>
+        public async void Save()
+        {
+            IsSaved = true;
+            switch (EditorType)
+            {
+                case EditorType.RawText:
+                    var te = (TextEditor)Content;
+                    var text = te.Document.Text;
+                    await File.WriteAllTextAsync(FilePath, text);
+                    break;
+                
+                default:
+                    throw new NotImplementedException("This editor type isn't implemented yet");
+            }
         }
 
 

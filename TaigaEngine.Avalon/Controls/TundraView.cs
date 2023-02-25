@@ -114,7 +114,15 @@ namespace TundraEngine.Studio.Controls
                 Gl?.Viewport(0, 0, (uint)bound.Width, (uint)bound.Height);
 
                 Renderer?.Begin();
-                Scene.Render(Renderer);
+                try
+                {
+                    Scene.Render(Renderer);
+                }
+                catch (Exception e)
+                {
+                    //TODO: better exception handling
+                    Console.WriteLine(e);
+                }
                 Renderer?.End();
 
                 Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Render);
@@ -128,13 +136,29 @@ namespace TundraEngine.Studio.Controls
         public void Update(float dt)
         {
             if ((this as IGameWindow).IsInitialized)
-                Scene.Update(dt);
+                try
+                {
+                    Scene.Update(dt);
+                }
+                catch (Exception e)
+                {
+                    //TODO: better exception handling
+                    Console.WriteLine(e);
+                }
         }
 
         public void Initialize()
         {
             Console.WriteLine("Initializing Scene");
-            Scene.Initialize();
+            try
+            {
+                Scene.Initialize();
+            }
+            catch (Exception e)
+            {
+                //TODO: better exception handling
+                Console.WriteLine(e);
+            }
         }
 
         public void PollEvents()

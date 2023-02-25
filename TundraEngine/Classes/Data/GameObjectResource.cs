@@ -69,12 +69,12 @@ namespace TundraEngine.Classes.Data
         public static Assembly? GetAssemblyByName(string name)
         {
             return AppDomain.CurrentDomain.GetAssemblies().
-                SingleOrDefault(assembly => assembly.GetName().Name == name || assembly.GetName().Name.StartsWith(name) || name.StartsWith(assembly.GetName().Name));
+                FirstOrDefault(assembly => assembly.GetName().Name == name || assembly.GetName().Name.StartsWith(name) || name.StartsWith(assembly.GetName().Name));
         }
         public static Assembly? GetAssemblyByName(string name, AssemblyLoadContext asl)
         {
             return asl.Assemblies.
-                SingleOrDefault(assembly => assembly.GetName().Name == name || assembly.GetName().Name.StartsWith(name) || name.StartsWith(assembly.GetName().Name));
+                FirstOrDefault(assembly => assembly.GetName().Name == name || assembly.GetName().Name.StartsWith(name) || name.StartsWith(assembly.GetName().Name));
         }
     }
 

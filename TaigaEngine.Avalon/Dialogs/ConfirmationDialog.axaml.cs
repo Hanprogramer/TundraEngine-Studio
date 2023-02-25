@@ -23,6 +23,7 @@ namespace TundraEngine.Studio.Dialogs
             PositiveAction = positiveAction ?? "Yes";
             NegativeAction = negativeAction ?? "No";
             ShowCancel = showCancel;
+            ShowNegative = showNegative;
             IsDangerous = isDangerous;
             InitializeComponent();
             DataContext = this;
@@ -39,12 +40,18 @@ namespace TundraEngine.Studio.Dialogs
 
         public void OnCancel(object? sender, RoutedEventArgs e)
         {
-            this.Close();
+            this.Close(null);
         }
 
         public static async Task<bool?> Show(string title, string message, Window owner, string? positiveAction = null, string? negativeAction = null, bool showCancel = true, bool showNegative = false, bool isDangerous = false)
         {
-            var dlg = new ConfirmationDialog(message, positiveAction, negativeAction, showCancel, showNegative, isDangerous);
+            var dlg = new ConfirmationDialog(
+                message, 
+                positiveAction, 
+                negativeAction, 
+                showCancel, 
+                showNegative, 
+                isDangerous);
             dlg.Title = title;
             return await dlg.ShowDialog<bool?>(owner);
         }

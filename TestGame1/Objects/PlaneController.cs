@@ -1,9 +1,10 @@
-﻿using TundraEngine.Classes;
+using TundraEngine.Classes;
 using TundraEngine.Components;
 using TundraEngine.Rendering;
 
 namespace TestGame1.Objects
 {
+	// Hey this is a comment
     public class PlaneController : Component
     {
         Transform transform;

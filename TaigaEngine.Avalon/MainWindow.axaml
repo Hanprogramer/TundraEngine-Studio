@@ -16,7 +16,7 @@
 		<Grid ColumnDefinitions="Auto,*,Auto" DockPanel.Dock="Top">
 			<StackPanel Grid.Row="0" VerticalAlignment="Stretch" Background="#121212">
 				<!-- Menu Bar -->
-				<Button>
+				<Button Name="SaveBtn" Click="SaveBtn_OnClick">
 					<svg:Svg Path="/Assets/save_white.svg" Width="16" Height="16"/>
 				</Button>
 			</StackPanel>

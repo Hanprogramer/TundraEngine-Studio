@@ -34,7 +34,7 @@ namespace TundraEngine.Classes
             Transform = new Transform(this);
             if (Game != null)
             {
-                Game = scene.GameWindow.Game;
+                //Game = scene.GameWindow.Game;
                 AssetManager = Game.ResourceManager;
             }
             Components = new();

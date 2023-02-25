@@ -5,10 +5,9 @@ using Avalonia.Media;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-using TundraEngine.Rendering;
 using TundraEngine.Studio.Compiler;
 using TundraEngine.Studio.Controls;
+using TundraEngine.Studio.Dialogs;
 using TundraEngine.Studio.Util;
 
 namespace TundraEngine.Studio
@@ -79,13 +78,34 @@ namespace TundraEngine.Studio
         }
 
         // Event handler for file close
-        public void OnFileClose(object? s, RoutedEventArgs args)
+        public async void OnFileClose(object? s, RoutedEventArgs args)
         {
-            EditorTab? el = (args.Source as Button)!.DataContext! as EditorTab;
-            if (el != null)
+            if ((args.Source as Button)!.DataContext! is not EditorTab el)
+                return;
+            if (!el.IsSaved)
             {
-                CloseTab(el);
+                var result = await ConfirmationDialog.Show(
+                    "Warning", 
+                    "File isn't saved yet. Save now?", 
+                    this, 
+                    "Save", "Discard", 
+                    showCancel: true, showNegative: true);
+                switch (result)
+                {
+                    case true:
+                        // Save and close
+                        el.Save();
+                        CloseTab(el);
+                        break;
+                    case false:
+                        // Close without saving
+                        CloseTab(el);
+                        break;
+                }
+                // if null Cancel the closing
             }
+            else 
+                CloseTab(el);
         }
 
 
@@ -194,6 +214,13 @@ namespace TundraEngine.Studio
             PauseBtn.IsEnabled = false;
             StopBtn.IsEnabled = false;
             GC.Collect();
+        }
+        private void SaveBtn_OnClick(object? sender, RoutedEventArgs e)
+        {
+            if (FileTabs.SelectedItem is EditorTab tab)
+            {
+                tab.Save();
+            }
         }
     }
 }
