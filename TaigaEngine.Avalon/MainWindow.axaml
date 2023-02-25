@@ -8,7 +8,7 @@
 		xmlns:edit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
 		xmlns:controls="clr-namespace:TundraEngine.Studio.Controls"
 		xmlns:svg="clr-namespace:Avalonia.Svg.Skia;assembly=Avalonia.Svg.Skia"
-		Icon="/Assets/TundraEngine.png"
+		
         Title="TundraEngine v0.1 Beta">
 	<Window.Styles>
 	</Window.Styles>

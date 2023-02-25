@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.Loader;
 using TundraEngine.Components;
 
 namespace TundraEngine.Classes.Data
@@ -6,8 +7,6 @@ namespace TundraEngine.Classes.Data
 
     public class SceneResource : Resource
     {
-        public static string TUNDRA_ENGINE = typeof(TundraEngine.Game).Assembly.GetName().Name;
-        public static Assembly TUNDRA_ENGINE_ASSEMBLY = typeof(TundraEngine.Game).Assembly;
         public SceneResource(string uuid, ResourceType resourceType = ResourceType.Scene) : base(uuid, ResourceType.Scene)
         { }
 
@@ -18,7 +17,7 @@ namespace TundraEngine.Classes.Data
         /// <param name="rm">Resource manager</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public Scene Instantiate(IGameWindow window, ResourceManager rm)
+        public Scene Instantiate(IGameWindow window, ResourceManager rm, AssemblyLoadContext? asl = null)
         {
             var scene = new Scene(window);
             foreach (var data in objects)
@@ -33,36 +32,8 @@ namespace TundraEngine.Classes.Data
                 transform.Height = 32;
 
                 foreach (var comp in res.components)
-                {
-                    if (comp.component.StartsWith(TUNDRA_ENGINE))
-                    {
-                        var type = TUNDRA_ENGINE_ASSEMBLY.GetType(comp.component);
-                        if (type != null)
-                        {
-                            if (type.IsSubclassOf(typeof(Component)))
-                            {
-                                var ctr = type.GetConstructor(new Type[] { typeof(GameObject) });
-                                if (ctr == null)
-                                    throw new Exception($"Class {comp.component} doesn't have a (GameObject){{}} constructor");
-                                var compInst = ctr.Invoke(new object[] { gobj });
-                                if (compInst is SpriteRenderer sr)
-                                {
-                                    var texProp = comp.properties["Sprite"]!;
-                                    var tex = rm.GetTexture(texProp);
-                                    sr.Texture = tex;
-                                }
-                                gobj.AddComponent((Component)compInst);
-                            }
-                            else
-                                throw new Exception($"Class {comp.component} is not a Component");
-                        }
-                        else
-                        {
-                            throw new Exception($"Can't find component class {comp.component}");
-                        }
-                    }
-                }
-
+                    comp.Instantiate(gobj, rm, asl);
+                
                 scene.AddObject(gobj);
 
                 //TODO: implement children

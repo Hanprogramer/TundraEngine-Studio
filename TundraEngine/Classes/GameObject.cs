@@ -25,11 +25,13 @@ namespace TundraEngine.Classes
         public static ResourceManager AssetManager;
 
         public List<Component> Components;
+        public Transform Transform { get; set; }
 
 
         public GameObject(Scene scene)
         {
             Scene = scene;
+            Transform = new Transform(this);
             if (Game != null)
             {
                 Game = scene.GameWindow.Game;
@@ -118,12 +120,12 @@ namespace TundraEngine.Classes
             // TODO: this might not work when multiple derivation generation happens
             if (typeof(T).BaseType == typeof(Component))
             {
-                ConstructorInfo? info = typeof(T).GetConstructor(new Type[] { typeof(GameObject), typeof(ComponentProperties) });
+                ConstructorInfo? info = typeof(T).GetConstructor(new Type[] { typeof(GameObject) });
                 if (info != null)
                 {
                     var comp = info.Invoke(new object[]{
                     gameObject,
-                    props
+                    // TODO: do something with the props
                 });
                     return (T)comp;
                 }

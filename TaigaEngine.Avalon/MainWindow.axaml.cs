@@ -3,7 +3,9 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using TundraEngine.Rendering;
 using TundraEngine.Studio.Compiler;
 using TundraEngine.Studio.Controls;
@@ -32,6 +34,19 @@ namespace TundraEngine.Studio
             fb.CurrentWorkingDirectory = TundraStudio.CurrentProject.Path;
             fb.FileOpen += OnFileOpen;
             DataContext = new MainWindowViewModel();
+            InitializeProject();
+
+        }
+        private async void InitializeProject()
+        {
+            var extraComps = await GameCompiler.AnalyzeProject(
+                Path.Join(TundraStudio.CurrentProject.Path,TundraStudio.CurrentProject.CSProject),
+                Path.Join(TundraStudio.CurrentProject.Path,"bin")
+            );
+            foreach (var comp in extraComps)
+            {
+                TundraStudio.ComponentRegistry.Register(comp);
+            }
         }
 
         /// <summary>

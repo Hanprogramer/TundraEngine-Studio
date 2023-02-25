@@ -10,18 +10,17 @@ namespace TundraEngine.Components
     [Component(DisplayName = "Transform", DisplayOnEditor = true)]
     public class Transform : Component
     {
-        public float X { get; set; } 
-        public float Y { get; set; }
-        public float Width { get; set; }
-        public float Height { get; set; }
-        public float XScale { get; set; }
-        public float YScale { get; set; }
-        public float Rotation { get; set; }
+        public float X { get; set; } = 0;
+        public float Y { get; set; } = 0;
+        public float Width { get; set; } = 1;
+        public float Height { get; set; } = 1;
+        public float XScale { get; set; } = 1;
+        public float YScale { get; set; } = 1;
+        public float Rotation { get; set; } = 0;
 
-        public Transform(GameObject gameObject, ComponentProperties props) : base(gameObject, props)
+        public Transform(GameObject gameObject) : base(gameObject)
         {
+            
         }
-
-        public Transform(ComponentProperties props) : base(props) { }
     }
 }

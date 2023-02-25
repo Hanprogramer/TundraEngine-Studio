@@ -22,11 +22,5 @@ namespace TundraEngine.Components
         public TestComponent(GameObject gameObject) : base(gameObject)
         {
         }
-        public TestComponent(GameObject gameObject, ComponentProperties props) : base(gameObject, props)
-        {
-        }
-        public TestComponent(ComponentProperties props) : base(props)
-        {
-        }
     }
 }

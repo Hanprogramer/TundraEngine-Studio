@@ -8,8 +8,12 @@
     <Grid ColumnDefinitions="200,4,*">
         <Grid RowDefinitions="auto,*" Background="#191919">
             <TextBlock>Hierarchy</TextBlock>
-            <TreeView Grid.Row="1" Background="#090909" Margin="2">
-                
+            <TreeView Grid.Row="1" Background="#090909" Margin="2" Items="{Binding Objects, Mode=TwoWay}">
+                <TreeView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding name}"></TextBlock>
+                    </DataTemplate>
+                </TreeView.ItemTemplate>
             </TreeView>
         </Grid>
         <GridSplitter Grid.Column="1"/>

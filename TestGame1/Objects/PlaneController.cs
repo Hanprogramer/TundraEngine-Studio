@@ -7,7 +7,7 @@ namespace TestGame1.Objects
     public class PlaneController : Component
     {
         Transform transform;
-        Camera camera;
+        public Camera camera { get; set; }
         public PlaneController(GameObject gameObject) : base(gameObject)
         {
         }

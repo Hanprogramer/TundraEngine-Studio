@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.VisualTree;
 using System;
+using System.Collections.ObjectModel;
 using TundraEngine.Classes;
 using TundraEngine.Classes.Data;
 using TundraEngine.Rendering;
@@ -22,10 +23,20 @@ namespace TundraEngine.Studio.Controls.Editor
 
         private bool isDragged = false;
         private Point lastPoint;
+
+        public ObservableCollection<SceneObjectData> Objects { get; set; } = new();
+
         public SceneEditor()
         {
             DataContext = this;
             InitializeComponent();
+        }
+        private void InitializeChild()
+        {
+            foreach (var obj in Scene.objects)
+            {
+                Objects.Add(obj);
+            }
         }
         public SceneEditor(SceneResource scene)
         {
@@ -39,15 +50,24 @@ namespace TundraEngine.Studio.Controls.Editor
             await TundraStudio.CurrentProject.InitializeResourceManager(MainTundraView.Renderer);
 
             // Sets the view's scene to the scene
-            MainTundraView.Scene = Scene.Instantiate(MainTundraView, TundraStudio.CurrentProject.ResourceManager);;
-
-            MainTundraView.Scene.Initialize();
-            MainTundraView.Scene.Update(0);
+            MainTundraView.Scene = Scene.Instantiate(MainTundraView, TundraStudio.CurrentProject.ResourceManager, TundraStudio.Asl);
+            try
+            {
+                //MainTundraView.Scene.Initialize();
+                //MainTundraView.Scene.Update(0);
+            }
+            catch (Exception e)
+            {
+                // TODO: better exception handling
+                Console.WriteLine(e);
+            }
             // Create an editor camera
             CameraObject = new Camera(MainTundraView.Scene, MainTundraView);
             CameraObject.FlipY = true;
             MainTundraView.Scene.AddObject(CameraObject);
             Console.WriteLine("Initialized");
+            
+            InitializeChild();
         }
 
         /// <summary>
@@ -62,7 +82,11 @@ namespace TundraEngine.Studio.Controls.Editor
         }
         private void MainTundraViewOnPointerWheelChanged(object? sender, PointerWheelEventArgs e)
         {
-            CameraObject.Zoom += (float)e.Delta.Y / 5f;
+            float zoomFactor = 1.5f;
+            if (e.Delta.Y > 0)
+                CameraObject.Zoom *= zoomFactor; 
+            if (e.Delta.Y < 0)
+                CameraObject.Zoom /= zoomFactor;
             e.Handled = true;
         }
         private void MainTundraViewOnPointerMoved(object? sender, PointerEventArgs e)
@@ -95,16 +119,16 @@ namespace TundraEngine.Studio.Controls.Editor
             MainTundraView = this.FindControl<TundraView>("MainTundraView");
             if (MainTundraView != null && MainTundraView.Renderer != null)
             {
-                SetupInteractions();
                 if (!IsInitialized)
                 {
+                    SetupInteractions();
                     InitializeSceneEditor();
                     IsInitialized = true;
                 }
                 else if(TundraStudio.CurrentProject.IsRmInitialized)
                     TundraStudio.CurrentProject.EnsureTextureLoaded(MainTundraView.Renderer);
                 
-                MainTundraView.Scene.Update(0);
+                //MainTundraView.Scene.Update(0);
             }
         }
 

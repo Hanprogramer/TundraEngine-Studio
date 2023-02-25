@@ -68,6 +68,12 @@ namespace TundraEngine.Studio.Util
             //}
         }
 
+        public void Register(Type t)
+        {
+            var comp = new ComponentRegistryData(t);
+            Components[t.FullName] = comp;
+        }
+
         /// <summary>
         /// Gets a component from the registry
         /// </summary>

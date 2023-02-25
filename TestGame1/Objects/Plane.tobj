@@ -7,6 +7,13 @@
 		"uuid": "524885f3-4309-4847-b4f6-e40bbfae3e81",
 		"description" : "The main player game object",
 		"components": [
+            {
+                "component" : "TundraEngine.Components.Transform",
+                "properties" : {
+                    "X" : 0,
+                    "Y" : 0
+                }
+            },
 			{
 				"component": "TundraEngine.Components.SpriteRenderer",
 				"properties" : {

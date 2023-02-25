@@ -7,8 +7,11 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Runtime.Loader;
 using System.Threading.Tasks;
 using TundraEngine.Classes.Data;
+using TundraEngine.Components;
 using TundraEngine.Studio.Util;
 
 namespace TundraEngine.Studio.Compiler
@@ -133,6 +136,39 @@ namespace TundraEngine.Studio.Compiler
                 workspace.Dispose();
                 return result;
             }
+        }
+
+        private static void AnalyzeAssembly(string dllPath, ref List<Type> types)
+        {
+            var asl = TundraStudio.Asl;
+            var asm = asl.LoadFromAssemblyPath(dllPath);
+            foreach (var type in asm.GetTypes())
+            {
+                var isComponent = type.GetCustomAttributes(false).OfType<ComponentAttribute>().Any() || type.IsSubclassOf(typeof(TundraEngine.Components.Component));
+                if(isComponent)
+                    types.Add(type);
+            }
+            asl.Unload();
+        }
+
+        public static async Task<List<Type>> AnalyzeProject(string path, string outputFolderPath)
+        {
+            // Register MSBuild variables
+            if (!MSBuildLocator.IsRegistered)
+                MSBuildLocator.RegisterDefaults();
+
+            var types = new List<Type>();
+            
+            using var workspace = MSBuildWorkspace.Create();
+            var project = await workspace.OpenProjectAsync(path);
+            var comp = await project.GetCompilationAsync();
+            var uuid = Guid.NewGuid().ToString();
+            var dllPath = Path.Join(outputFolderPath, "temp_" + uuid + ".dll");
+            comp.Emit(dllPath);
+            AnalyzeAssembly(dllPath, ref types);
+            //AnalyzeNamespace(comp.GlobalNamespace, ref types, true, comp.SourceModule);
+            workspace.CloseSolution();
+            return types;
         }
 
         /// <summary>

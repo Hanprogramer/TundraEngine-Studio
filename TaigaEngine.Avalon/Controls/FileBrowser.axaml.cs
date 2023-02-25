@@ -206,7 +206,7 @@ namespace TundraEngine.Studio.Controls
                 }
                 else
                 {
-                    throw new DirectoryNotFoundException($"Parent item not found {parentPath}");
+                    Console.WriteLine($"Parent item not found {parentPath}");
                 }
             }
             catch (Exception error)

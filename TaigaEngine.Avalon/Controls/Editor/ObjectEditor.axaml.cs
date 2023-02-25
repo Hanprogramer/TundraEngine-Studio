@@ -108,9 +108,9 @@ namespace TundraEngine.Studio.Controls
                         var prop = pair.Key;
                         if (comp.HasProperty(prop))
                         {
-                            if (TundraStudio.CurrentProject.ResourceManager.Resources.ContainsKey(uuid))
+                            if (TundraStudio.CurrentProject.ResourceManager.Resources.ContainsKey((string)uuid))
                             {
-                                var res = TundraStudio.CurrentProject.ResourceManager.Resources[uuid]!;
+                                var res = TundraStudio.CurrentProject.ResourceManager.Resources[(string)uuid]!;
                                 comp_data.SetPropertyValue(prop, res);
                             }
                             else

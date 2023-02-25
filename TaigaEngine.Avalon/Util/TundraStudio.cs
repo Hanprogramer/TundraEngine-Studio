@@ -1,8 +1,10 @@
-﻿namespace TundraEngine.Studio.Util
+﻿using System.Runtime.Loader;
+namespace TundraEngine.Studio.Util
 {
-    public class TundraStudio
+    public static class TundraStudio
     {
         public static TundraProject? CurrentProject;
-        public static ComponentRegistry ComponentRegistry = new();
+        public static readonly ComponentRegistry ComponentRegistry = new ComponentRegistry();
+        public static readonly AssemblyLoadContext Asl = new AssemblyLoadContext("TundraProject", true);
     }
 }
