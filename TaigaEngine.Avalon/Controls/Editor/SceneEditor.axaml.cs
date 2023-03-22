@@ -24,6 +24,8 @@ namespace TundraEngine.Studio.Controls.Editor
         private bool isDragged = false;
         private Point lastPoint;
 
+        private float camZoomTo = 1.0f;
+
         public ObservableCollection<SceneObjectData> Objects { get; set; } = new();
 
         public SceneEditor()
@@ -84,9 +86,9 @@ namespace TundraEngine.Studio.Controls.Editor
         {
             float zoomFactor = 1.5f;
             if (e.Delta.Y > 0)
-                CameraObject.Zoom *= zoomFactor; 
+                camZoomTo *= zoomFactor; 
             if (e.Delta.Y < 0)
-                CameraObject.Zoom /= zoomFactor;
+                camZoomTo /= zoomFactor;
             e.Handled = true;
         }
         private void MainTundraViewOnPointerMoved(object? sender, PointerEventArgs e)
@@ -130,6 +132,9 @@ namespace TundraEngine.Studio.Controls.Editor
                 
                 //MainTundraView.Scene.Update(0);
             }
+
+            if(CameraObject!=null)
+            CameraObject.Zoom += (camZoomTo - CameraObject.Zoom) / 2f;
         }
 
         private void InitializeComponent()

@@ -1,30 +1,44 @@
 {
-	"format_version": 1,
-	"resource_type" : 1,
-	"uuid": "524885f3-4309-4847-b4f6-e40bbfae3e81",
-	"data": {
-		"name": "Player",
-		"uuid": "524885f3-4309-4847-b4f6-e40bbfae3e81",
-		"description" : "The main player game object",
-		"components": [
-            {
-                "component" : "TundraEngine.Components.Transform",
-                "properties" : {
-                    "X" : 0,
-                    "Y" : 0
-                }
-            },
-			{
-				"component": "TundraEngine.Components.SpriteRenderer",
-				"properties" : {
-					"Sprite" : "fba6ff4a-188d-40ff-9a4b-7b50441eda81"
-				}
-			},
-			{
-				"component": "TestGame1.Objects.PlaneController",
-				"properties" : {}
-			}
-		],
-		"children": []
-	}
+  "uuid": "524885f3-4309-4847-b4f6-e40bbfae3e81",
+  "resource_type": 1,
+  "path": null,
+  "data": {
+    "name": "Player",
+    "uuid": "524885f3-4309-4847-b4f6-e40bbfae3e81",
+    "description": "The main player game object",
+    "components": [
+      {
+        "component": "TundraEngine.Components.Transform",
+        "properties": {
+          "X": 0,
+          "Y": 0,
+          "Width": 0.0,
+          "Height": 0.0,
+          "XScale": 0.0,
+          "YScale": 0.0,
+          "Rotation": 0.0
+        }
+      },
+      {
+        "component": "TundraEngine.Components.SpriteRenderer",
+        "properties": {
+          "Sprite": "fba6ff4a-188d-40ff-9a4b-7b50441eda81"
+        }
+      },
+      {
+        "component": "TestGame1.Objects.PlaneController",
+        "properties": {
+          "camera": null
+        }
+      }
+    ],
+    "children": [],
+    "resource_type": 1,
+    "path": "D:\\Programming\\C#\\TaigaEngine.Avalon\\TestGame1\\Objects\\Plane.tobj",
+    "data": null,
+    "format_version": 1,
+    "filename": "Plane.tobj"
+  },
+  "format_version": 1,
+  "filename": null
 }

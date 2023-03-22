@@ -10,7 +10,7 @@ using TundraEngine.Studio.Util;
 
 namespace TundraEngine.Studio.Controls
 {
-    public partial class SpritePropEditor : UserControl
+    public partial class SpritePropEditor : UserControl, IPropertyEditor
     {
         public string Label { get; set; } = "Prop.Label";
         private SpriteResource? _sprite;
@@ -94,5 +94,10 @@ namespace TundraEngine.Studio.Controls
         {
             Sprite = null;
         }
+        public object? GetPropertyValue()
+        {
+            return _sprite;
+        }
+        public event IPropertyEditor.OnPropertyChangedHandler? OnPropertyChanged;
     }
 }

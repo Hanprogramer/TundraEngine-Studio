@@ -45,7 +45,7 @@ namespace TestGame1.Objects
             {
                 transform.X += moveSpeed;
             }
-            camera.Position = transform;
+            //camera.Position = transform;
         }
     }
 }

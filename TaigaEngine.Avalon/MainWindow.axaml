@@ -16,18 +16,21 @@
 		<Grid ColumnDefinitions="Auto,*,Auto" DockPanel.Dock="Top">
 			<StackPanel Grid.Row="0" VerticalAlignment="Stretch" Background="#121212">
 				<!-- Menu Bar -->
-				<Button Name="SaveBtn" Click="SaveBtn_OnClick">
+				<Button Name="SaveBtn" Click="SaveBtn_OnClick" ToolTip.Tip="Save files">
 					<svg:Svg Path="/Assets/save_white.svg" Width="16" Height="16"/>
 				</Button>
 			</StackPanel>
 			<StackPanel Grid.Column="2" Orientation="Horizontal">
-				<Button Name="PlayBtn" Click="OnPlayBtnClicked">
+				<Button Name="CompileBtn" Click="OnPlayBtnClicked" ToolTip.Tip="Compile">
+					<svg:Svg Path="Assets/settings_white.svg" Width="16" Height="16"/>
+				</Button>
+				<Button Name="PlayBtn" Click="OnPlayBtnClicked" ToolTip.Tip="Play">
 					<svg:Svg Path="Assets/play_white.svg" Width="16" Height="16"/>
 				</Button>
-				<Button Name="PauseBtn" IsEnabled="false">
+				<Button Name="PauseBtn" IsEnabled="false" ToolTip.Tip="Pause">
 					<svg:Svg Path="Assets/pause_white.svg" Width="16" Height="16"/>
 				</Button>
-				<Button Name="StopBtn" IsEnabled="false" Click="OnStopGame">
+				<Button Name="StopBtn" IsEnabled="false" Click="OnStopGame" ToolTip.Tip="Stop">
 					<svg:Svg Path="Assets/stop_white.svg" Width="16" Height="16"/>
 				</Button>
 			</StackPanel>

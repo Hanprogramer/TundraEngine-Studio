@@ -4,7 +4,7 @@ using Avalonia.Markup.Xaml;
 
 namespace TundraEngine.Studio.Controls
 {
-    public partial class StringPropEditor : UserControl
+    public partial class StringPropEditor : UserControl, IPropertyEditor
     {
         public string Label { get; set; } = "Prop.Label";
         public string Value { get => Data.Value; set { Data.Value = value; } }
@@ -27,6 +27,11 @@ namespace TundraEngine.Studio.Controls
         {
             AvaloniaXamlLoader.Load(this);
         }
+        public object? GetPropertyValue()
+        {
+            return Value;
+        }
+        public event IPropertyEditor.OnPropertyChangedHandler? OnPropertyChanged;
     }
 }
 

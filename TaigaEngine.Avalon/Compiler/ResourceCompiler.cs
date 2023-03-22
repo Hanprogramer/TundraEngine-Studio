@@ -63,7 +63,7 @@ namespace TundraEngine.Studio.Compiler
                     }
 
                     ResourceType type = json.resource_type;
-                    Resource finalData;
+                    Resource finalData = json;
                     switch (type)
                     {
                         case ResourceType.Object:

@@ -87,6 +87,11 @@ namespace TundraEngine.Studio.Util
                     await File.WriteAllTextAsync(FilePath, text);
                     break;
                 
+                case EditorType.Object:
+                    var editor = (ObjectEditor)Content;
+                    editor.Save();
+                    break;
+                
                 default:
                     throw new NotImplementedException("This editor type isn't implemented yet");
             }

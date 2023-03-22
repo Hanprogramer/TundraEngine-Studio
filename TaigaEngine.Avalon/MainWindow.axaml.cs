@@ -34,6 +34,8 @@ namespace TundraEngine.Studio
             fb.FileOpen += OnFileOpen;
             DataContext = new MainWindowViewModel();
             InitializeProject();
+            
+            HotKeyManager.SetHotKey(this, KeyGesture.Parse("Ctrl+S"));
 
         }
         private async void InitializeProject()

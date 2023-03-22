@@ -1,11 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.VisualTree;
-using AvaloniaEdit.Utils;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reflection;
 using TundraEngine.Classes.Data;
 using TundraEngine.Studio.Util;
@@ -20,38 +16,64 @@ namespace TundraEngine.Studio.Controls
         public dynamic? Value { get; set; }
         public Control Content { get => GetContent(); }
 
+        public delegate void OnChangedEventHandler();
+        public event OnChangedEventHandler OnChanged;
+
         /// <summary>
         /// Get the content control. The content control must be recreated everytime it's get. Otherwise will do error
         /// </summary>
         /// <returns></returns>
         public Control GetContent()
         {
+            Control? editor = null;
             if (PropType == typeof(float) || PropType == typeof(int))
-                return new NumberEditor(this);
+                editor = new NumberEditor(this);
             if (PropType == typeof(SpriteResource))
-                return new SpritePropEditor(this);
+                editor = new SpritePropEditor(this);
             if (PropType == typeof(bool))
-                return new BooleanEditor(this);
+                editor = new BooleanEditor(this);
             if (PropType == typeof(string))
-                return new StringPropEditor(this);
-            
-            return new TextBlock() { Text = $"Unsupported data type [{PropType}]" };
+                editor = new StringPropEditor(this);
+
+
+            // Else it's unknown type
+            if (editor == null)
+                return new TextBlock()
+                {
+                    Text = $"Unsupported data type [{PropType}]"
+                };
+
+            // Put the on changed event
+            (editor as IPropertyEditor)!.OnPropertyChanged += () =>
+                OnChanged.Invoke();
+            return editor;
         }
         public ObjectEditorPropertiesData(PropertyInfo info)
         {
             Name = info.Name;
             PropType = info.PropertyType;
         }
+
+        public object? GetValue() =>
+            (Content as IPropertyEditor)!.GetPropertyValue();
+
+        public void RefreshValue() => Value = GetValue();
+
+
     }
     public class ObjectEditorComponentData
     {
+        public delegate void OnChangedEvent();
+        public event OnChangedEvent OnChanged;
+
         public ComponentRegistryData Data { get; set; }
         public ObservableCollection<ObjectEditorPropertiesData> Properties { get; set; }
-        public ObjectEditorComponentData(ComponentRegistryData data)
+        public string ClassName;
+        public ObjectEditorComponentData(ComponentRegistryData data, string className)
         {
             Data = data;
             Properties = new();
-
+            ClassName = className;
             foreach (var prop in Data.Properties)
             {
                 Properties.Add(new ObjectEditorPropertiesData(prop));
@@ -75,6 +97,7 @@ namespace TundraEngine.Studio.Controls
     {
         public ObservableCollection<ObjectEditorComponentData> Components { get; set; }
         public ObservableCollection<ComponentRegistryData> AvailableComponents { get; set; }
+        public GameObjectResource resource;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public ObjectEditor()
@@ -86,7 +109,7 @@ namespace TundraEngine.Studio.Controls
 
         public ObjectEditor(GameObjectResource resource)
         {
-
+            this.resource = resource;
             Initialize();
             InitializeComponent();
             TbObjectName.Text = resource.name;
@@ -98,25 +121,34 @@ namespace TundraEngine.Studio.Controls
                     var comp_class = c.component;
                     // Component class
                     var comp = TundraStudio.ComponentRegistry.GetComponent(comp_class);
-                    var comp_data = new ObjectEditorComponentData(comp);
+                    var comp_data = new ObjectEditorComponentData(comp, c.component);
 
                     // Component props
                     var props = c.properties;
                     foreach (var pair in props)
                     {
-                        var uuid = pair.Value;
+                        var propValue = pair.Value;
                         var prop = pair.Key;
                         if (comp.HasProperty(prop))
                         {
-                            if (TundraStudio.CurrentProject.ResourceManager.Resources.ContainsKey((string)uuid))
+                            if (propValue is string)
                             {
-                                var res = TundraStudio.CurrentProject.ResourceManager.Resources[(string)uuid]!;
-                                comp_data.SetPropertyValue(prop, res);
+                                if (Guid.TryParse(propValue as string, out var guid))
+                                {
+                                    // It's a UUID, parse as resource
+                                    if (TundraStudio.CurrentProject.ResourceManager.Resources.ContainsKey((string)propValue))
+                                    {
+                                        var res = TundraStudio.CurrentProject.ResourceManager.Resources[(string)propValue]!;
+                                        comp_data.SetPropertyValue(prop, res);
+                                        continue; // finish with this prop
+                                    }
+
+                                    // Else resource not found
+                                    throw new Exception("Resource not found: " + propValue);
+                                }
                             }
-                            else
-                            {
-                                throw new Exception($"Resource not found {uuid}");
-                            }
+                            // Else treat as a regular property
+                            comp_data.SetPropertyValue(prop, propValue);
                         }
                         else
                         {
@@ -154,8 +186,33 @@ namespace TundraEngine.Studio.Controls
         {
             AddCompBtn.Flyout.Hide();
             var data = ((e.Source as Control)!.DataContext as ComponentRegistryData)!;
-            Components.Add(new ObjectEditorComponentData(data));
+            Components.Add(new ObjectEditorComponentData(data, data.ComponentType.FullName));
+        }
 
+        public async void Save()
+        {
+            // Updating the resource properties
+            foreach (var c in Components)
+            {
+                foreach (var c2 in resource.components)
+                {
+                    if (c2.component == c.ClassName)
+                    {
+                        // Found the match, update the values
+                        foreach (var p in c.Properties)
+                        {
+                            if (p.Value is Resource rs)
+                                c2.properties[p.Name] = rs.uuid;
+                            else
+                                c2.properties[p.Name] = p.Value;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            // Writing to file
+            await resource.SaveToFile();
         }
     }
 }

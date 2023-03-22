@@ -2,10 +2,10 @@ using Avalonia.Controls;
 
 namespace TundraEngine.Studio.Controls
 {
-    public partial class NumberEditor : UserControl
+    public partial class NumberEditor : UserControl, IPropertyEditor
     {
         public string Label { get; set; } = "Prop.Label";
-        public float Value { get => Data.Value; set { Data.Value = value; } }
+        public float Value { get => (float)Data.Value; set { Data.Value = value; } }
         ObjectEditorPropertiesData Data;
         public NumberEditor()
         {
@@ -24,5 +24,10 @@ namespace TundraEngine.Studio.Controls
             InitializeComponent();
             DataContext = this;
         }
+        public object? GetPropertyValue()
+        {
+            return Value;
+        }
+        public event IPropertyEditor.OnPropertyChangedHandler? OnPropertyChanged;
     }
 }

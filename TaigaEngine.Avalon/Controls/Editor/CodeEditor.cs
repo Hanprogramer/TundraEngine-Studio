@@ -6,6 +6,7 @@ using AvaloniaEdit;
 using AvaloniaEdit.TextMate;
 using System.Collections.Generic;
 using TextMateSharp.Grammars;
+using TundraEngine.Studio.Controls.Editor;
 
 namespace TundraEngine.Studio.Controls
 {
@@ -69,6 +70,10 @@ namespace TundraEngine.Studio.Controls
                 i.Handled = true;
             }, RoutingStrategies.Bubble, true);
             _textEditor.FontFamily = "JetBrains Mono";
+        }
+        public void Save()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
